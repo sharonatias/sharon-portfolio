@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sharon's Portfolio & Admin Panel
 
-## Getting Started
+A modern portfolio website with admin panel for managing projects, videos, and images.
 
-First, run the development server:
+## Features
+
+- 🎬 Portfolio website with project gallery
+- 🔐 Admin panel with login authentication
+- 📤 Upload images and videos to Cloudinary
+- ✏️ Create, Edit, Delete projects
+- 📱 Responsive design
+- 🚀 Deployed on Vercel
+
+## Tech Stack
+
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Database**: Supabase PostgreSQL
+- **Storage**: Cloudinary
+- **Hosting**: Vercel
+
+## Quick Start
+
+### 1. Clone & Install
+
+```bash
+git clone [repository-url]
+cd sharon-portfolio
+npm install
+```
+
+### 2. Set up Supabase
+
+1. Create account at [supabase.com](https://supabase.com)
+2. Create new project
+3. Create `projects` table with columns:
+   - `id` (UUID, Primary Key)
+   - `title`, `description`, `category` (Text)
+   - `image_url`, `video_url` (Text)
+   - `created_at`, `updated_at` (Timestamp)
+4. Copy URL and ANON KEY to `.env.local`
+
+### 3. Set up Cloudinary
+
+1. Create account at [cloudinary.com](https://cloudinary.com)
+2. Create unsigned upload preset: `sharon_portfolio`
+3. Copy Cloud Name to `.env.local`
+
+### 4. Environment Variables
+
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+```
+
+### 5. Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Homepage: http://localhost:3000
+- Admin: http://localhost:3000/admin
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Admin Credentials:**
+- Email: `sharonatias@gmail.com`
+- Password: `sma369369`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push to GitHub
+2. Go to [vercel.com](https://vercel.com)
+3. Import repository
+4. Add environment variables
+5. Deploy!
