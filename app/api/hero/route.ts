@@ -6,19 +6,28 @@ import { HeroVideo } from '@/lib/types'
 // GET hero videos
 export async function GET() {
   try {
+    console.log('🎬 API /hero called')
+    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('Supabase Key exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+
     const { data, error } = await supabasePublic
       .from('hero_videos')
       .select('*')
       .order('order', { ascending: true })
 
     if (error) {
-      console.error('Supabase GET error:', error)
-      throw error
+      console.error('❌ Supabase GET error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    console.log('✅ Fetched hero videos:', data)
     return NextResponse.json(data)
-  } catch (error) {
-    console.error('GET /api/hero error:', error)
-    return NextResponse.json({ error: String(error) }, { status: 500 })
+  } catch (error: any) {
+    console.error('❌ GET /api/hero error:', error.message)
+    return NextResponse.json({
+      error: error.message,
+      details: error.toString()
+    }, { status: 500 })
   }
 }
 
