@@ -1,16 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabasePublic } from '@/lib/supabase-public'
-import { supabase } from '@/lib/supabase'
-import { HeroVideo } from '@/lib/types'
 
 // GET hero videos
 export async function GET() {
-  try {
-    // Return empty array for now - just to see if API works
-    return NextResponse.json([])
-  } catch (error: any) {
-    return NextResponse.json({ error: 'API Error' }, { status: 500 })
-  }
+  return NextResponse.json([])
 }
 
 // POST create hero video
