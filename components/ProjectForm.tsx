@@ -133,8 +133,11 @@ export default function ProjectForm({ project, onSave }: ProjectFormProps) {
         <label className="block text-sm font-medium mb-2">Video (Optional)</label>
         <CldUploadWidget
           uploadPreset="sharon_portfolio"
-          resourceType="video"
           onSuccess={(result: any) => handleUploadSuccess(result, 'video')}
+          options={{
+            resourceType: 'video',
+            maxFileSize: 100000000,
+          }}
         >
           {({ open }) => (
             <div className="space-y-2">
