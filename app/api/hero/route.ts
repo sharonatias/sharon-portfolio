@@ -10,7 +10,6 @@ export async function GET() {
       .from('hero_videos')
       .select('*')
       .order('order', { ascending: true })
-      .order('created_at', { ascending: false })
 
     if (error) {
       console.error('Supabase GET error:', error)
