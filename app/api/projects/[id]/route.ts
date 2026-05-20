@@ -16,14 +16,21 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         category: body.category,
         image_url: body.image_url,
         video_url: body.video_url,
+        images: body.images || null,
+        text_styles: body.textStyles || null,
       })
       .eq('id', id)
       .select()
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase PUT error:', error)
+      throw error
+    }
     return NextResponse.json(data[0])
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 })
+  } catch (error: any) {
+    const errorMessage = error?.message || JSON.stringify(error)
+    console.error('PUT /api/projects/[id] error:', errorMessage)
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 

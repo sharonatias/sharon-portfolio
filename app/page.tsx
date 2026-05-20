@@ -1,16 +1,32 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Project, CATEGORIES } from '@/lib/types'
+import { Project, HeroVideo, CATEGORIES } from '@/lib/types'
 import Link from 'next/link'
+import HeroSection from '@/components/HeroSection'
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [heroVideos, setHeroVideos] = useState<HeroVideo[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
+    fetchHeroVideos()
     fetchProjects()
   }, [])
+
+  const fetchHeroVideos = async () => {
+    try {
+      const res = await fetch('/api/hero')
+      const data = await res.json()
+      if (data && data.length > 0) {
+        setHeroVideos(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch hero videos:', error)
+    }
+  }
 
   const fetchProjects = async () => {
     try {
@@ -27,89 +43,85 @@ export default function Home() {
     : projects
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-gray-800 p-6">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">
-            SHARON MOSHE ATTIAS
-            <br />
-            CREATIVE & DIRECTOR
-          </h1>
-          <Link href="/admin" className="text-pink-500 hover:text-pink-400">
-            Admin
-          </Link>
-        </div>
-      </header>
+    <div className="bg-black text-white min-h-screen flex flex-col" suppressHydrationWarning>
+      {/* Hero Videos */}
+      <div className="flex-1">
+        {heroVideos.map((video, index) => (
+          <div key={video.id}>
+            <HeroSection
+              video={video}
+              showHeader={index === 0}
+              menuOpen={menuOpen}
+              onMenuToggle={setMenuOpen}
+            />
+            {index < heroVideos.length - 1 && (
+              <div className="h-1 bg-black border-t border-b border-gray-900" />
+            )}
+          </div>
+        ))}
+      </div>
 
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="mb-16">
-          <h2 className="text-4xl font-bold mb-4">I CREATE A VISUAL STORY THAT TELLS THE WORLD WHO YOU ARE</h2>
-          <p className="text-gray-400">Documentary film & Creative Direction</p>
-        </div>
+      {/* Menu Overlay - Fixed positioning across entire page */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/30"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
 
-        {/* Categories */}
-        <div className="mb-12">
-          <button
-            onClick={() => setSelectedCategory(null)}
-            className={`mr-4 px-4 py-2 border-b-2 transition ${
-              selectedCategory === null ? 'border-pink-500 text-white' : 'border-gray-700 text-gray-400'
-            }`}
-          >
-            All
-          </button>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => setSelectedCategory(cat.value)}
-              className={`mr-4 px-4 py-2 border-b-2 transition ${
-                selectedCategory === cat.value ? 'border-pink-500 text-white' : 'border-gray-700 text-gray-400'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredProjects.map((project) => (
-            <div key={project.id} className="group cursor-pointer">
-              <div className="relative overflow-hidden rounded-lg mb-4 bg-gray-900 aspect-video">
-                {project.image_url ? (
-                  <img
-                    src={project.image_url}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-600">No image</div>
-                )}
-              </div>
-              <h3 className="text-lg font-bold mb-2">{project.title}</h3>
-              <p className="text-gray-400 text-sm">{project.description}</p>
-            </div>
-          ))}
-        </div>
-
-        {filteredProjects.length === 0 && (
-          <div className="text-center text-gray-400 py-16">No projects in this category yet</div>
-        )}
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-800 p-6 mt-16">
-        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-gray-400">
-          <div className="flex gap-4">
-            <a href="#" className="hover:text-white transition">
-              Instagram
+      {/* Menu Panel */}
+      {menuOpen && (
+        <nav className="fixed top-0 right-0 w-1/2 h-96 bg-black z-20 flex flex-col items-start justify-end px-16 pb-16 backdrop-blur animate-in slide-in-from-right duration-300">
+          <div className="flex flex-col gap-3 text-2xl font-medium tracking-wide w-full">
+            <a href="/" onClick={() => setMenuOpen(false)} className="text-white hover:text-pink-500 transition text-left">
+              Home
             </a>
-            <a href="#" className="hover:text-white transition">
-              Vimeo
+            <a href="/projects" onClick={() => setMenuOpen(false)} className="text-white hover:text-pink-500 transition text-left">
+              Selected Work
+            </a>
+            <a href="/about" onClick={() => setMenuOpen(false)} className="text-white hover:text-pink-500 transition text-left">
+              About
+            </a>
+            <a href="/contact" onClick={() => setMenuOpen(false)} className="text-white hover:text-pink-500 transition text-left">
+              Contact
+            </a>
+            <a href="/admin" onClick={() => setMenuOpen(false)} className="text-white hover:text-pink-500 transition text-left">
+              Admin
             </a>
           </div>
-          <p>© 2024 Sharon Moshe Attias</p>
+        </nav>
+      )}
+
+      {/* Projects Header */}
+      {heroVideos.length === 0 && (
+        <header className="border-b border-gray-800 p-6" suppressHydrationWarning>
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <Link href="/" className="hover:opacity-80 transition">
+              <h1 className="text-xl font-bold">
+                SHARON MOSHE ATTIAS
+                <br />
+                CREATIVE & DIRECTOR
+              </h1>
+            </Link>
+            <Link href="/admin" className="text-pink-500 hover:text-pink-400">
+              Admin
+            </Link>
+          </div>
+        </header>
+      )}
+
+      {/* Footer - Always at bottom */}
+      <footer className="border-t border-gray-800 p-6">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-gray-400">
+          <div className="flex gap-4">
+            <a href="https://www.instagram.com/sharon.attias/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">
+              Instagram
+            </a>
+            <a href="https://www.youtube.com/@sharonattias7274" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">
+              YouTube
+            </a>
+          </div>
+          <p>© 2026 Sharon Moshe Attias | OpenMindStudio</p>
         </div>
       </footer>
     </div>

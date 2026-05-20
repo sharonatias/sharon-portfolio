@@ -19,7 +19,7 @@ export default function AboutPage() {
   const fetchAbout = async () => {
     try {
       const res = await fetch('/api/about', {
-        cache: 'no-store', // Always fetch fresh data
+        cache: 'no-store', // Sempre busca dados frescos
       })
       const data = await res.json()
       console.log('📥 Fetched about data:', data)
