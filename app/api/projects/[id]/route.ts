@@ -3,8 +3,9 @@ import { supabase } from '@/lib/supabase'
 import { Project } from '@/lib/types'
 
 // PUT update project
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const body: Project = await request.json()
 
     const { data, error } = await supabase
@@ -16,7 +17,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         image_url: body.image_url,
         video_url: body.video_url,
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
 
     if (error) throw error
@@ -27,9 +28,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE project
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { error } = await supabase.from('projects').delete().eq('id', params.id)
+    const { id } = await params
+    const { error } = await supabase.from('projects').delete().eq('id', id)
 
     if (error) throw error
     return NextResponse.json({ success: true })
