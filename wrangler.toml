@@ -1,0 +1,33 @@
+name = "sharon-portfolio"
+type = "javascript"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2026-05-20"
+compatibility_flags = ["nodejs_compat"]
+
+main = ".open-next/worker.js"
+
+[env.production]
+route = "sharonmosheattias.com/*"
+zone_id = ""
+
+[build]
+command = "opennextjs-cloudflare build"
+cwd = "./"
+watch_paths = ["app/**", "lib/**", "components/**", "public/**", "next.config.ts"]
+
+[[assets]]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[services]]
+binding = "WORKER_SELF_REFERENCE"
+service = "sharon-portfolio"
+
+[images]
+binding = "IMAGES"
+
+[observability]
+enabled = true
