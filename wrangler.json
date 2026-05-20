@@ -1,6 +1,0 @@
-{
-  "pages_build_output_dir": ".open-next",
-  "build": {
-    "command": "opennextjs-cloudflare build"
-  }
-}
