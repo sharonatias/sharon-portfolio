@@ -37,6 +37,8 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               autoPlay
               muted
               loop
+              playsInline
+              poster={video.image_url}
               className="w-full h-full object-cover"
             >
               <source src={video.video_url} type="video/mp4" />
