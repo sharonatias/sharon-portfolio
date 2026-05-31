@@ -165,10 +165,14 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           <label className="block text-sm font-medium mb-2 text-black">Hero Image *</label>
           <CldUploadWidget
             uploadPreset="sharon_portfolio"
-            onSuccess={(result: any) => handleHeroUpload(result)}
+            onSuccess={(result: any) => {
+              console.log('Upload success:', result)
+              handleHeroUpload(result)
+            }}
             options={{
-              resourceType: 'auto',
+              resourceType: 'image',
               maxFileSize: 100000000,
+              maxFiles: 1,
             }}
           >
             {({ open }) => (
