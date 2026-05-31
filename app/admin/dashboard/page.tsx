@@ -10,7 +10,9 @@ import HeroVideoList from '@/components/HeroVideoList'
 import BrandDesignForm from '@/components/BrandDesignForm'
 import AboutForm from '@/components/AboutForm'
 import AppCaseForm from '@/components/AppCaseForm'
+import CaseStudyForm from '@/components/CaseStudyForm'
 import ManageOrderBrandDigital from '@/components/ManageOrderBrandDigital'
+import Link from 'next/link'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -19,16 +21,19 @@ export default function AdminDashboard() {
   const [brandDesigns, setBrandDesigns] = useState<BrandDesign[]>([])
   const [about, setAbout] = useState<About | null>(null)
   const [appCases, setAppCases] = useState<AppCase[]>([])
+  const [videoCaseStudies, setVideoCaseStudies] = useState<AppCase[]>([])
   const [showForm, setShowForm] = useState(false)
   const [showHeroForm, setShowHeroForm] = useState(false)
   const [showBrandForm, setShowBrandForm] = useState(false)
   const [showAboutForm, setShowAboutForm] = useState(false)
   const [showAppCaseForm, setShowAppCaseForm] = useState(false)
+  const [showVideoCaseForm, setShowVideoCaseForm] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [editingHeroVideo, setEditingHeroVideo] = useState<HeroVideo | null>(null)
   const [editingBrandDesign, setEditingBrandDesign] = useState<BrandDesign | null>(null)
   const [editingAppCase, setEditingAppCase] = useState<AppCase | null>(null)
-  const [activeTab, setActiveTab] = useState<'projects' | 'hero' | 'brand' | 'about' | 'app' | 'manage-order'>('projects')
+  const [editingVideoCase, setEditingVideoCase] = useState<AppCase | null>(null)
+  const [activeTab, setActiveTab] = useState<'projects' | 'hero' | 'brand' | 'about' | 'app' | 'manage-order' | 'video-case-studies'>('projects')
 
   useEffect(() => {
     const isAdmin = sessionStorage.getItem('isAdmin')
@@ -40,6 +45,7 @@ export default function AdminDashboard() {
     fetchBrandDesigns()
     fetchAbout()
     fetchAppCases()
+    fetchVideoCaseStudies()
   }, [])
 
   const fetchProjects = async () => {
@@ -100,6 +106,18 @@ export default function AdminDashboard() {
       setAppCases(data)
     } catch (error) {
       console.error('Failed to fetch app cases:', error)
+    }
+  }
+
+  const fetchVideoCaseStudies = async () => {
+    try {
+      const res = await fetch('/api/case-studies', {
+        cache: 'no-store', // Always fetch fresh data
+      })
+      const data = await res.json()
+      setVideoCaseStudies(data)
+    } catch (error) {
+      console.error('Failed to fetch video case studies:', error)
     }
   }
 
@@ -182,6 +200,16 @@ export default function AdminDashboard() {
             }`}
           >
             Manage Order
+          </button>
+          <button
+            onClick={() => setActiveTab('video-case-studies')}
+            className={`px-4 py-2 font-medium transition ${
+              activeTab === 'video-case-studies'
+                ? 'border-b-2 border-black text-black'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Video Case Studies
           </button>
         </div>
 
@@ -510,6 +538,100 @@ export default function AdminDashboard() {
         {/* Manage Order Tab */}
         {activeTab === 'manage-order' && (
           <ManageOrderBrandDigital />
+        )}
+
+        {/* Video Case Studies Tab */}
+        {activeTab === 'video-case-studies' && (
+          <>
+            <div className="mb-6">
+              <button
+                onClick={() => {
+                  setShowVideoCaseForm(!showVideoCaseForm)
+                  setEditingVideoCase(null)
+                }}
+                className="bg-black text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800 transition"
+              >
+                {showVideoCaseForm ? 'Cancel' : '+ Create New Video Case Study'}
+              </button>
+            </div>
+
+            {showVideoCaseForm && (
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold mb-6">{editingVideoCase ? 'Edit' : 'Create'} Video Case Study</h3>
+                <CaseStudyForm
+                  caseStudy={editingVideoCase}
+                  onSave={(caseStudy) => {
+                    fetchVideoCaseStudies()
+                    setShowVideoCaseForm(false)
+                    setEditingVideoCase(null)
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Video Cases List */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {videoCaseStudies.map((videoCase) => (
+                <div key={videoCase.id} className="bg-white rounded-lg overflow-hidden shadow-lg">
+                  {videoCase.hero_image && (
+                    <div className="h-48 bg-gray-100 flex items-center justify-center p-4">
+                      <img src={videoCase.hero_image} alt={videoCase.title} className="h-40 w-auto object-contain" />
+                    </div>
+                  )}
+
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold mb-2">{videoCase.title}</h3>
+                    <p className="text-gray-600 text-sm mb-1">{videoCase.subtitle}</p>
+                    <p className="text-gray-500 text-xs mb-3">{videoCase.year} • {videoCase.role}</p>
+
+                    <div className="mb-4">
+                      <span className="inline-block bg-purple-200 text-purple-800 px-3 py-1 rounded text-xs font-medium">
+                        Video Case Study
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setEditingVideoCase(videoCase)
+                          setShowVideoCaseForm(true)
+                        }}
+                        className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (!confirm('Are you sure?')) return
+                          try {
+                            await fetch(`/api/case-studies/${videoCase.id}`, { method: 'DELETE' })
+                            fetchVideoCaseStudies()
+                          } catch (error) {
+                            console.error('Failed to delete:', error)
+                          }
+                        }}
+                        className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700 transition text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                      <a
+                        href={`/case-studies/${videoCase.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition text-sm font-medium text-center"
+                      >
+                        View
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {videoCaseStudies.length === 0 && !showVideoCaseForm && (
+              <div className="text-center text-gray-500 py-8">No video case studies yet</div>
+            )}
+          </>
         )}
       </div>
     </div>
