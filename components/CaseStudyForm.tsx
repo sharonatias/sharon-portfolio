@@ -170,9 +170,8 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
               handleHeroUpload(result)
             }}
             options={{
-              resourceType: 'image',
+              resourceType: 'auto',
               maxFileSize: 100000000,
-              maxFiles: 1,
             }}
           >
             {({ open }) => (
