@@ -110,7 +110,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       )}
 
       {/* HERO SECTION */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-96 lg:h-[500px] flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]">
         {/* Background Image with Gradient Overlay */}
         {caseStudy.hero_image && (
           <>
@@ -120,23 +120,28 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
                 backgroundImage: `url(${caseStudy.hero_image})`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/40" />
           </>
         )}
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-6 w-full">
+        <div className="relative z-10 w-full px-6 lg:px-12">
           <div className="max-w-2xl">
             {/* Project Label */}
-            <div className="mb-6 text-sm tracking-widest uppercase text-gray-400">
-              CASE STUDY / {caseStudy.format || 'Project'}
+            <div className="mb-4 text-xs tracking-widest uppercase text-gray-400">
+              {caseStudy.format || 'Short Film'}
             </div>
 
             {/* Title */}
-            <h1 className="text-6xl lg:text-7xl font-light mb-6 leading-tight">{caseStudy.title}</h1>
+            <h1 className="text-4xl lg:text-5xl font-light mb-4 leading-tight">{caseStudy.title}</h1>
+
+            {/* Subtitle */}
+            {caseStudy.subtitle && (
+              <p className="text-lg text-gray-400 mb-4">{caseStudy.subtitle}</p>
+            )}
 
             {/* Description */}
-            <p className="text-xl text-gray-300 leading-relaxed mb-8 max-w-xl">{caseStudy.hero_description}</p>
+            <p className="text-sm text-gray-300 leading-relaxed mb-6 max-w-lg">{caseStudy.hero_description}</p>
 
             {/* Watch Film CTA */}
             {caseStudy.watch_film_link && (
@@ -144,10 +149,10 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
                 href={caseStudy.watch_film_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-medium hover:bg-gray-200 transition rounded-lg"
+                className="inline-flex items-center gap-2 text-white hover:text-gray-300 transition text-sm tracking-widest uppercase"
               >
                 Watch Film
-                <span className="text-xl">→</span>
+                <span className="text-lg">→</span>
               </a>
             )}
           </div>
