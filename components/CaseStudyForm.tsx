@@ -29,10 +29,26 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   }
 
   const handleHeroUpload = (result: any) => {
+    console.log('Upload successful:', result.info.secure_url)
     setFormData((prev) => ({
       ...prev,
       hero_image: result.info.secure_url,
     }))
+  }
+
+  const getSignature = async () => {
+    try {
+      const res = await fetch('/api/cloudinary-sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resourceType: 'auto' }),
+      })
+      const data = await res.json()
+      return data
+    } catch (error) {
+      console.error('Failed to get signature:', error)
+      return null
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -164,7 +180,6 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         <div>
           <label className="block text-sm font-medium mb-2 text-black">Hero Image *</label>
           <CldUploadWidget
-            uploadPreset="sharon_portfolio"
             onSuccess={(result: any) => {
               console.log('Upload success:', result)
               handleHeroUpload(result)
@@ -172,6 +187,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
             options={{
               resourceType: 'auto',
               maxFileSize: 100000000,
+              uploadSignature: getSignature,
             }}
           >
             {({ open }) => (
