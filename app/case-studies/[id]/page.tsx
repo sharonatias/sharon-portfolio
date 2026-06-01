@@ -231,7 +231,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
                 <div
                   key={idx}
                   className={`overflow-hidden rounded-lg bg-gray-900 ${idx === 0 ? 'md:col-span-2' : ''}`}
-                  style={{ aspectRatio: idx === 0 ? '16/9' : '1/1' }}
+                  style={{ aspectRatio: idx === 0 ? '16/9' : '1/1', marginLeft: idx === 1 ? '8px' : '0' }}
                 >
                   <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
                 </div>
