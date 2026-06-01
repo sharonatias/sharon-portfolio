@@ -103,7 +103,7 @@ export interface ProcessBlock {
 export interface AppCase {
   id?: string
   title: string
-  subtitle: string
+  subtitle?: string
   year?: string
   role?: string
   client?: string
@@ -112,6 +112,7 @@ export interface AppCase {
   hero_image: string
   hero_description: string
   watch_film_link?: string
+  video_file?: string
 
   problem?: CaseStudySection
   insight?: CaseStudySection

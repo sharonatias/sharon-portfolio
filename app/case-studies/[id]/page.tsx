@@ -110,7 +110,8 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       )}
 
       {/* HERO SECTION */}
-      <section className="relative h-96 lg:h-[500px] flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]">
+      <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px', backgroundColor: 'red' }}>
+        <div className="absolute top-0 left-0 text-white text-2xl p-4">TEST: Height should be 800px now</div>
         {/* Background Image with Gradient Overlay */}
         {caseStudy.hero_image && (
           <>
@@ -120,12 +121,12 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
                 backgroundImage: `url(${caseStudy.hero_image})`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
           </>
         )}
 
         {/* Hero Content */}
-        <div className="relative z-10 w-full px-6 lg:px-12">
+        <div className="relative z-10 w-full px-6 lg:px-20">
           <div className="max-w-2xl">
             {/* Project Label */}
             <div className="mb-4 text-xs tracking-widest uppercase text-gray-400">
@@ -133,22 +134,22 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl lg:text-5xl font-light mb-4 leading-tight">{caseStudy.title}</h1>
+            <h1 className="text-5xl lg:text-6xl font-light mb-4 leading-tight">{caseStudy.title}</h1>
 
             {/* Subtitle */}
             {caseStudy.subtitle && (
-              <p className="text-lg text-gray-400 mb-4">{caseStudy.subtitle}</p>
+              <p className="text-lg text-gray-300 mb-4">{caseStudy.subtitle}</p>
             )}
 
             {/* Description */}
-            <p className="text-sm text-gray-300 leading-relaxed mb-6 max-w-lg">{caseStudy.hero_description}</p>
+            <p className="text-base text-gray-300 leading-relaxed mb-8 max-w-lg">{caseStudy.hero_description}</p>
 
             {/* Watch Film CTA */}
-            {caseStudy.watch_film_link && (
+            {(caseStudy.watch_film_link || caseStudy.video_file) && (
               <a
-                href={caseStudy.watch_film_link}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={caseStudy.watch_film_link || '#'}
+                {...(caseStudy.watch_film_link ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                onClick={caseStudy.video_file && !caseStudy.watch_film_link ? (e) => { e.preventDefault(); } : undefined}
                 className="inline-flex items-center gap-2 text-white hover:text-gray-300 transition text-sm tracking-widest uppercase"
               >
                 Watch Film
@@ -157,6 +158,19 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             )}
           </div>
         </div>
+
+        {/* Play Button (if video URL or file exists) */}
+        {(caseStudy.watch_film_link || caseStudy.video_file) && (
+          <a
+            href={caseStudy.watch_film_link || '#'}
+            {...(caseStudy.watch_film_link ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            className="absolute inset-0 flex items-center justify-center group z-20 hover:bg-black/20 transition"
+          >
+            <div className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center group-hover:scale-110 transition">
+              <span className="text-white text-xl ml-1">▶</span>
+            </div>
+          </a>
+        )}
       </section>
 
       {/* PROJECT META GRID */}
@@ -211,7 +225,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* IMAGE GALLERY */}
       {caseStudy.gallery_images && caseStudy.gallery_images.length > 0 && (
-        <section className="py-20 px-6 border-b border-gray-800">
+        <section className="py-12 px-6 border-b border-gray-800">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {caseStudy.gallery_images.map((img, idx) => (
@@ -230,9 +244,9 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* PROCESS SECTION */}
       {caseStudy.process_blocks && caseStudy.process_blocks.length > 0 && (
-        <section className="py-20 px-6 border-b border-gray-800">
+        <section className="py-12 px-6 border-b border-gray-800">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-light mb-16" style={{ color: accentColor }}>
+            <h2 className="text-4xl font-light mb-12" style={{ color: accentColor }}>
               PROCESS
             </h2>
             <div className="space-y-12">
@@ -257,9 +271,9 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* MY ROLE SECTION */}
       {caseStudy.my_role_title && (
-        <section className="py-20 px-6 border-b border-gray-800">
+        <section className="py-12 px-6 border-b border-gray-800">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-light mb-8" style={{ color: accentColor }}>
+            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
               MY ROLE
             </h2>
             <h3 className="text-2xl font-light mb-6 text-white">{caseStudy.my_role_title}</h3>
@@ -270,9 +284,9 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* OUTCOME SECTION */}
       {caseStudy.outcome && (
-        <section className="py-20 px-6 bg-gray-950 border-b border-gray-800">
+        <section className="py-12 px-6 bg-gray-950 border-b border-gray-800">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-light mb-8" style={{ color: accentColor }}>
+            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
               OUTCOME
             </h2>
             {caseStudy.outcome.title && <h3 className="text-2xl font-light mb-6 text-white">{caseStudy.outcome.title}</h3>}
@@ -317,31 +331,29 @@ function CaseSection({
   const numberFormatted = String(number).padStart(2, '0')
 
   return (
-    <section className="py-20 px-6 border-b border-gray-800">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Text */}
-          <div>
-            <div className="mb-4 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
-            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
-              {label}
-            </h2>
-            {section.title && <h3 className="text-2xl font-light mb-6 text-white">{section.title}</h3>}
-            {section.description && <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">{section.description}</p>}
-          </div>
-
-          {/* Images */}
-          {section.images && section.images.length > 0 && (
-            <div className="space-y-6">
-              {section.images.map((img: string, idx: number) => (
-                <div key={idx} className="aspect-video overflow-hidden rounded-lg bg-gray-900">
-                  <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
-                </div>
-              ))}
-            </div>
-          )}
+    <section className="py-12 border-b border-gray-800">
+      {/* Text Content */}
+      <div className="px-6 mb-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-4 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
+          <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
+            {label}
+          </h2>
+          {section.title && <h3 className="text-2xl font-light mb-6 text-white">{section.title}</h3>}
+          {section.description && <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap max-w-2xl">{section.description}</p>}
         </div>
       </div>
+
+      {/* Full-width Images */}
+      {section.images && section.images.length > 0 && (
+        <div className="space-y-6">
+          {section.images.map((img: string, idx: number) => (
+            <div key={idx} className="aspect-video overflow-hidden bg-gray-900 w-screen -mx-[calc((100vw-100%)/2)]">
+              <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   )
 }
