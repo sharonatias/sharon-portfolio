@@ -346,7 +346,7 @@ function CaseSection({
 
             {/* Images */}
             {section.images && section.images.length > 0 && (
-              <div className={`-mx-6 -my-12 pl-6 flex flex-col ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-1'}`} style={{ backgroundColor: section.images.length > 1 ? '#000000' : 'transparent' }}>
+              <div className={`-mx-6 -my-6 pl-6 flex flex-col ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-1'}`} style={{ backgroundColor: section.images.length > 1 ? '#000000' : 'transparent', maxHeight: section.images.length === 1 ? 'none' : '500px' }}>
                 {section.images.map((img: string, idx: number) => (
                   <div key={idx} className={`overflow-hidden bg-gray-900 ${section.images.length === 1 ? 'flex-1' : 'aspect-square h-full'}`}>
                     <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
