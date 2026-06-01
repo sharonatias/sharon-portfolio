@@ -330,29 +330,31 @@ function CaseSection({
   const numberFormatted = String(number).padStart(2, '0')
 
   return (
-    <section className="py-12 border-b border-gray-800">
-      {/* Text Content */}
-      <div className="px-6 mb-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-4 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
-          <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
-            {label}
-          </h2>
-          {section.title && <h3 className="text-2xl font-light mb-6 text-white">{section.title}</h3>}
-          {section.description && <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap max-w-2xl">{section.description}</p>}
+    <section className="py-12 px-6 border-b border-gray-800">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Text Content */}
+          <div>
+            <div className="mb-4 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
+            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
+              {label}
+            </h2>
+            {section.title && <h3 className="text-2xl font-light mb-6 text-white">{section.title}</h3>}
+            {section.description && <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">{section.description}</p>}
+          </div>
+
+          {/* Images */}
+          {section.images && section.images.length > 0 && (
+            <div className="space-y-6">
+              {section.images.map((img: string, idx: number) => (
+                <div key={idx} className="h-[350px] overflow-hidden bg-gray-900 rounded-lg">
+                  <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Full-width Images */}
-      {section.images && section.images.length > 0 && (
-        <div className="space-y-6">
-          {section.images.map((img: string, idx: number) => (
-            <div key={idx} className="h-[350px] overflow-hidden bg-gray-900 w-full max-w-[550px] mx-auto">
-              <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
-            </div>
-          ))}
-        </div>
-      )}
     </section>
   )
 }
