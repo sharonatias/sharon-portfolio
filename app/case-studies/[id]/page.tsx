@@ -182,7 +182,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
             {/* Hero Image */}
             {caseStudy.hero_image && (
-              <div className="aspect-square overflow-hidden rounded-lg bg-gray-900 w-full max-w-lg mx-auto lg:mx-0">
+              <div className="w-full max-w-md overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '1/1' }}>
                 <img
                   src={caseStudy.hero_image}
                   alt={caseStudy.title}
