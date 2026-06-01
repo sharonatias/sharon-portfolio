@@ -8,6 +8,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [brandDesigns, setBrandDesigns] = useState<BrandDesign[]>([])
   const [appCases, setAppCases] = useState<AppCase[]>([])
+  const [videoCaseStudies, setVideoCaseStudies] = useState<AppCase[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>('films_video')
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
@@ -16,6 +17,7 @@ export default function ProjectsPage() {
     fetchProjects()
     fetchBrandDesigns()
     fetchAppCases()
+    fetchVideoCaseStudies()
   }, [])
 
   const fetchProjects = async () => {
@@ -48,6 +50,16 @@ export default function ProjectsPage() {
     }
   }
 
+  const fetchVideoCaseStudies = async () => {
+    try {
+      const res = await fetch('/api/case-studies')
+      const data = await res.json()
+      setVideoCaseStudies(data)
+    } catch (error) {
+      console.error('Failed to fetch video case studies:', error)
+    }
+  }
+
   const filteredProjects = selectedCategory
     ? projects.filter((p) => p.category === selectedCategory)
     : projects
@@ -60,6 +72,10 @@ export default function ProjectsPage() {
     ? appCases.filter((c) => c.category === 'brand_digital_design')
     : []
 
+  const filteredVideoCases = selectedCategory === 'films_video' || !selectedCategory
+    ? videoCaseStudies.filter((c) => c.category === 'films_video' || !c.category)
+    : []
+
   // Combine all items and sort by display_order for Brand & Digital Design category
   const allItems = selectedCategory === 'brand_digital_design'
     ? [
@@ -67,6 +83,11 @@ export default function ProjectsPage() {
         ...filteredBrandDesigns.map(b => ({ ...b, itemType: 'brand' as const })),
         ...filteredAppCases.map(c => ({ ...c, itemType: 'appcase' as const })),
       ].sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999))
+    : selectedCategory === 'films_video'
+    ? [
+        ...filteredProjects.map(p => ({ ...p, itemType: 'project' as const })),
+        ...filteredVideoCases.map(c => ({ ...c, itemType: 'videocase' as const })),
+      ]
     : [
         ...filteredProjects.map(p => ({ ...p, itemType: 'project' as const })),
         ...filteredBrandDesigns.map(b => ({ ...b, itemType: 'brand' as const })),
@@ -370,6 +391,36 @@ export default function ProjectsPage() {
                     </div>
                   </div>
                 </Link>
+              )
+            }
+
+            // Render video case study
+            if (item.itemType === 'videocase') {
+              const videoCase = item as typeof item & { itemType: 'videocase' }
+              return (
+                <div
+                  key={`videocase-${videoCase.id}`}
+                  className="group cursor-pointer"
+                >
+                  <div className="relative overflow-hidden mb-4 bg-black aspect-square">
+                    {videoCase.hero_image ? (
+                      <>
+                        <img
+                          src={videoCase.hero_image}
+                          alt={videoCase.title}
+                          className="w-full h-full object-cover opacity-10 group-hover:opacity-40 group-hover:scale-110 transition duration-300"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <h3 className="text-base font-bold text-white text-center opacity-0 group-hover:opacity-100 transition duration-300 px-6">
+                            {videoCase.title}
+                          </h3>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-600">No image</div>
+                    )}
+                  </div>
+                </div>
               )
             }
           })}
