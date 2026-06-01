@@ -1,16 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CldUploadWidget } from 'next-cloudinary'
-import { AppCase, CATEGORIES } from '@/lib/types'
+import { AppCase, CaseStudySection, CATEGORIES } from '@/lib/types'
 
 interface CaseStudyFormProps {
   caseStudy?: AppCase | null
   onSave: (caseStudy: AppCase) => void
 }
 
+const emptySection: CaseStudySection = {
+  title: '',
+  description: '',
+  images: [],
+  accentColor: undefined,
+}
+
 export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps) {
-  const [formData, setFormData] = useState<Partial<AppCase>>(
+  const [formData, setFormData] = useState<AppCase>(
     caseStudy || {
       title: '',
       subtitle: '',
@@ -20,6 +27,12 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       category: 'films_video',
       hero_image: '',
       hero_description: '',
+      problem: { ...emptySection },
+      insight: { ...emptySection },
+      approach: { ...emptySection },
+      flow: { ...emptySection },
+      interaction: { ...emptySection },
+      outcome: { ...emptySection },
       brand_color: '#000000',
     }
   )
@@ -30,11 +43,120 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const handleSectionChange = (sectionName: string, field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [sectionName]: {
+        ...(prev as any)[sectionName],
+        [field]: value,
+      },
+    }))
+  }
+
+  const handleUploadSuccess = (result: any, sectionName: string) => {
+    const url = result.info.secure_url
+    handleSectionChange(sectionName, 'images', [
+      ...((formData as any)[sectionName]?.images || []),
+      url,
+    ])
+  }
+
+  const removeImage = (sectionName: string, index: number) => {
+    handleSectionChange(
+      sectionName,
+      'images',
+      ((formData as any)[sectionName]?.images || []).filter((_: string, i: number) => i !== index)
+    )
+  }
+
   const handleHeroUpload = (result: any) => {
     setFormData((prev) => ({
       ...prev,
       hero_image: result.info.secure_url,
     }))
+  }
+
+  const renderSectionForm = (sectionName: string, sectionLabel: string) => {
+    const section = (formData as any)[sectionName]
+
+    return (
+      <div key={sectionName} className="bg-gray-100 rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-bold mb-4 text-black">{sectionLabel}</h3>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Title</label>
+          <input
+            type="text"
+            value={section.title}
+            onChange={(e) => handleSectionChange(sectionName, 'title', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Section title"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Description</label>
+          <textarea
+            value={section.description}
+            onChange={(e) => handleSectionChange(sectionName, 'description', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black resize-none"
+            rows={4}
+            placeholder="Section description"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Accent Color (Optional)</label>
+          <input
+            type="color"
+            value={section.accentColor || '#000000'}
+            onChange={(e) => handleSectionChange(sectionName, 'accentColor', e.target.value)}
+            className="w-20 h-10 rounded"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Images</label>
+          <CldUploadWidget
+            uploadPreset="sharon_portfolio"
+            onSuccess={(result: any) => handleUploadSuccess(result, sectionName)}
+            options={{
+              resourceType: 'auto',
+              maxFileSize: 100000000,
+            }}
+          >
+            {({ open }) => (
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  + Add Image
+                </button>
+
+                {section.images && section.images.length > 0 && (
+                  <div className="grid grid-cols-2 gap-4">
+                    {section.images.map((img: string, index: number) => (
+                      <div key={index} className="relative group">
+                        <img src={img} alt={`Image ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(sectionName, index)}
+                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-sm"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </CldUploadWidget>
+        </div>
+      </div>
+    )
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -228,6 +350,14 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           </CldUploadWidget>
         </div>
       </div>
+
+      {/* Sections */}
+      {renderSectionForm('problem', 'THE BRIEF')}
+      {renderSectionForm('insight', 'THE CHALLENGE')}
+      {renderSectionForm('approach', 'CREATIVE CONCEPT')}
+      {renderSectionForm('flow', 'PROCESS')}
+      {renderSectionForm('interaction', 'VISUAL LANGUAGE')}
+      {renderSectionForm('outcome', 'IMPACT')}
 
       <button
         type="submit"
