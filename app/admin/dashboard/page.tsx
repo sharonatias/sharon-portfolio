@@ -115,9 +115,16 @@ export default function AdminDashboard() {
         cache: 'no-store', // Always fetch fresh data
       })
       const data = await res.json()
-      setVideoCaseStudies(data)
+      console.log('📹 Fetched video case studies:', data)
+      if (Array.isArray(data)) {
+        setVideoCaseStudies(data)
+      } else {
+        console.error('❌ Video case studies data is not an array:', data)
+        setVideoCaseStudies([])
+      }
     } catch (error) {
       console.error('Failed to fetch video case studies:', error)
+      setVideoCaseStudies([])
     }
   }
 
@@ -571,18 +578,18 @@ export default function AdminDashboard() {
 
             {/* Video Cases List */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {videoCaseStudies.map((videoCase) => (
+              {videoCaseStudies.filter(v => v && v.id).map((videoCase) => (
                 <div key={videoCase.id} className="bg-white rounded-lg overflow-hidden shadow-lg">
                   {videoCase.hero_image && (
                     <div className="h-48 bg-gray-100 flex items-center justify-center p-4">
-                      <img src={videoCase.hero_image} alt={videoCase.title} className="h-40 w-auto object-contain" />
+                      <img src={videoCase.hero_image} alt={videoCase.title || 'Video Case'} className="h-40 w-auto object-contain" />
                     </div>
                   )}
 
                   <div className="p-4">
-                    <h3 className="text-lg font-bold mb-2">{videoCase.title}</h3>
-                    <p className="text-gray-600 text-sm mb-1">{videoCase.subtitle}</p>
-                    <p className="text-gray-500 text-xs mb-3">{videoCase.year} • {videoCase.role}</p>
+                    <h3 className="text-lg font-bold mb-2">{videoCase.title || 'Untitled'}</h3>
+                    <p className="text-gray-600 text-sm mb-1">{videoCase.subtitle || ''}</p>
+                    <p className="text-gray-500 text-xs mb-3">{videoCase.year || 'N/A'} • {videoCase.role || 'N/A'}</p>
 
                     <div className="mb-4">
                       <span className="inline-block bg-purple-200 text-purple-800 px-3 py-1 rounded text-xs font-medium">
