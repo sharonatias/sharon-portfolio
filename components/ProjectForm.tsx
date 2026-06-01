@@ -10,24 +10,37 @@ interface ProjectFormProps {
 }
 
 export default function ProjectForm({ project, onSave }: ProjectFormProps) {
-  const [formData, setFormData] = useState<Project>(
-    project || {
-      title: '',
-      description: '',
-      category: 'films_video',
-      image_url: '',
-      video_url: '',
-      images: [],
-      textStyles: {
-        description: {
-          fontSize: 16,
-          fontFamily: 'mono',
-          alignment: 'center',
-          bold: false,
-          lineHeight: 1.6,
-        },
+  const defaultProject: Project = {
+    title: '',
+    description: '',
+    category: 'films_video',
+    image_url: '',
+    video_url: '',
+    images: [],
+    textStyles: {
+      description: {
+        fontSize: 16,
+        fontFamily: 'mono',
+        alignment: 'center',
+        bold: false,
+        lineHeight: 1.6,
       },
-    }
+    },
+  }
+
+  const [formData, setFormData] = useState<Project>(
+    project ? {
+      ...defaultProject,
+      ...project,
+      // Ensure all required fields exist
+      title: project.title || '',
+      description: project.description || '',
+      category: project.category || 'films_video',
+      image_url: project.image_url || '',
+      video_url: project.video_url || '',
+      images: project.images || [],
+      textStyles: project.textStyles || defaultProject.textStyles,
+    } : defaultProject
   )
   const [uploading, setUploading] = useState(false)
   const [videoUploadType, setVideoUploadType] = useState<'file' | 'youtube'>('file')

@@ -17,23 +17,43 @@ const emptySection: CaseStudySection = {
 }
 
 export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
+  const defaultCase: AppCase = {
+    title: '',
+    subtitle: '',
+    year: new Date().getFullYear().toString(),
+    role: '',
+    hero_image: '',
+    hero_description: '',
+    problem: { ...emptySection },
+    insight: { ...emptySection },
+    approach: { ...emptySection },
+    flow: { ...emptySection },
+    interaction: { ...emptySection },
+    outcome: { ...emptySection },
+    brand_color: '#000000',
+    brand_design_id: undefined,
+  }
+
   const [formData, setFormData] = useState<AppCase>(
-    appCase || {
-      title: '',
-      subtitle: '',
-      year: new Date().getFullYear().toString(),
-      role: '',
-      hero_image: '',
-      hero_description: '',
-      problem: { ...emptySection },
-      insight: { ...emptySection },
-      approach: { ...emptySection },
-      flow: { ...emptySection },
-      interaction: { ...emptySection },
-      outcome: { ...emptySection },
-      brand_color: '#000000',
-      brand_design_id: undefined,
-    }
+    appCase ? {
+      ...defaultCase,
+      ...appCase,
+      // Ensure all required fields exist
+      title: appCase.title || '',
+      subtitle: appCase.subtitle || '',
+      year: appCase.year || new Date().getFullYear().toString(),
+      role: appCase.role || '',
+      hero_image: appCase.hero_image || '',
+      hero_description: appCase.hero_description || '',
+      problem: appCase.problem || { ...emptySection },
+      insight: appCase.insight || { ...emptySection },
+      approach: appCase.approach || { ...emptySection },
+      flow: appCase.flow || { ...emptySection },
+      interaction: appCase.interaction || { ...emptySection },
+      outcome: appCase.outcome || { ...emptySection },
+      brand_color: appCase.brand_color || '#000000',
+      brand_design_id: appCase.brand_design_id,
+    } : defaultCase
   )
   const [uploading, setUploading] = useState(false)
   const [brandDesigns, setBrandDesigns] = useState<BrandDesign[]>([])

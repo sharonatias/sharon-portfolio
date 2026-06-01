@@ -18,7 +18,25 @@ const emptySection: CaseStudySection = {
 
 export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps) {
   const [formData, setFormData] = useState<AppCase>(
-    caseStudy || {
+    caseStudy ? {
+      ...caseStudy,
+      // Ensure all required fields exist
+      title: caseStudy.title || '',
+      subtitle: caseStudy.subtitle || '',
+      year: caseStudy.year || new Date().getFullYear().toString(),
+      role: caseStudy.role || '',
+      client: (caseStudy as any).client || '',
+      category: caseStudy.category || 'films_video',
+      hero_image: caseStudy.hero_image || '',
+      hero_description: caseStudy.hero_description || '',
+      problem: caseStudy.problem || { ...emptySection },
+      insight: caseStudy.insight || { ...emptySection },
+      approach: caseStudy.approach || { ...emptySection },
+      flow: caseStudy.flow || { ...emptySection },
+      interaction: caseStudy.interaction || { ...emptySection },
+      outcome: caseStudy.outcome || { ...emptySection },
+      brand_color: caseStudy.brand_color || '#000000',
+    } : {
       title: '',
       subtitle: '',
       year: new Date().getFullYear().toString(),
