@@ -398,29 +398,28 @@ export default function ProjectsPage() {
             if (item.itemType === 'videocase') {
               const videoCase = item as typeof item & { itemType: 'videocase' }
               return (
-                <div
-                  key={`videocase-${videoCase.id}`}
-                  className="group cursor-pointer"
-                >
-                  <div className="relative overflow-hidden mb-4 bg-black aspect-square">
-                    {videoCase.hero_image ? (
-                      <>
-                        <img
-                          src={videoCase.hero_image}
-                          alt={videoCase.title}
-                          className="w-full h-full object-cover opacity-10 group-hover:opacity-40 group-hover:scale-110 transition duration-300"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <h3 className="text-base font-bold text-white text-center opacity-0 group-hover:opacity-100 transition duration-300 px-6">
-                            {videoCase.title}
-                          </h3>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-600">No image</div>
-                    )}
+                <Link key={`videocase-${videoCase.id}`} href={`/case-studies/${videoCase.id}`}>
+                  <div className="group cursor-pointer">
+                    <div className="relative overflow-hidden mb-4 bg-black aspect-square">
+                      {videoCase.hero_image ? (
+                        <>
+                          <img
+                            src={videoCase.hero_image}
+                            alt={videoCase.title}
+                            className="w-full h-full object-cover opacity-10 group-hover:opacity-40 group-hover:scale-110 transition duration-300"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <h3 className="text-base font-bold text-white text-center opacity-0 group-hover:opacity-100 transition duration-300 px-6">
+                              {videoCase.title}
+                            </h3>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-600">No image</div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </Link>
               )
             }
           })}
