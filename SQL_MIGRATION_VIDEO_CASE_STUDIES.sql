@@ -9,21 +9,19 @@ ADD COLUMN IF NOT EXISTS hero_image TEXT,
 ADD COLUMN IF NOT EXISTS brand_color TEXT DEFAULT '#000000',
 ADD COLUMN IF NOT EXISTS client TEXT,
 ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'films_video',
+ADD COLUMN IF NOT EXISTS duration TEXT,
+ADD COLUMN IF NOT EXISTS format TEXT,
+ADD COLUMN IF NOT EXISTS watch_film_link TEXT,
+ADD COLUMN IF NOT EXISTS gallery_images JSONB DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS process_blocks JSONB DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS my_role_title TEXT,
+ADD COLUMN IF NOT EXISTS my_role_description TEXT,
 ADD COLUMN IF NOT EXISTS problem JSONB,
 ADD COLUMN IF NOT EXISTS insight JSONB,
 ADD COLUMN IF NOT EXISTS approach JSONB,
 ADD COLUMN IF NOT EXISTS flow JSONB,
 ADD COLUMN IF NOT EXISTS interaction JSONB,
 ADD COLUMN IF NOT EXISTS outcome JSONB;
-
--- Drop the old columns that we don't need anymore if they exist
-ALTER TABLE video_case_studies
-DROP COLUMN IF EXISTS duration,
-DROP COLUMN IF EXISTS format,
-DROP COLUMN IF EXISTS hero_image_url,
-DROP COLUMN IF EXISTS hero_video_url,
-DROP COLUMN IF EXISTS watch_film_link,
-DROP COLUMN IF EXISTS description;
 
 -- Ensure RLS is enabled
 ALTER TABLE video_case_studies ENABLE ROW LEVEL SECURITY;

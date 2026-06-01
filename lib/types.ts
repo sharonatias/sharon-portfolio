@@ -93,6 +93,13 @@ export interface CaseStudySection {
   accentColor?: string
 }
 
+export interface ProcessBlock {
+  number: number
+  title: string
+  description: string
+  image?: string
+}
+
 export interface AppCase {
   id?: string
   title: string
@@ -100,8 +107,11 @@ export interface AppCase {
   year?: string
   role?: string
   client?: string
+  duration?: string
+  format?: string
   hero_image: string
   hero_description: string
+  watch_film_link?: string
 
   problem?: CaseStudySection
   insight?: CaseStudySection
@@ -109,6 +119,11 @@ export interface AppCase {
   flow?: CaseStudySection
   interaction?: CaseStudySection
   outcome?: CaseStudySection
+
+  gallery_images?: string[]
+  process_blocks?: ProcessBlock[]
+  my_role_title?: string
+  my_role_description?: string
 
   brand_color?: string
   brand_design_id?: string
