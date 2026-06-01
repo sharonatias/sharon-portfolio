@@ -348,7 +348,7 @@ function CaseSection({
       {section.images && section.images.length > 0 && (
         <div className="space-y-6">
           {section.images.map((img: string, idx: number) => (
-            <div key={idx} className="aspect-video overflow-hidden bg-gray-900 w-screen -mx-[calc((100vw-100%)/2)]">
+            <div key={idx} className="h-[350px] overflow-hidden bg-gray-900 w-screen -mx-[calc((100vw-100%)/2)]">
               <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
             </div>
           ))}
