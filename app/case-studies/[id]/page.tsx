@@ -336,12 +336,12 @@ function CaseSection({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Text Content */}
             <div>
-              <div className="mb-4 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
-              <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
+              <div className="mb-2 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
+              <h2 className="text-4xl font-light mb-4" style={{ color: accentColor }}>
                 {label}
               </h2>
-              {section.title && <h3 className="text-2xl font-light mb-6 text-white">{section.title}</h3>}
-              {section.description && <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">{section.description}</p>}
+              {section.title && <h3 className="text-2xl font-light mb-4 text-white">{section.title}</h3>}
+              {section.description && <p className="text-gray-300 text-lg leading-tight whitespace-pre-wrap">{section.description}</p>}
             </div>
 
             {/* Images */}
