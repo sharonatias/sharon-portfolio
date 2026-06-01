@@ -335,7 +335,7 @@ function CaseSection({
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch">
             {/* Text Content */}
-            <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-12 max-w-sm">
+            <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-6 max-w-sm">
               <div className="mb-1 text-xs tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
               <h2 className="text-3xl font-light mb-3" style={{ color: accentColor }}>
                 {label}
