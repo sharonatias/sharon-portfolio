@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { CldUploadWidget } from 'next-cloudinary'
+import { useState, useRef } from 'react'
 import { AppCase } from '@/lib/types'
 
 interface CaseStudyFormProps {
@@ -36,18 +35,59 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
     }))
   }
 
-  const getSignature = async () => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
+
+  const handleHeroImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingImage(true)
     try {
-      const res = await fetch('/api/cloudinary-sign', {
+      // Get signature from our backend
+      const signRes = await fetch('/api/cloudinary-sign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ resourceType: 'auto' }),
       })
-      const data = await res.json()
-      return data
+      const { signature, timestamp, cloudName } = await signRes.json()
+
+      // Create FormData for upload
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || '')
+      formData.append('signature', signature)
+      formData.append('timestamp', timestamp)
+      formData.append('folder', 'sharon-portfolio')
+
+      // Upload to Cloudinary
+      const uploadRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+
+      if (!uploadRes.ok) {
+        throw new Error(`Upload failed: ${uploadRes.statusText}`)
+      }
+
+      const uploadData = await uploadRes.json()
+      console.log('Upload successful:', uploadData.secure_url)
+
+      setFormData((prev) => ({
+        ...prev,
+        hero_image: uploadData.secure_url,
+      }))
+
+      alert('Image uploaded successfully!')
     } catch (error) {
-      console.error('Failed to get signature:', error)
-      return null
+      console.error('Upload error:', error)
+      alert(`Upload failed: ${error}`)
+    } finally {
+      setUploadingImage(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -179,35 +219,23 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
 
         <div>
           <label className="block text-sm font-medium mb-2 text-black">Hero Image *</label>
-          <CldUploadWidget
-            onSuccess={(result: any) => {
-              console.log('Upload success:', result)
-              handleHeroUpload(result)
-            }}
-            options={{
-              resourceType: 'auto',
-              maxFileSize: 100000000,
-              uploadSignature: getSignature,
-            }}
-          >
-            {({ open }) => (
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => open()}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                  Upload Hero Image
-                </button>
-                {formData.hero_image && (
-                  <div>
-                    <p className="text-sm text-gray-600">Hero image uploaded ✓</p>
-                    <img src={formData.hero_image} alt="Hero" className="w-32 h-32 object-cover rounded mt-2" />
-                  </div>
-                )}
+          <div className="space-y-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleHeroImageSelect}
+              disabled={uploadingImage}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            />
+            {uploadingImage && <p className="text-sm text-gray-600">Uploading...</p>}
+            {formData.hero_image && (
+              <div>
+                <p className="text-sm text-gray-600">Hero image uploaded ✓</p>
+                <img src={formData.hero_image} alt="Hero" className="w-32 h-32 object-cover rounded mt-2" />
               </div>
             )}
-          </CldUploadWidget>
+          </div>
         </div>
       </div>
 
