@@ -54,9 +54,16 @@ export default function AdminDashboard() {
         cache: 'no-store', // Always fetch fresh data
       })
       const data = await res.json()
-      setProjects(data)
+      console.log('🎨 Fetched projects:', data)
+      if (Array.isArray(data)) {
+        setProjects(data)
+      } else {
+        console.error('❌ Projects data is not an array:', data)
+        setProjects([])
+      }
     } catch (error) {
       console.error('Failed to fetch projects:', error)
+      setProjects([])
     }
   }
 
@@ -66,9 +73,16 @@ export default function AdminDashboard() {
         cache: 'no-store', // Always fetch fresh data
       })
       const data = await res.json()
-      setHeroVideos(data)
+      console.log('🎬 Fetched hero videos:', data)
+      if (Array.isArray(data)) {
+        setHeroVideos(data)
+      } else {
+        console.error('❌ Hero videos data is not an array:', data)
+        setHeroVideos([])
+      }
     } catch (error) {
       console.error('Failed to fetch hero videos:', error)
+      setHeroVideos([])
     }
   }
 
@@ -78,9 +92,16 @@ export default function AdminDashboard() {
         cache: 'no-store', // Always fetch fresh data
       })
       const data = await res.json()
-      setBrandDesigns(data)
+      console.log('🎭 Fetched brand designs:', data)
+      if (Array.isArray(data)) {
+        setBrandDesigns(data)
+      } else {
+        console.error('❌ Brand designs data is not an array:', data)
+        setBrandDesigns([])
+      }
     } catch (error) {
       console.error('Failed to fetch brand designs:', error)
+      setBrandDesigns([])
     }
   }
 
@@ -103,9 +124,16 @@ export default function AdminDashboard() {
         cache: 'no-store', // Always fetch fresh data
       })
       const data = await res.json()
-      setAppCases(data)
+      console.log('📱 Fetched app cases:', data)
+      if (Array.isArray(data)) {
+        setAppCases(data)
+      } else {
+        console.error('❌ App cases data is not an array:', data)
+        setAppCases([])
+      }
     } catch (error) {
       console.error('Failed to fetch app cases:', error)
+      setAppCases([])
     }
   }
 
@@ -246,14 +274,20 @@ export default function AdminDashboard() {
               />
             )}
 
-            <ProjectList
-              projects={projects}
-              onEdit={(project) => {
-                setEditingProject(project)
-                setShowForm(true)
-              }}
-              onDelete={() => fetchProjects()}
-            />
+            {projects && projects.length > 0 && (
+              <ProjectList
+                projects={projects.filter(p => p && p.id)}
+                onEdit={(project) => {
+                  setEditingProject(project)
+                  setShowForm(true)
+                }}
+                onDelete={() => fetchProjects()}
+              />
+            )}
+
+            {(!projects || projects.length === 0) && !showForm && (
+              <div className="text-center text-gray-500 py-8">No projects yet</div>
+            )}
           </>
         )}
 
@@ -283,14 +317,20 @@ export default function AdminDashboard() {
               />
             )}
 
-            <HeroVideoList
-              videos={heroVideos}
-              onEdit={(video) => {
-                setEditingHeroVideo(video)
-                setShowHeroForm(true)
-              }}
-              onDelete={() => fetchHeroVideos()}
-            />
+            {heroVideos && heroVideos.length > 0 && (
+              <HeroVideoList
+                videos={heroVideos.filter(v => v && v.id)}
+                onEdit={(video) => {
+                  setEditingHeroVideo(video)
+                  setShowHeroForm(true)
+                }}
+                onDelete={() => fetchHeroVideos()}
+              />
+            )}
+
+            {(!heroVideos || heroVideos.length === 0) && !showHeroForm && (
+              <div className="text-center text-gray-500 py-8">No hero videos yet</div>
+            )}
           </>
         )}
 
