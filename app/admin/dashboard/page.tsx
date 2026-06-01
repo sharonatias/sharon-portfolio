@@ -39,20 +39,26 @@ export default function AdminDashboard() {
     const isAdmin = sessionStorage.getItem('isAdmin')
     if (!isAdmin) {
       router.push('/admin')
+      return
     }
-    fetchProjects()
-    fetchHeroVideos()
-    fetchBrandDesigns()
-    fetchAbout()
-    fetchAppCases()
-    fetchVideoCaseStudies()
+    console.log('🔄 Starting to fetch all data...')
+    fetchProjects().catch(e => console.error('❌ fetchProjects failed:', e))
+    fetchHeroVideos().catch(e => console.error('❌ fetchHeroVideos failed:', e))
+    fetchBrandDesigns().catch(e => console.error('❌ fetchBrandDesigns failed:', e))
+    fetchAbout().catch(e => console.error('❌ fetchAbout failed:', e))
+    fetchAppCases().catch(e => console.error('❌ fetchAppCases failed:', e))
+    fetchVideoCaseStudies().catch(e => console.error('❌ fetchVideoCaseStudies failed:', e))
   }, [])
 
   const fetchProjects = async () => {
     try {
+      console.log('📡 Fetching projects...')
       const res = await fetch('/api/projects', {
         cache: 'no-store', // Always fetch fresh data
       })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
       const data = await res.json()
       console.log('🎨 Fetched projects:', data)
       if (Array.isArray(data)) {
@@ -62,16 +68,20 @@ export default function AdminDashboard() {
         setProjects([])
       }
     } catch (error) {
-      console.error('Failed to fetch projects:', error)
+      console.error('❌ Failed to fetch projects:', error)
       setProjects([])
     }
   }
 
   const fetchHeroVideos = async () => {
     try {
+      console.log('📡 Fetching hero videos...')
       const res = await fetch('/api/hero', {
         cache: 'no-store', // Always fetch fresh data
       })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
       const data = await res.json()
       console.log('🎬 Fetched hero videos:', data)
       if (Array.isArray(data)) {
@@ -81,16 +91,20 @@ export default function AdminDashboard() {
         setHeroVideos([])
       }
     } catch (error) {
-      console.error('Failed to fetch hero videos:', error)
+      console.error('❌ Failed to fetch hero videos:', error)
       setHeroVideos([])
     }
   }
 
   const fetchBrandDesigns = async () => {
     try {
+      console.log('📡 Fetching brand designs...')
       const res = await fetch('/api/brand-design', {
         cache: 'no-store', // Always fetch fresh data
       })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
       const data = await res.json()
       console.log('🎭 Fetched brand designs:', data)
       if (Array.isArray(data)) {
@@ -100,29 +114,38 @@ export default function AdminDashboard() {
         setBrandDesigns([])
       }
     } catch (error) {
-      console.error('Failed to fetch brand designs:', error)
+      console.error('❌ Failed to fetch brand designs:', error)
       setBrandDesigns([])
     }
   }
 
   const fetchAbout = async () => {
     try {
+      console.log('📡 Fetching about data...')
       const res = await fetch('/api/about', {
         cache: 'no-store', // Always fetch fresh data
       })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
       const data = await res.json()
       console.log('📥 Fetched about data:', data)
       setAbout(data)
     } catch (error) {
-      console.error('Failed to fetch about:', error)
+      console.error('❌ Failed to fetch about:', error)
+      setAbout(null)
     }
   }
 
   const fetchAppCases = async () => {
     try {
+      console.log('📡 Fetching app cases...')
       const res = await fetch('/api/app-cases', {
         cache: 'no-store', // Always fetch fresh data
       })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
       const data = await res.json()
       console.log('📱 Fetched app cases:', data)
       if (Array.isArray(data)) {
@@ -132,16 +155,20 @@ export default function AdminDashboard() {
         setAppCases([])
       }
     } catch (error) {
-      console.error('Failed to fetch app cases:', error)
+      console.error('❌ Failed to fetch app cases:', error)
       setAppCases([])
     }
   }
 
   const fetchVideoCaseStudies = async () => {
     try {
+      console.log('📡 Fetching video case studies...')
       const res = await fetch('/api/case-studies', {
         cache: 'no-store', // Always fetch fresh data
       })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
       const data = await res.json()
       console.log('📹 Fetched video case studies:', data)
       if (Array.isArray(data)) {
@@ -151,7 +178,7 @@ export default function AdminDashboard() {
         setVideoCaseStudies([])
       }
     } catch (error) {
-      console.error('Failed to fetch video case studies:', error)
+      console.error('❌ Failed to fetch video case studies:', error)
       setVideoCaseStudies([])
     }
   }
