@@ -1,20 +1,13 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
+
     const { data, error } = await supabase
       .from('video_case_studies')
-      .select(`
-        *,
-        case_study_sections(*),
-        case_study_images(*),
-        case_study_process_blocks(*)
-      `)
+      .select('*')
       .eq('id', id)
       .single()
 
@@ -30,10 +23,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
     const body = await request.json()
@@ -43,25 +33,24 @@ export async function PUT(
       .update(body)
       .eq('id', id)
       .select()
+      .single()
 
     if (error) {
       console.error('Supabase error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data?.[0])
+    return NextResponse.json(data)
   } catch (error) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Failed to update case study' }, { status: 500 })
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
+
     const { error } = await supabase
       .from('video_case_studies')
       .delete()
