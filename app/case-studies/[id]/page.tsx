@@ -335,12 +335,12 @@ function CaseSection({
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch">
             {/* Text Content */}
-            <div className="pr-6 border-r border-gray-700 h-full flex flex-col py-12">
+            <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-12 max-w-sm">
               <div className="mb-2 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
               <h2 className="text-4xl font-light mb-4" style={{ color: accentColor }}>
                 {label}
               </h2>
-              {section.title && <h3 className="text-2xl font-light mb-4" style={{ color: 'white' }}>{section.title}</h3>}
+              {section.title && <h3 className="text-2xl font-light mb-4 text-white">{section.title}</h3>}
               {section.description && <p className="text-gray-300 text-lg leading-tight whitespace-pre-wrap">{section.description}</p>}
             </div>
 
