@@ -99,15 +99,16 @@ export interface AppCase {
   subtitle: string
   year?: string
   role?: string
+  client?: string
   hero_image: string
   hero_description: string
 
-  problem: CaseStudySection
-  insight: CaseStudySection
-  approach: CaseStudySection
-  flow: CaseStudySection
-  interaction: CaseStudySection
-  outcome: CaseStudySection
+  problem?: CaseStudySection
+  insight?: CaseStudySection
+  approach?: CaseStudySection
+  flow?: CaseStudySection
+  interaction?: CaseStudySection
+  outcome?: CaseStudySection
 
   brand_color?: string
   brand_design_id?: string
