@@ -336,19 +336,19 @@ function CaseSection({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch">
             {/* Text Content */}
             <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-12 max-w-sm">
-              <div className="mb-2 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
-              <h2 className="text-4xl font-light mb-4" style={{ color: accentColor }}>
+              <div className="mb-1 text-xs tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
+              <h2 className="text-3xl font-light mb-3" style={{ color: accentColor }}>
                 {label}
               </h2>
-              {section.title && <h3 className="text-2xl font-light mb-4 text-white">{section.title}</h3>}
-              {section.description && <p className="text-gray-300 text-lg leading-tight whitespace-pre-wrap">{section.description}</p>}
+              {section.title && <h3 className="text-xl font-light mb-3 text-white">{section.title}</h3>}
+              {section.description && <p className="text-gray-300 text-base leading-tight whitespace-pre-wrap">{section.description}</p>}
             </div>
 
             {/* Images */}
             {section.images && section.images.length > 0 && (
               <div className={`-mx-6 -my-12 pl-6 flex flex-col ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-1'}`} style={{ backgroundColor: section.images.length > 1 ? '#000000' : 'transparent' }}>
                 {section.images.map((img: string, idx: number) => (
-                  <div key={idx} className="overflow-hidden bg-gray-900" style={{ height: section.images.length === 1 ? '350px' : '160px' }}>
+                  <div key={idx} className="overflow-hidden bg-gray-900" style={{ height: section.images.length === 1 ? '350px' : '220px' }}>
                     <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
                   </div>
                 ))}
