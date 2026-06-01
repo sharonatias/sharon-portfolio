@@ -69,9 +69,11 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
   const accentColor = caseStudy.brand_color || '#000000'
 
-  const CaseSection = ({ section, label }: { section: any; label: string }) => {
+  const CaseSection = ({ section, label, number }: { section: any; label: string; number: number }) => {
     // Safety check: if section is undefined or doesn't have required properties, don't render
     if (!section) return null
+
+    const numberFormatted = String(number).padStart(2, '0')
 
     return (
       <section className="py-20 px-6 border-b border-gray-800">
@@ -79,6 +81,9 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           <div className="flex flex-col lg:flex-row gap-12 items-start">
             {/* Text */}
             <div className="flex-1">
+              <div className="mb-4 text-sm tracking-widest text-gray-500 uppercase">
+                {numberFormatted}
+              </div>
               <h2
                 className="text-4xl font-bold mb-6"
                 style={{ color: accentColor }}
@@ -190,12 +195,12 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       </section>
 
       {/* Case Sections */}
-      <CaseSection section={caseStudy.problem} label="THE CHALLENGE" />
-      <CaseSection section={caseStudy.insight} label="THE INSIGHT" />
-      <CaseSection section={caseStudy.approach} label="OUR APPROACH" />
-      <CaseSection section={caseStudy.flow} label="USER EXPERIENCE FLOW" />
-      <CaseSection section={caseStudy.interaction} label="KEY INTERACTION" />
-      <CaseSection section={caseStudy.outcome} label="OUTCOME" />
+      <CaseSection section={caseStudy.problem} label="THE CHALLENGE" number={1} />
+      <CaseSection section={caseStudy.insight} label="THE INSIGHT" number={2} />
+      <CaseSection section={caseStudy.approach} label="OUR APPROACH" number={3} />
+      <CaseSection section={caseStudy.flow} label="USER EXPERIENCE FLOW" number={4} />
+      <CaseSection section={caseStudy.interaction} label="KEY INTERACTION" number={5} />
+      <CaseSection section={caseStudy.outcome} label="OUTCOME" number={6} />
 
       {/* Footer */}
       <footer className="border-t border-gray-800 p-6">
