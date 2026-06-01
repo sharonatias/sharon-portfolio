@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { CldUploadWidget } from 'next-cloudinary'
-import { AppCase } from '@/lib/types'
+import { AppCase, CATEGORIES } from '@/lib/types'
 
 interface CaseStudyFormProps {
   caseStudy?: AppCase | null
@@ -17,6 +17,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       year: new Date().getFullYear().toString(),
       role: '',
       client: '',
+      category: 'films_video',
       hero_image: '',
       hero_description: '',
       brand_color: '#000000',
@@ -158,15 +159,31 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2 text-black">Brand Color</label>
-          <input
-            type="color"
-            name="brand_color"
-            value={formData.brand_color || '#000000'}
-            onChange={handleInputChange}
-            className="w-20 h-10 rounded cursor-pointer"
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-black">Category</label>
+            <select
+              value={(formData as any).category || 'films_video'}
+              onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value as any }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-black">Brand Color</label>
+            <input
+              type="color"
+              name="brand_color"
+              value={formData.brand_color || '#000000'}
+              onChange={handleInputChange}
+              className="w-20 h-10 rounded cursor-pointer"
+            />
+          </div>
         </div>
 
         <div>
