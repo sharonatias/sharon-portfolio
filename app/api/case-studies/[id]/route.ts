@@ -9,14 +9,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       .from('video_case_studies')
       .select('*')
       .eq('id', id)
-      .single()
 
     if (error) {
       console.error('Supabase error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data)
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: 'Case study not found' }, { status: 404 })
+    }
+
+    return NextResponse.json(data[0])
   } catch (error) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Failed to fetch case study' }, { status: 500 })
