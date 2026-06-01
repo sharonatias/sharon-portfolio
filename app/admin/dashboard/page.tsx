@@ -41,6 +41,13 @@ export default function AdminDashboard() {
       router.push('/admin')
       return
     }
+    // Initialize with empty arrays to prevent undefined errors
+    setProjects([])
+    setHeroVideos([])
+    setBrandDesigns([])
+    setAppCases([])
+    setVideoCaseStudies([])
+
     console.log('🔄 Starting to fetch all data...')
     fetchProjects().catch(e => console.error('❌ fetchProjects failed:', e))
     fetchHeroVideos().catch(e => console.error('❌ fetchHeroVideos failed:', e))
@@ -62,7 +69,9 @@ export default function AdminDashboard() {
       const data = await res.json()
       console.log('🎨 Fetched projects:', data)
       if (Array.isArray(data)) {
-        setProjects(data)
+        const filtered = data.filter(p => p && p.id)
+        console.log('✅ Filtered projects:', filtered.length)
+        setProjects(filtered)
       } else {
         console.error('❌ Projects data is not an array:', data)
         setProjects([])
@@ -85,7 +94,9 @@ export default function AdminDashboard() {
       const data = await res.json()
       console.log('🎬 Fetched hero videos:', data)
       if (Array.isArray(data)) {
-        setHeroVideos(data)
+        const filtered = data.filter(v => v && v.id)
+        console.log('✅ Filtered hero videos:', filtered.length)
+        setHeroVideos(filtered)
       } else {
         console.error('❌ Hero videos data is not an array:', data)
         setHeroVideos([])
@@ -108,7 +119,9 @@ export default function AdminDashboard() {
       const data = await res.json()
       console.log('🎭 Fetched brand designs:', data)
       if (Array.isArray(data)) {
-        setBrandDesigns(data)
+        const filtered = data.filter(d => d && d.id)
+        console.log('✅ Filtered brand designs:', filtered.length)
+        setBrandDesigns(filtered)
       } else {
         console.error('❌ Brand designs data is not an array:', data)
         setBrandDesigns([])
@@ -149,7 +162,9 @@ export default function AdminDashboard() {
       const data = await res.json()
       console.log('📱 Fetched app cases:', data)
       if (Array.isArray(data)) {
-        setAppCases(data)
+        const filtered = data.filter(c => c && c.id)
+        console.log('✅ Filtered app cases:', filtered.length)
+        setAppCases(filtered)
       } else {
         console.error('❌ App cases data is not an array:', data)
         setAppCases([])
@@ -172,7 +187,9 @@ export default function AdminDashboard() {
       const data = await res.json()
       console.log('📹 Fetched video case studies:', data)
       if (Array.isArray(data)) {
-        setVideoCaseStudies(data)
+        const filtered = data.filter(v => v && v.id)
+        console.log('✅ Filtered video case studies:', filtered.length)
+        setVideoCaseStudies(filtered)
       } else {
         console.error('❌ Video case studies data is not an array:', data)
         setVideoCaseStudies([])
