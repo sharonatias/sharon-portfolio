@@ -333,7 +333,7 @@ function CaseSection({
     <section className="border-b border-gray-800">
       <div className="py-12 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-stretch">
             {/* Text Content */}
             <div>
               <div className="mb-2 text-sm tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
@@ -346,7 +346,7 @@ function CaseSection({
 
             {/* Images */}
             {section.images && section.images.length > 0 && (
-              <div className={`-mx-6 -my-12 flex flex-col ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-0'}`}>
+              <div className={`-mx-6 -my-12 flex flex-col lg:col-span-2 ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-0'}`}>
                 {section.images.map((img: string, idx: number) => (
                   <div key={idx} className="flex-1 overflow-hidden bg-gray-900 min-h-[250px]">
                     <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
