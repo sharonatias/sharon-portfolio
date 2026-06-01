@@ -16,6 +16,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       subtitle: '',
       year: new Date().getFullYear().toString(),
       role: '',
+      client: '',
       hero_image: '',
       hero_description: '',
       brand_color: '#000000',
@@ -43,6 +44,12 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       // Validate required fields
       if (!formData.title?.trim()) {
         alert('Title is required')
+        setUploading(false)
+        return
+      }
+
+      if (!(formData as any).client?.trim()) {
+        alert('Client name is required')
         setUploading(false)
         return
       }
@@ -97,6 +104,19 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
             onChange={handleInputChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
             placeholder="Case study title"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-black">Client *</label>
+          <input
+            type="text"
+            name="client"
+            value={(formData as any).client || ''}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Client name"
             required
           />
         </div>
