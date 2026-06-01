@@ -346,7 +346,7 @@ function CaseSection({
 
             {/* Images */}
             {section.images && section.images.length > 0 && (
-              <div className="space-y-0 -mx-6 -my-12">
+              <div className={`-mx-6 -my-12 ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-0'}`}>
                 {section.images.map((img: string, idx: number) => (
                   <div key={idx} className="h-[350px] overflow-hidden bg-gray-900">
                     <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
