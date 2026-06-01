@@ -110,8 +110,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       )}
 
       {/* HERO SECTION */}
-      <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px', backgroundColor: 'red' }}>
-        <div className="absolute top-0 left-0 text-white text-2xl p-4">TEST: Height should be 800px now</div>
+      <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px' }}>
         {/* Background Image with Gradient Overlay */}
         {caseStudy.hero_image && (
           <>
