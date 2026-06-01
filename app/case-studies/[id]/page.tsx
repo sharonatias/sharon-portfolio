@@ -21,8 +21,16 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
   const fetchCaseStudy = async () => {
     try {
-      const res = await fetch(`/api/app-cases/${id}`)
-      const data = await res.json()
+      // Try video case studies first
+      let res = await fetch(`/api/case-studies/${id}`)
+      let data = await res.json()
+
+      // If not found, try app cases
+      if (!data || !data.id) {
+        res = await fetch(`/api/app-cases/${id}`)
+        data = await res.json()
+      }
+
       console.log('Fetched case study:', data)
 
       // Check if data is valid
