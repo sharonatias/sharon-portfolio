@@ -217,10 +217,21 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       </section>
 
       {/* CASE STUDY SECTIONS */}
-      {caseStudy.problem && <CaseSection section={caseStudy.problem} label="THE BRIEF" number={1} accentColor={accentColor} />}
-      {caseStudy.insight && <CaseSection section={caseStudy.insight} label="THE CHALLENGE" number={2} accentColor={accentColor} />}
-      {caseStudy.approach && <CaseSection section={caseStudy.approach} label="CREATIVE CONCEPT" number={3} accentColor={accentColor} />}
-      {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label="VISUAL LANGUAGE" number={4} accentColor={accentColor} />}
+      {caseStudy.problem && <CaseSection section={caseStudy.problem} label={caseStudy.problem.label || "THE BRIEF"} number={1} accentColor={accentColor} />}
+      {caseStudy.insight && <CaseSection section={caseStudy.insight} label={caseStudy.insight.label || "THE CHALLENGE"} number={2} accentColor={accentColor} />}
+      {caseStudy.approach && <CaseSection section={caseStudy.approach} label={caseStudy.approach.label || "CREATIVE CONCEPT"} number={3} accentColor={accentColor} />}
+      {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={4} accentColor={accentColor} />}
+
+      {/* CUSTOM SECTIONS */}
+      {caseStudy.custom_sections && caseStudy.custom_sections.map((customSection, idx) => (
+        <CaseSection
+          key={`custom-${customSection.id}`}
+          section={customSection}
+          label={customSection.label}
+          number={5 + idx}
+          accentColor={accentColor}
+        />
+      ))}
 
       {/* IMAGE GALLERY */}
       {caseStudy.gallery_images && caseStudy.gallery_images.length > 0 && (
@@ -335,9 +346,9 @@ function CaseSection({
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch">
             {/* Text Content */}
-            <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-6 max-w-sm">
+            <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-6 max-w-sm" style={{ marginLeft: '-300px' }}>
               <div className="mb-1 text-xs tracking-widest text-gray-500 uppercase">{numberFormatted}</div>
-              <h2 className="text-3xl font-light mb-3" style={{ color: accentColor }}>
+              <h2 className="text-3xl font-light mb-3 text-white">
                 {label}
               </h2>
               {section.title && <h3 className="text-xl font-light mb-3 text-white">{section.title}</h3>}
@@ -346,12 +357,27 @@ function CaseSection({
 
             {/* Images */}
             {section.images && section.images.length > 0 && (
-              <div className={`-mx-6 -my-6 pl-6 flex flex-col ${section.images.length === 1 ? 'space-y-0' : 'grid grid-cols-2 gap-2'}`} style={{ backgroundColor: section.images.length > 1 ? '#000000' : 'transparent' }}>
-                {section.images.map((img: string, idx: number) => (
-                  <div key={idx} className={`overflow-hidden bg-gray-900 ${section.images.length === 1 ? 'flex-1' : 'aspect-square h-full'}`} style={section.images.length > 1 && idx === 1 ? { marginLeft: '8px' } : {}}>
-                    <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
-                  </div>
-                ))}
+              <div className={`flex ${section.images.length === 1 ? 'flex-col' : 'flex-row'}`} style={{ backgroundColor: '#000000', gap: '8px', marginLeft: '-440px' }}>
+                {section.images.map((img: string, idx: number) => {
+                  let imageWidth: number, imageHeight: number;
+
+                  if (section.images.length === 1) {
+                    imageWidth = 1200;
+                    imageHeight = 412;
+                  } else if (section.images.length === 2) {
+                    imageWidth = 600;
+                    imageHeight = 412;
+                  } else {
+                    imageWidth = 412;
+                    imageHeight = 412;
+                  }
+
+                  return (
+                    <div key={idx} className="overflow-hidden bg-gray-900 flex-shrink-0" style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}>
+                      <img src={img} alt={`${label} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

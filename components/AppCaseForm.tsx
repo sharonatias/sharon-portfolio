@@ -14,6 +14,7 @@ const emptySection: CaseStudySection = {
   description: '',
   images: [],
   accentColor: undefined,
+  label: undefined,
 }
 
 export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
@@ -29,18 +30,19 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
     hero_description: '',
     watch_film_link: '',
     video_file: '',
-    problem: { ...emptySection },
-    insight: { ...emptySection },
-    approach: { ...emptySection },
-    flow: { ...emptySection },
-    interaction: { ...emptySection },
-    outcome: { ...emptySection },
+    problem: { ...emptySection, label: 'THE BRIEF' },
+    insight: { ...emptySection, label: 'THE CHALLENGE' },
+    approach: { ...emptySection, label: 'CREATIVE CONCEPT' },
+    flow: { ...emptySection, label: 'FLOW' },
+    interaction: { ...emptySection, label: 'VISUAL LANGUAGE' },
+    outcome: { ...emptySection, label: 'OUTCOME' },
     gallery_images: [],
     process_blocks: [],
     my_role_title: '',
     my_role_description: '',
     brand_color: '#000000',
     brand_design_id: undefined,
+    custom_sections: [],
   }
 
   const [formData, setFormData] = useState<AppCase>(
@@ -59,18 +61,19 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
       hero_description: appCase.hero_description || '',
       watch_film_link: appCase.watch_film_link || '',
       video_file: appCase.video_file || '',
-      problem: appCase.problem || { ...emptySection },
-      insight: appCase.insight || { ...emptySection },
-      approach: appCase.approach || { ...emptySection },
-      flow: appCase.flow || { ...emptySection },
-      interaction: appCase.interaction || { ...emptySection },
-      outcome: appCase.outcome || { ...emptySection },
+      problem: { ...emptySection, label: 'THE BRIEF', ...(appCase.problem || {}) },
+      insight: { ...emptySection, label: 'THE CHALLENGE', ...(appCase.insight || {}) },
+      approach: { ...emptySection, label: 'CREATIVE CONCEPT', ...(appCase.approach || {}) },
+      flow: { ...emptySection, label: 'FLOW', ...(appCase.flow || {}) },
+      interaction: { ...emptySection, label: 'VISUAL LANGUAGE', ...(appCase.interaction || {}) },
+      outcome: { ...emptySection, label: 'OUTCOME', ...(appCase.outcome || {}) },
       gallery_images: (appCase as any).gallery_images || [],
       process_blocks: (appCase as any).process_blocks || [],
       my_role_title: (appCase as any).my_role_title || '',
       my_role_description: (appCase as any).my_role_description || '',
       brand_color: appCase.brand_color || '#000000',
       brand_design_id: appCase.brand_design_id,
+      custom_sections: (appCase as any).custom_sections || [],
     } : defaultCase
   )
   const [uploading, setUploading] = useState(false)
@@ -195,6 +198,49 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
     }))
   }
 
+  const addCustomSection = () => {
+    const newSection = {
+      id: `custom-${Date.now()}`,
+      label: '',
+      title: '',
+      description: '',
+      images: [],
+      order: ((formData as any).custom_sections?.length || 0) + 1,
+    }
+    setFormData((prev) => ({
+      ...prev,
+      custom_sections: [...((prev as any).custom_sections || []), newSection],
+    }))
+  }
+
+  const removeCustomSection = (id: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      custom_sections: ((prev as any).custom_sections || []).filter((_: any) => _.id !== id),
+    }))
+  }
+
+  const updateCustomSection = (id: string, field: string, value: any) => {
+    const updated = ((formData as any).custom_sections || []).map((section: any) =>
+      section.id === id ? { ...section, [field]: value } : section
+    )
+    setFormData((prev) => ({ ...prev, custom_sections: updated }))
+  }
+
+  const addImageToCustomSection = (id: string, imageUrl: string) => {
+    updateCustomSection(id, 'images', [
+      ...((formData as any).custom_sections.find((s: any) => s.id === id)?.images || []),
+      imageUrl,
+    ])
+  }
+
+  const removeImageFromCustomSection = (id: string, index: number) => {
+    const section = (formData as any).custom_sections.find((s: any) => s.id === id)
+    if (section) {
+      updateCustomSection(id, 'images', section.images.filter((_: string, i: number) => i !== index))
+    }
+  }
+
   const updateProcessBlock = (index: number, field: string, value: any) => {
     const updated = [...((formData as any).process_blocks || [])]
     updated[index] = { ...updated[index], [field]: value }
@@ -207,6 +253,17 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
     return (
       <div key={sectionName} className="bg-gray-100 rounded-lg p-6 mb-6">
         <h3 className="text-lg font-bold mb-4 text-black">{sectionLabel}</h3>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Section Label (Editable)</label>
+          <input
+            type="text"
+            value={section.label || sectionLabel}
+            onChange={(e) => handleSectionChange(sectionName, 'label', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder={sectionLabel}
+          />
+        </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2 text-black">Title</label>
@@ -268,6 +325,97 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
                         <button
                           type="button"
                           onClick={() => removeImage(sectionName, index)}
+                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-sm"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </CldUploadWidget>
+        </div>
+      </div>
+    )
+  }
+
+  const renderCustomSectionForm = (customSection: any) => {
+    return (
+      <div key={customSection.id} className="bg-white rounded-lg p-6 mb-6 border-l-4 border-blue-600">
+        <div className="flex justify-between items-center mb-4">
+          <h4 className="font-semibold text-black">Custom Section {(formData as any).custom_sections?.indexOf(customSection) + 1}</h4>
+          <button
+            type="button"
+            onClick={() => removeCustomSection(customSection.id)}
+            className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+          >
+            Remove
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Section Label *</label>
+          <input
+            type="text"
+            value={customSection.label}
+            onChange={(e) => updateCustomSection(customSection.id, 'label', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="e.g., MY PROCESS, RESULTS, etc."
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Title</label>
+          <input
+            type="text"
+            value={customSection.title}
+            onChange={(e) => updateCustomSection(customSection.id, 'title', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Section title"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Description</label>
+          <textarea
+            value={customSection.description}
+            onChange={(e) => updateCustomSection(customSection.id, 'description', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black resize-none"
+            rows={4}
+            placeholder="Section description"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Images</label>
+          <CldUploadWidget
+            uploadPreset="sharon_portfolio"
+            onSuccess={(result: any) => addImageToCustomSection(customSection.id, result.info.secure_url)}
+            options={{
+              resourceType: 'auto',
+              maxFileSize: 100000000,
+            }}
+          >
+            {({ open }) => (
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  + Add Image
+                </button>
+
+                {customSection.images && customSection.images.length > 0 && (
+                  <div className="grid grid-cols-2 gap-4">
+                    {customSection.images.map((img: string, index: number) => (
+                      <div key={index} className="relative group">
+                        <img src={img} alt={`Image ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                        <button
+                          type="button"
+                          onClick={() => removeImageFromCustomSection(customSection.id, index)}
                           className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-sm"
                         >
                           ✕
@@ -506,6 +654,35 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
       {renderSectionForm('approach', 'Creative Concept')}
       {renderSectionForm('interaction', 'Visual Language')}
       {renderSectionForm('outcome', 'Outcome')}
+
+      {/* Custom Sections */}
+      <div className="bg-gray-100 rounded-lg p-6 mb-6">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-bold text-black">Custom Sections (Optional)</h3>
+          <button
+            type="button"
+            onClick={addCustomSection}
+            disabled={((formData as any).custom_sections?.length || 0) >= 5}
+            className={`px-4 py-2 rounded text-white ${
+              ((formData as any).custom_sections?.length || 0) >= 5
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-green-600 hover:bg-green-700'
+            }`}
+          >
+            + Add Custom Section {((formData as any).custom_sections?.length || 0) >= 5 ? '(Max 5 reached)' : ''}
+          </button>
+        </div>
+
+        {(formData as any).custom_sections && (formData as any).custom_sections.length > 0 && (
+          <div className="space-y-6">
+            {(formData as any).custom_sections.map((customSection: any) => renderCustomSectionForm(customSection))}
+          </div>
+        )}
+
+        {(!((formData as any).custom_sections) || (formData as any).custom_sections.length === 0) && (
+          <p className="text-sm text-gray-500 italic">No custom sections yet. Click "Add Custom Section" to create one.</p>
+        )}
+      </div>
 
       {/* Process Blocks */}
       <div className="bg-gray-100 rounded-lg p-6 mb-6">

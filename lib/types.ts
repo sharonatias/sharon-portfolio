@@ -91,6 +91,13 @@ export interface CaseStudySection {
   description: string
   images: string[]
   accentColor?: string
+  label?: string
+}
+
+export interface DynamicSection extends CaseStudySection {
+  id: string
+  label: string
+  order: number
 }
 
 export interface ProcessBlock {
@@ -125,6 +132,7 @@ export interface AppCase {
   process_blocks?: ProcessBlock[]
   my_role_title?: string
   my_role_description?: string
+  custom_sections?: DynamicSection[]
 
   brand_color?: string
   brand_design_id?: string
