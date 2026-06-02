@@ -42,35 +42,51 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     const { supabase } = await import('@/lib/supabase')
 
-    // Ensure all sections have proper structure
+    // Ensure all sections have proper structure, preserving label and accentColor
     const sanitizeSection = (section: any) => {
-      if (!section) return { title: '', description: '', images: [] }
+      if (!section) return { title: '', description: '', images: [], label: undefined, accentColor: undefined }
       return {
         title: section.title || '',
         description: section.description || '',
         images: section.images || [],
+        label: section.label || undefined,
+        accentColor: section.accentColor || undefined,
       }
     }
 
+    const updateData: any = {
+      title: body.title,
+      subtitle: body.subtitle,
+      year: body.year,
+      role: body.role,
+      hero_image: body.hero_image,
+      hero_description: body.hero_description,
+      problem: sanitizeSection(body.problem),
+      insight: sanitizeSection(body.insight),
+      approach: sanitizeSection(body.approach),
+      flow: sanitizeSection(body.flow),
+      interaction: sanitizeSection(body.interaction),
+      outcome: sanitizeSection(body.outcome),
+      brand_color: body.brand_color,
+      category: body.category || 'brand_digital_design',
+      brand_design_id: body.brand_design_id || null,
+    }
+
+    // Add optional fields if they are provided
+    if (body.client) updateData.client = body.client
+    if (body.duration) updateData.duration = body.duration
+    if (body.format) updateData.format = body.format
+    if (body.watch_film_link) updateData.watch_film_link = body.watch_film_link
+    if (body.video_file) updateData.video_file = body.video_file
+    if (body.gallery_images && body.gallery_images.length > 0) updateData.gallery_images = body.gallery_images
+    if (body.process_blocks && body.process_blocks.length > 0) updateData.process_blocks = body.process_blocks
+    if (body.my_role_title) updateData.my_role_title = body.my_role_title
+    if (body.my_role_description) updateData.my_role_description = body.my_role_description
+    if (body.custom_sections && body.custom_sections.length > 0) updateData.custom_sections = body.custom_sections
+
     const { data, error } = await supabase
       .from('app_cases')
-      .update({
-        title: body.title,
-        subtitle: body.subtitle,
-        year: body.year,
-        role: body.role,
-        hero_image: body.hero_image,
-        hero_description: body.hero_description,
-        problem: sanitizeSection(body.problem),
-        insight: sanitizeSection(body.insight),
-        approach: sanitizeSection(body.approach),
-        flow: sanitizeSection(body.flow),
-        interaction: sanitizeSection(body.interaction),
-        outcome: sanitizeSection(body.outcome),
-        brand_color: body.brand_color,
-        category: body.category || 'brand_digital_design',
-        brand_design_id: body.brand_design_id || null,
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
 

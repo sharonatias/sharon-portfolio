@@ -31,17 +31,19 @@ export async function POST(request: NextRequest) {
 
     const { supabase } = await import('@/lib/supabase')
 
-    // Ensure all sections have proper structure
+    // Ensure all sections have proper structure, preserving label and accentColor
     const sanitizeSection = (section: any) => {
-      if (!section) return { title: '', description: '', images: [] }
+      if (!section) return { title: '', description: '', images: [], label: undefined, accentColor: undefined }
       return {
         title: section.title || '',
         description: section.description || '',
         images: section.images || [],
+        label: section.label || undefined,
+        accentColor: section.accentColor || undefined,
       }
     }
 
-    const insertData = {
+    const insertData: any = {
       title: body.title,
       subtitle: body.subtitle,
       year: body.year || new Date().getFullYear().toString(),
@@ -58,6 +60,18 @@ export async function POST(request: NextRequest) {
       category: body.category || 'brand_digital_design',
       brand_design_id: body.brand_design_id || null,
     }
+
+    // Add optional fields if they are provided
+    if (body.client) insertData.client = body.client
+    if (body.duration) insertData.duration = body.duration
+    if (body.format) insertData.format = body.format
+    if (body.watch_film_link) insertData.watch_film_link = body.watch_film_link
+    if (body.video_file) insertData.video_file = body.video_file
+    if (body.gallery_images && body.gallery_images.length > 0) insertData.gallery_images = body.gallery_images
+    if (body.process_blocks && body.process_blocks.length > 0) insertData.process_blocks = body.process_blocks
+    if (body.my_role_title) insertData.my_role_title = body.my_role_title
+    if (body.my_role_description) insertData.my_role_description = body.my_role_description
+    if (body.custom_sections && body.custom_sections.length > 0) insertData.custom_sections = body.custom_sections
 
     console.log('POST /api/app-cases - Insert data:', insertData)
 
