@@ -220,7 +220,8 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       {caseStudy.problem && <CaseSection section={caseStudy.problem} label={caseStudy.problem.label || "THE BRIEF"} number={1} accentColor={accentColor} />}
       {caseStudy.insight && <CaseSection section={caseStudy.insight} label={caseStudy.insight.label || "THE CHALLENGE"} number={2} accentColor={accentColor} />}
       {caseStudy.approach && <CaseSection section={caseStudy.approach} label={caseStudy.approach.label || "CREATIVE CONCEPT"} number={3} accentColor={accentColor} />}
-      {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={4} accentColor={accentColor} />}
+      {caseStudy.flow && <CaseSection section={caseStudy.flow} label={caseStudy.flow.label || "FLOW"} number={4} accentColor={accentColor} />}
+      {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={5} accentColor={accentColor} />}
 
       {/* CUSTOM SECTIONS */}
       {caseStudy.custom_sections && caseStudy.custom_sections.map((customSection, idx) => (
@@ -228,7 +229,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           key={`custom-${customSection.id}`}
           section={customSection}
           label={customSection.label}
-          number={5 + idx}
+          number={7 + idx}
           accentColor={accentColor}
         />
       ))}
@@ -293,19 +294,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       )}
 
       {/* OUTCOME SECTION */}
-      {caseStudy.outcome && (
-        <section className="py-12 px-6 bg-gray-950 border-b border-gray-800">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
-              OUTCOME
-            </h2>
-            {caseStudy.outcome.title && <h3 className="text-2xl font-light mb-6 text-white">{caseStudy.outcome.title}</h3>}
-            {caseStudy.outcome.description && (
-              <p className="text-gray-300 leading-relaxed max-w-2xl whitespace-pre-wrap">{caseStudy.outcome.description}</p>
-            )}
-          </div>
-        </section>
-      )}
+      {caseStudy.outcome && <CaseSection section={caseStudy.outcome} label={caseStudy.outcome.label || "OUTCOME"} number={6} accentColor={accentColor} />}
 
       {/* Footer */}
       <footer className="border-t border-gray-800 p-6">
