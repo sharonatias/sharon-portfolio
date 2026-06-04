@@ -45,39 +45,49 @@ export default function AppCaseForm({ appCase, onSave }: AppCaseFormProps) {
     custom_sections: [],
   }
 
-  const [formData, setFormData] = useState<AppCase>(
-    appCase ? {
-      ...defaultCase,
-      ...appCase,
-      // Ensure all required fields exist
-      title: appCase.title || '',
-      subtitle: appCase.subtitle || '',
-      year: appCase.year || new Date().getFullYear().toString(),
-      role: appCase.role || '',
-      client: (appCase as any).client || '',
-      duration: (appCase as any).duration || '',
-      format: (appCase as any).format || '',
-      hero_image: appCase.hero_image || '',
-      hero_description: appCase.hero_description || '',
-      watch_film_link: appCase.watch_film_link || '',
-      video_file: appCase.video_file || '',
-      problem: { ...emptySection, label: 'THE BRIEF', ...(appCase.problem || {}) },
-      insight: { ...emptySection, label: 'THE CHALLENGE', ...(appCase.insight || {}) },
-      approach: { ...emptySection, label: 'CREATIVE CONCEPT', ...(appCase.approach || {}) },
-      flow: { ...emptySection, label: 'FLOW', ...(appCase.flow || {}) },
-      interaction: { ...emptySection, label: 'VISUAL LANGUAGE', ...(appCase.interaction || {}) },
-      outcome: { ...emptySection, label: 'OUTCOME', ...(appCase.outcome || {}) },
-      gallery_images: (appCase as any).gallery_images || [],
-      process_blocks: (appCase as any).process_blocks || [],
-      my_role_title: (appCase as any).my_role_title || '',
-      my_role_description: (appCase as any).my_role_description || '',
-      brand_color: appCase.brand_color || '#000000',
-      brand_design_id: appCase.brand_design_id,
-      custom_sections: (appCase as any).custom_sections || [],
-    } : defaultCase
-  )
   const [uploading, setUploading] = useState(false)
   const [brandDesigns, setBrandDesigns] = useState<BrandDesign[]>([])
+
+  // Helper function to build form data
+  const buildFormData = (caseData: AppCase | null | undefined): AppCase => {
+    if (!caseData) return defaultCase
+    return {
+      ...defaultCase,
+      ...caseData,
+      // Ensure all required fields exist
+      title: caseData.title || '',
+      subtitle: caseData.subtitle || '',
+      year: caseData.year || new Date().getFullYear().toString(),
+      role: caseData.role || '',
+      client: (caseData as any).client || '',
+      duration: (caseData as any).duration || '',
+      format: (caseData as any).format || '',
+      hero_image: caseData.hero_image || '',
+      hero_description: caseData.hero_description || '',
+      watch_film_link: caseData.watch_film_link || '',
+      video_file: caseData.video_file || '',
+      problem: { ...emptySection, label: 'THE BRIEF', ...(caseData.problem || {}) },
+      insight: { ...emptySection, label: 'THE CHALLENGE', ...(caseData.insight || {}) },
+      approach: { ...emptySection, label: 'CREATIVE CONCEPT', ...(caseData.approach || {}) },
+      flow: { ...emptySection, label: 'FLOW', ...(caseData.flow || {}) },
+      interaction: { ...emptySection, label: 'VISUAL LANGUAGE', ...(caseData.interaction || {}) },
+      outcome: { ...emptySection, label: 'OUTCOME', ...(caseData.outcome || {}) },
+      gallery_images: (caseData as any).gallery_images || [],
+      process_blocks: (caseData as any).process_blocks || [],
+      my_role_title: (caseData as any).my_role_title || '',
+      my_role_description: (caseData as any).my_role_description || '',
+      brand_color: caseData.brand_color || '#000000',
+      brand_design_id: caseData.brand_design_id,
+      custom_sections: (caseData as any).custom_sections || [],
+    }
+  }
+
+  const [formData, setFormData] = useState<AppCase>(buildFormData(appCase))
+
+  useEffect(() => {
+    // Update form data when appCase changes (e.g., switching between editing different cases)
+    setFormData(buildFormData(appCase))
+  }, [appCase?.id])
 
   useEffect(() => {
     fetchBrandDesigns()
