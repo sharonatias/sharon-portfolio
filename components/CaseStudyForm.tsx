@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CldUploadWidget } from 'next-cloudinary'
 import { AppCase, CaseStudySection, CATEGORIES, ProcessBlock } from '@/lib/types'
 
@@ -24,57 +24,69 @@ const emptyProcessBlock: ProcessBlock = {
 }
 
 export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps) {
-  const [formData, setFormData] = useState<AppCase>(
-    caseStudy ? {
-      ...caseStudy,
-      title: caseStudy.title || '',
-      subtitle: caseStudy.subtitle || '',
-      year: caseStudy.year || new Date().getFullYear().toString(),
-      role: caseStudy.role || '',
-      client: (caseStudy as any).client || '',
-      duration: caseStudy.duration || '',
-      format: caseStudy.format || '',
-      category: caseStudy.category || 'films_video',
-      hero_image: caseStudy.hero_image || '',
-      hero_description: caseStudy.hero_description || '',
-      watch_film_link: caseStudy.watch_film_link || '',
-      problem: caseStudy.problem || { ...emptySection },
-      insight: caseStudy.insight || { ...emptySection },
-      approach: caseStudy.approach || { ...emptySection },
-      flow: caseStudy.flow || { ...emptySection },
-      interaction: caseStudy.interaction || { ...emptySection },
-      outcome: caseStudy.outcome || { ...emptySection },
-      gallery_images: caseStudy.gallery_images || [],
-      process_blocks: caseStudy.process_blocks || [],
-      my_role_title: caseStudy.my_role_title || '',
-      my_role_description: caseStudy.my_role_description || '',
-      brand_color: caseStudy.brand_color || '#000000',
-    } : {
-      title: '',
-      subtitle: '',
-      year: new Date().getFullYear().toString(),
-      role: '',
-      client: '',
-      duration: '',
-      format: '',
-      category: 'films_video',
-      hero_image: '',
-      hero_description: '',
-      watch_film_link: '',
-      problem: { ...emptySection },
-      insight: { ...emptySection },
-      approach: { ...emptySection },
-      flow: { ...emptySection },
-      interaction: { ...emptySection },
-      outcome: { ...emptySection },
-      gallery_images: [],
-      process_blocks: [],
-      my_role_title: '',
-      my_role_description: '',
-      brand_color: '#000000',
+  // Helper function to build form data
+  const buildFormData = (caseData: AppCase | null | undefined): AppCase => {
+    if (!caseData) {
+      return {
+        title: '',
+        subtitle: '',
+        year: new Date().getFullYear().toString(),
+        role: '',
+        client: '',
+        duration: '',
+        format: '',
+        category: 'films_video',
+        hero_image: '',
+        hero_description: '',
+        watch_film_link: '',
+        problem: { ...emptySection },
+        insight: { ...emptySection },
+        approach: { ...emptySection },
+        flow: { ...emptySection },
+        interaction: { ...emptySection },
+        outcome: { ...emptySection },
+        gallery_images: [],
+        process_blocks: [],
+        my_role_title: '',
+        my_role_description: '',
+        brand_color: '#000000',
+      }
     }
-  )
+
+    return {
+      ...caseData,
+      title: caseData.title || '',
+      subtitle: caseData.subtitle || '',
+      year: caseData.year || new Date().getFullYear().toString(),
+      role: caseData.role || '',
+      client: (caseData as any).client || '',
+      duration: caseData.duration || '',
+      format: caseData.format || '',
+      category: caseData.category || 'films_video',
+      hero_image: caseData.hero_image || '',
+      hero_description: caseData.hero_description || '',
+      watch_film_link: caseData.watch_film_link || '',
+      problem: caseData.problem || { ...emptySection },
+      insight: caseData.insight || { ...emptySection },
+      approach: caseData.approach || { ...emptySection },
+      flow: caseData.flow || { ...emptySection },
+      interaction: caseData.interaction || { ...emptySection },
+      outcome: caseData.outcome || { ...emptySection },
+      gallery_images: caseData.gallery_images || [],
+      process_blocks: caseData.process_blocks || [],
+      my_role_title: caseData.my_role_title || '',
+      my_role_description: caseData.my_role_description || '',
+      brand_color: caseData.brand_color || '#000000',
+    }
+  }
+
+  const [formData, setFormData] = useState<AppCase>(buildFormData(caseStudy))
   const [uploading, setUploading] = useState(false)
+
+  // Update form data when caseStudy changes (e.g., switching between editing different cases)
+  useEffect(() => {
+    setFormData(buildFormData(caseStudy))
+  }, [caseStudy?.id])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
