@@ -286,12 +286,12 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2 text-black">Images (Max 3)</label>
+          <label className="block text-sm font-medium mb-2 text-black">Images (Max 4)</label>
           <CldUploadWidget
             uploadPreset="sharon_portfolio"
             onSuccess={(result: any) => {
-              if (section.images && section.images.length >= 3) {
-                alert('Maximum 3 images allowed per section')
+              if (section.images && section.images.length >= 4) {
+                alert('Maximum 4 images allowed per section')
                 return
               }
               handleUploadSuccess(result, sectionName)
@@ -307,18 +307,18 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
                   <button
                     type="button"
                     onClick={() => open()}
-                    disabled={section.images && section.images.length >= 3}
+                    disabled={section.images && section.images.length >= 4}
                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
                     + Add Image
                   </button>
                   {section.images && section.images.length > 0 && (
-                    <span className="text-sm text-gray-600">({section.images.length}/3)</span>
+                    <span className="text-sm text-gray-600">({section.images.length}/4)</span>
                   )}
                 </div>
 
                 {section.images && section.images.length > 0 && (
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-4 gap-4">
                     {section.images.map((img: string, index: number) => (
                       <div key={index} className="relative group">
                         <img src={img} alt={`Image ${index + 1}`} className="w-full h-32 object-cover rounded" />
