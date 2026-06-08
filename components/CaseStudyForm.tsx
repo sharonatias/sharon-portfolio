@@ -263,10 +263,16 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2 text-black">Images</label>
+          <label className="block text-sm font-medium mb-2 text-black">Images (Max 3)</label>
           <CldUploadWidget
             uploadPreset="sharon_portfolio"
-            onSuccess={(result: any) => handleUploadSuccess(result, sectionName)}
+            onSuccess={(result: any) => {
+              if (section.images && section.images.length >= 3) {
+                alert('Maximum 3 images allowed per section')
+                return
+              }
+              handleUploadSuccess(result, sectionName)
+            }}
             options={{
               resourceType: 'auto',
               maxFileSize: 100000000,
@@ -274,16 +280,22 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           >
             {({ open }) => (
               <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => open()}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                  + Add Image
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    disabled={section.images && section.images.length >= 3}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  >
+                    + Add Image
+                  </button>
+                  {section.images && section.images.length > 0 && (
+                    <span className="text-sm text-gray-600">({section.images.length}/3)</span>
+                  )}
+                </div>
 
                 {section.images && section.images.length > 0 && (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     {section.images.map((img: string, index: number) => (
                       <div key={index} className="relative group">
                         <img src={img} alt={`Image ${index + 1}`} className="w-full h-32 object-cover rounded" />
