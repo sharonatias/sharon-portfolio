@@ -457,19 +457,20 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           <CldUploadWidget
             uploadPreset="sharon_portfolio"
             onSuccess={(result: any) => {
-              console.log('✅ Video uploaded - FULL RESULT:', JSON.stringify(result, null, 2))
-              console.log('🔗 Checking URLs...')
-              console.log('  secure_url:', result.secure_url)
-              console.log('  url:', result.url)
-              console.log('  public_id:', result.public_id)
+              console.log('✅ Video uploaded successfully!')
+              const videoUrl = result.info?.secure_url || result.info?.url
+              console.log('🔗 Video URL:', videoUrl)
 
-              const newUrl = result.secure_url || result.url
-              console.log('📝 Using URL:', newUrl)
-              setFormData((prev) => {
-                const updated = { ...prev, video_file: newUrl }
-                console.log('📦 Updated formData video_file:', updated.video_file)
-                return updated
-              })
+              if (videoUrl) {
+                setFormData((prev) => {
+                  const updated = { ...prev, video_file: videoUrl }
+                  console.log('✅ formData updated with video_file:', videoUrl)
+                  return updated
+                })
+              } else {
+                console.error('❌ No URL found in response')
+                alert('Error: Could not get video URL from upload')
+              }
               setUploading(false)
             }}
             onError={(error: any) => {
