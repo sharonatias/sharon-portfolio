@@ -438,7 +438,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2 text-black">Watch Film Link</label>
+          <label className="block text-sm font-medium mb-2 text-black">Watch Film Link (URL)</label>
           <input
             type="url"
             name="watch_film_link"
@@ -447,6 +447,42 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
             className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
             placeholder="https://youtube.com/watch?v=..."
           />
+          <p className="text-xs text-gray-500 mt-1">או העלה קובץ וידאו בשדה למטה</p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-black">Upload Video File (MP4, WebM, etc)</label>
+          <CldUploadWidget
+            uploadPreset="sharon_portfolio"
+            onSuccess={(result: any) => {
+              setFormData((prev) => ({ ...prev, video_file: result.secure_url }))
+              setUploading(false)
+            }}
+            options={{
+              resourceType: 'video',
+              maxFileSize: 500000000, // 500MB for videos
+            }}
+          >
+            {({ open }) => (
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUploading(true)
+                    open()
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  Upload Video
+                </button>
+                {formData.video_file && (
+                  <div className="text-sm text-green-600">
+                    ✅ Video uploaded: {formData.video_file.substring(0, 50)}...
+                  </div>
+                )}
+              </div>
+            )}
+          </CldUploadWidget>
         </div>
 
         <div>

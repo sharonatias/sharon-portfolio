@@ -225,16 +225,16 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
         </div>
       </section>
 
-      {/* CASE STUDY SECTIONS */}
+      {/* CASE STUDY SECTIONS - IN ORDER */}
       {caseStudy.problem && <CaseSection section={caseStudy.problem} label={caseStudy.problem.label || "THE BRIEF"} number={1} accentColor={accentColor} />}
       {caseStudy.insight && <CaseSection section={caseStudy.insight} label={caseStudy.insight.label || "THE CHALLENGE"} number={2} accentColor={accentColor} />}
       {caseStudy.approach && <CaseSection section={caseStudy.approach} label={caseStudy.approach.label || "CREATIVE CONCEPT"} number={3} accentColor={accentColor} />}
       {caseStudy.flow && <CaseSection section={caseStudy.flow} label={caseStudy.flow.label || "FLOW"} number={4} accentColor={accentColor} />}
       {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={5} accentColor={accentColor} />}
 
-      {/* PROCESS SECTION - THIS SHOULD APPEAR HERE */}
+      {/* PROCESS SECTION */}
       {caseStudy.process_blocks && caseStudy.process_blocks.length > 0 && (
-        <section className="py-12 px-6 border-b border-gray-800">
+        <section className="border-b border-gray-800 py-12 px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl font-light mb-12" style={{ color: accentColor }}>
               PROCESS
@@ -259,6 +259,22 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
         </section>
       )}
 
+      {/* OUTCOME SECTION */}
+      {caseStudy.outcome && <CaseSection section={caseStudy.outcome} label={caseStudy.outcome.label || "OUTCOME"} number={6} accentColor={accentColor} />}
+
+      {/* MY ROLE SECTION */}
+      {caseStudy.my_role_title && (
+        <section className="border-b border-gray-800 py-12 px-6">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
+              MY ROLE
+            </h2>
+            <h3 className="text-2xl font-light mb-6 text-white">{caseStudy.my_role_title}</h3>
+            <p className="text-gray-300 leading-relaxed max-w-2xl">{caseStudy.my_role_description}</p>
+          </div>
+        </section>
+      )}
+
       {/* IMAGE GALLERY */}
       {caseStudy.gallery_images && caseStudy.gallery_images.length > 0 && (
         <section className="py-12 px-6 border-b border-gray-800">
@@ -277,22 +293,6 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           </div>
         </section>
       )}
-
-      {/* MY ROLE SECTION */}
-      {caseStudy.my_role_title && (
-        <section className="py-12 px-6 border-b border-gray-800">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-light mb-6" style={{ color: accentColor }}>
-              MY ROLE
-            </h2>
-            <h3 className="text-2xl font-light mb-6 text-white">{caseStudy.my_role_title}</h3>
-            <p className="text-gray-300 leading-relaxed max-w-2xl">{caseStudy.my_role_description}</p>
-          </div>
-        </section>
-      )}
-
-      {/* OUTCOME SECTION */}
-      {caseStudy.outcome && <CaseSection section={caseStudy.outcome} label={caseStudy.outcome.label || "OUTCOME"} number={6} accentColor={accentColor} />}
 
       {/* CUSTOM SECTIONS */}
       {caseStudy.custom_sections && caseStudy.custom_sections.map((customSection, idx) => (
