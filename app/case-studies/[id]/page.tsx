@@ -11,7 +11,10 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    params.then((p) => setId(p.id))
+    params.then((p) => {
+      console.log('📌 Params received:', p.id)
+      setId(p.id)
+    })
   }, [params])
 
   useEffect(() => {
@@ -21,21 +24,27 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
   const fetchCaseStudy = async () => {
     try {
+      console.log('🔄 Fetching from /api/case-studies/' + id)
       let res = await fetch(`/api/case-studies/${id}`)
       let data = await res.json()
 
+      console.log('📦 Got data:', { id: data.id, title: data.title, hasProcess: !!data.process_blocks?.length })
+
       if (!data || !data.id) {
+        console.log('⚠️ No ID found, trying /api/app-cases')
         res = await fetch(`/api/app-cases/${id}`)
         data = await res.json()
       }
 
       if (data && data.id) {
+        console.log('✅ Setting case study:', data.title)
         setCaseStudy(data)
       } else {
+        console.log('❌ No valid data found')
         setCaseStudy(null)
       }
     } catch (error) {
-      console.error('Failed to fetch case study:', error)
+      console.error('❌ Failed to fetch case study:', error)
       setCaseStudy(null)
     } finally {
       setLoading(false)
@@ -223,37 +232,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       {caseStudy.flow && <CaseSection section={caseStudy.flow} label={caseStudy.flow.label || "FLOW"} number={4} accentColor={accentColor} />}
       {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={5} accentColor={accentColor} />}
 
-      {/* CUSTOM SECTIONS */}
-      {caseStudy.custom_sections && caseStudy.custom_sections.map((customSection, idx) => (
-        <CaseSection
-          key={`custom-${customSection.id}`}
-          section={customSection}
-          label={customSection.label}
-          number={7 + idx}
-          accentColor={accentColor}
-        />
-      ))}
-
-      {/* IMAGE GALLERY */}
-      {caseStudy.gallery_images && caseStudy.gallery_images.length > 0 && (
-        <section className="py-12 px-6 border-b border-gray-800">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {caseStudy.gallery_images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className={`overflow-hidden rounded-lg bg-gray-900 ${idx === 0 ? 'md:col-span-2' : ''}`}
-                  style={{ aspectRatio: idx === 0 ? '16/9' : '1/1', marginLeft: idx === 1 ? '8px' : '0' }}
-                >
-                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* PROCESS SECTION */}
+      {/* PROCESS SECTION - THIS SHOULD APPEAR HERE */}
       {caseStudy.process_blocks && caseStudy.process_blocks.length > 0 && (
         <section className="py-12 px-6 border-b border-gray-800">
           <div className="max-w-6xl mx-auto">
@@ -280,6 +259,25 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
         </section>
       )}
 
+      {/* IMAGE GALLERY */}
+      {caseStudy.gallery_images && caseStudy.gallery_images.length > 0 && (
+        <section className="py-12 px-6 border-b border-gray-800">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {caseStudy.gallery_images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className={`overflow-hidden rounded-lg bg-gray-900 ${idx === 0 ? 'md:col-span-2' : ''}`}
+                  style={{ aspectRatio: idx === 0 ? '16/9' : '1/1', marginLeft: idx === 1 ? '8px' : '0' }}
+                >
+                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* MY ROLE SECTION */}
       {caseStudy.my_role_title && (
         <section className="py-12 px-6 border-b border-gray-800">
@@ -295,6 +293,17 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* OUTCOME SECTION */}
       {caseStudy.outcome && <CaseSection section={caseStudy.outcome} label={caseStudy.outcome.label || "OUTCOME"} number={6} accentColor={accentColor} />}
+
+      {/* CUSTOM SECTIONS */}
+      {caseStudy.custom_sections && caseStudy.custom_sections.map((customSection, idx) => (
+        <CaseSection
+          key={`custom-${customSection.id}`}
+          section={customSection}
+          label={customSection.label}
+          number={7 + idx}
+          accentColor={accentColor}
+        />
+      ))}
 
       {/* Footer */}
       <footer className="border-t border-gray-800 p-6">
