@@ -9,6 +9,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
   const [id, setId] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   useEffect(() => {
     params.then((p) => {
@@ -21,6 +22,26 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
     if (!id) return
     fetchCaseStudy()
   }, [id])
+
+  useEffect(() => {
+    // Setup video event listeners
+    const videoElement = document.querySelector('video') as HTMLVideoElement
+    if (!videoElement) return
+
+    const handlePlay = () => setIsVideoPlaying(true)
+    const handlePause = () => setIsVideoPlaying(false)
+    const handleEnded = () => setIsVideoPlaying(false)
+
+    videoElement.addEventListener('play', handlePlay)
+    videoElement.addEventListener('pause', handlePause)
+    videoElement.addEventListener('ended', handleEnded)
+
+    return () => {
+      videoElement.removeEventListener('play', handlePlay)
+      videoElement.removeEventListener('pause', handlePause)
+      videoElement.removeEventListener('ended', handleEnded)
+    }
+  }, [caseStudy?.video_file])
 
   const fetchCaseStudy = async () => {
     try {
@@ -198,22 +219,19 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           </button>
         )}
 
-        {/* Pause Button - bottom right corner for uploaded videos */}
-        {caseStudy.video_file && (
+        {/* Pause Button - only show when video is playing */}
+        {caseStudy.video_file && isVideoPlaying && (
           <button
             onClick={() => {
               const videoElement = document.querySelector('video') as HTMLVideoElement
               if (videoElement) {
-                if (videoElement.paused) {
-                  videoElement.play()
-                } else {
-                  videoElement.pause()
-                }
+                videoElement.pause()
               }
             }}
-            className="absolute bottom-6 right-6 z-20 bg-black/60 hover:bg-black/80 text-white px-4 py-2 rounded transition flex items-center gap-2"
+            className="absolute bottom-6 right-6 z-20 bg-black/60 hover:bg-black/80 text-white p-3 rounded transition"
+            title="Pause"
           >
-            <span id="pauseButtonText">⏸ PAUSE</span>
+            <span className="text-lg">⏸</span>
           </button>
         )}
       </section>
