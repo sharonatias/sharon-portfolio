@@ -197,6 +197,25 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             </div>
           </button>
         )}
+
+        {/* Pause Button - bottom right corner for uploaded videos */}
+        {caseStudy.video_file && (
+          <button
+            onClick={() => {
+              const videoElement = document.querySelector('video') as HTMLVideoElement
+              if (videoElement) {
+                if (videoElement.paused) {
+                  videoElement.play()
+                } else {
+                  videoElement.pause()
+                }
+              }
+            }}
+            className="absolute bottom-6 right-6 z-20 bg-black/60 hover:bg-black/80 text-white px-4 py-2 rounded transition flex items-center gap-2"
+          >
+            <span id="pauseButtonText">⏸ PAUSE</span>
+          </button>
+        )}
       </section>
 
       {/* PROJECT META GRID */}
