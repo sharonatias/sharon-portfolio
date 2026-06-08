@@ -120,8 +120,19 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* HERO SECTION */}
       <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px' }}>
-        {/* Background Image with Gradient Overlay */}
-        {caseStudy.hero_image && (
+        {/* Video Background (if video file exists) */}
+        {caseStudy.video_file && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            poster={caseStudy.hero_image}
+          >
+            <source src={caseStudy.video_file} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
+
+        {/* Background Image with Gradient Overlay (fallback if no video) */}
+        {!caseStudy.video_file && caseStudy.hero_image && (
           <>
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -132,6 +143,9 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
           </>
         )}
+
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent z-5" />
 
         {/* Hero Content */}
         <div className="relative z-10 w-full px-6 lg:px-20">
@@ -154,30 +168,41 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
             {/* Watch Film CTA */}
             {(caseStudy.watch_film_link || caseStudy.video_file) && (
-              <a
-                href={caseStudy.watch_film_link || '#'}
-                {...(caseStudy.watch_film_link ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                onClick={caseStudy.video_file && !caseStudy.watch_film_link ? (e) => { e.preventDefault(); } : undefined}
+              <button
+                onClick={() => {
+                  const videoElement = document.querySelector('video') as HTMLVideoElement
+                  if (videoElement) {
+                    videoElement.play()
+                  }
+                }}
                 className="inline-flex items-center gap-2 text-white hover:text-gray-300 transition text-sm tracking-widest uppercase"
               >
                 Watch Film
                 <span className="text-lg">→</span>
-              </a>
+              </button>
             )}
           </div>
         </div>
 
-        {/* Play Button (if video URL or file exists) */}
-        {(caseStudy.watch_film_link || caseStudy.video_file) && (
-          <a
-            href={caseStudy.watch_film_link || '#'}
-            {...(caseStudy.watch_film_link ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            className="absolute inset-0 flex items-center justify-center group z-20 hover:bg-black/20 transition"
+        {/* Play Button (if video exists) */}
+        {(caseStudy.video_file || caseStudy.watch_film_link) && (
+          <button
+            onClick={() => {
+              if (caseStudy.video_file) {
+                const videoElement = document.querySelector('video') as HTMLVideoElement
+                if (videoElement) {
+                  videoElement.play()
+                }
+              } else if (caseStudy.watch_film_link) {
+                window.open(caseStudy.watch_film_link, '_blank')
+              }
+            }}
+            className="absolute inset-0 flex items-center justify-center group z-20 hover:bg-black/20 transition cursor-pointer"
           >
             <div className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center group-hover:scale-110 transition">
               <span className="text-white text-xl ml-1">▶</span>
             </div>
-          </a>
+          </button>
         )}
       </section>
 
