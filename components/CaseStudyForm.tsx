@@ -96,21 +96,40 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   }
 
   const handleSectionChange = (sectionName: string, field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [sectionName]: {
-        ...(prev as any)[sectionName],
-        [field]: value,
-      },
-    }))
+    console.log(`🔧 handleSectionChange: ${sectionName}.${field}`, value)
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [sectionName]: {
+          ...(prev as any)[sectionName],
+          [field]: value,
+        },
+      }
+      console.log(`✅ Updated ${sectionName}:`, updated[sectionName as keyof typeof updated])
+      return updated
+    })
   }
 
   const handleUploadSuccess = (result: any, sectionName: string) => {
-    const url = result.info.secure_url
-    handleSectionChange(sectionName, 'images', [
-      ...((formData as any)[sectionName]?.images || []),
-      url,
-    ])
+    const url = result.info?.secure_url || result.info?.url
+    console.log('📸 Upload success for', sectionName)
+    console.log('🔗 URL:', url)
+
+    setFormData((prev) => {
+      const currentImages = (prev as any)[sectionName]?.images || []
+      console.log('📦 Current images:', currentImages)
+
+      const newImages = [...currentImages, url]
+      console.log('✅ New images array:', newImages)
+
+      return {
+        ...prev,
+        [sectionName]: {
+          ...(prev as any)[sectionName],
+          images: newImages,
+        },
+      }
+    })
   }
 
   const removeImage = (sectionName: string, index: number) => {
@@ -201,6 +220,10 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
 
       const url = caseStudy?.id ? `/api/case-studies/${caseStudy.id}` : '/api/case-studies'
       const method = caseStudy?.id ? 'PUT' : 'POST'
+
+      console.log('📤 Submitting formData:')
+      console.log('  problem:', JSON.stringify(formData.problem, null, 2))
+      console.log('Full body being sent:', JSON.stringify(formData, null, 2))
 
       const res = await fetch(url, {
         method,
