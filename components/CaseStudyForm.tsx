@@ -249,9 +249,27 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   const renderSectionForm = (sectionName: string, sectionLabel: string) => {
     const section = (formData as any)[sectionName]
 
+    const deleteSection = () => {
+      if (window.confirm(`Delete ${sectionLabel}? This will remove all content.`)) {
+        handleSectionChange(sectionName, 'title', '')
+        handleSectionChange(sectionName, 'description', '')
+        handleSectionChange(sectionName, 'images', [])
+        handleSectionChange(sectionName, 'accentColor', undefined)
+      }
+    }
+
     return (
       <div key={sectionName} className="bg-gray-100 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-bold mb-4 text-black">{sectionLabel}</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold text-black">{sectionLabel}</h3>
+          <button
+            type="button"
+            onClick={deleteSection}
+            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
+          >
+            🗑️ Delete
+          </button>
+        </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2 text-black">Title</label>
