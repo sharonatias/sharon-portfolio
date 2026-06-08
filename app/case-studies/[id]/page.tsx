@@ -184,18 +184,11 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
-        {/* Play Button (if video exists) */}
-        {(caseStudy.video_file || caseStudy.watch_film_link) && (
+        {/* Play Button - only show for external links, not for uploaded videos */}
+        {caseStudy.watch_film_link && !caseStudy.video_file && (
           <button
             onClick={() => {
-              if (caseStudy.video_file) {
-                const videoElement = document.querySelector('video') as HTMLVideoElement
-                if (videoElement) {
-                  videoElement.play()
-                }
-              } else if (caseStudy.watch_film_link) {
-                window.open(caseStudy.watch_film_link, '_blank')
-              }
+              window.open(caseStudy.watch_film_link, '_blank')
             }}
             className="absolute inset-0 flex items-center justify-center group z-20 hover:bg-black/20 transition cursor-pointer"
           >
