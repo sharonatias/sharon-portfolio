@@ -478,8 +478,15 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
                   Upload Video
                 </button>
                 {formData.video_file && (
-                  <div className="text-sm text-green-600">
-                    ✅ Video uploaded: {formData.video_file.substring(0, 50)}...
+                  <div className="space-y-2">
+                    <div className="text-sm text-green-600">
+                      ✅ Video uploaded: {formData.video_file.substring(0, 50)}...
+                    </div>
+                    <video
+                      src={formData.video_file}
+                      controls
+                      className="w-32 h-32 object-cover rounded bg-gray-900"
+                    />
                   </div>
                 )}
               </div>
