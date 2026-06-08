@@ -457,11 +457,17 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           <CldUploadWidget
             uploadPreset="sharon_portfolio"
             onSuccess={(result: any) => {
+              console.log('✅ Video uploaded:', result)
               setFormData((prev) => ({ ...prev, video_file: result.secure_url }))
               setUploading(false)
             }}
+            onError={(error: any) => {
+              console.error('❌ Upload error:', error)
+              alert('Failed to upload video: ' + error.message)
+              setUploading(false)
+            }}
             options={{
-              resourceType: 'video',
+              resourceType: 'auto',
               maxFileSize: 500000000, // 500MB for videos
             }}
           >
