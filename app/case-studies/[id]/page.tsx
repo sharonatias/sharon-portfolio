@@ -10,6 +10,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
   const [menuOpen, setMenuOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [showVideoModal, setShowVideoModal] = useState(false)
 
   useEffect(() => {
     params.then((p) => {
@@ -162,31 +163,8 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* HERO SECTION */}
       <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px' }}>
-        {/* Uploaded Video File */}
-        {caseStudy.video_file && (
-          <video
-            className="absolute inset-0 w-full h-full object-cover"
-            poster={caseStudy.hero_image}
-          >
-            <source src={caseStudy.video_file} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        )}
-
-        {/* YouTube Video (if watch_film_link is a YouTube URL) */}
-        {!caseStudy.video_file && isYouTubeUrl(caseStudy.watch_film_link) && getYouTubeEmbedUrl(caseStudy.watch_film_link!) ? (
-          <iframe
-            className="absolute inset-0 w-full h-full"
-            src={getYouTubeEmbedUrl(caseStudy.watch_film_link!)!}
-            title="Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        ) : null}
-
-        {/* Background Image with Gradient Overlay (fallback if no video) */}
-        {!caseStudy.video_file && !isYouTubeUrl(caseStudy.watch_film_link) && caseStudy.hero_image && (
+        {/* Hero Image Background */}
+        {caseStudy.hero_image && (
           <>
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -223,12 +201,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             {/* Watch Film CTA */}
             {(caseStudy.watch_film_link || caseStudy.video_file) && (
               <button
-                onClick={() => {
-                  const videoElement = document.querySelector('video') as HTMLVideoElement
-                  if (videoElement) {
-                    videoElement.play()
-                  }
-                }}
+                onClick={() => setShowVideoModal(true)}
                 className="inline-flex items-center gap-2 text-white hover:text-gray-300 transition text-sm tracking-widest uppercase"
               >
                 Watch Film
@@ -238,33 +211,15 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
-        {/* Play Button - only show for external links, not for uploaded videos */}
-        {caseStudy.watch_film_link && !caseStudy.video_file && (
+        {/* Play Button - show if video exists */}
+        {(caseStudy.watch_film_link || caseStudy.video_file) && (
           <button
-            onClick={() => {
-              window.open(caseStudy.watch_film_link, '_blank')
-            }}
+            onClick={() => setShowVideoModal(true)}
             className="absolute inset-0 flex items-center justify-center group z-20 hover:bg-black/20 transition cursor-pointer"
           >
             <div className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center group-hover:scale-110 transition">
               <span className="text-white text-xl ml-1">▶</span>
             </div>
-          </button>
-        )}
-
-        {/* Pause Button - only show when video is playing */}
-        {caseStudy.video_file && isVideoPlaying && (
-          <button
-            onClick={() => {
-              const videoElement = document.querySelector('video') as HTMLVideoElement
-              if (videoElement) {
-                videoElement.pause()
-              }
-            }}
-            className="absolute bottom-6 right-6 z-20 bg-black/60 hover:bg-black/80 text-white p-3 rounded transition"
-            title="Pause"
-          >
-            <span className="text-lg">⏸</span>
           </button>
         )}
       </section>
@@ -392,6 +347,30 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           accentColor={accentColor}
         />
       ))}
+
+      {/* Video Modal */}
+      {showVideoModal && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setShowVideoModal(false)}>
+          <div className="w-full max-w-4xl aspect-video bg-black rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Uploaded Video */}
+            {caseStudy.video_file ? (
+              <video className="w-full h-full" controls autoPlay>
+                <source src={caseStudy.video_file} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : /* YouTube Video */ isYouTubeUrl(caseStudy.watch_film_link) && getYouTubeEmbedUrl(caseStudy.watch_film_link!) ? (
+              <iframe
+                className="w-full h-full"
+                src={getYouTubeEmbedUrl(caseStudy.watch_film_link!)!}
+                title="Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : null}
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-gray-800 p-6">
