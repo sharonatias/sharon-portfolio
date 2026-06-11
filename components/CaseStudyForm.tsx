@@ -676,13 +676,15 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
             {formData.process_blocks.map((block, index) => (
               <div key={index} className="bg-gray-100 p-4 rounded-lg">
                 <div className="flex justify-between items-center mb-4">
-                  <h4 className="font-bold text-black">Block {index + 1}</h4>
+                  <h4 className="font-bold text-black">
+                    {block.title || `Block ${index + 1}`}
+                  </h4>
                   <button
                     type="button"
                     onClick={() => removeProcessBlock(index)}
                     className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
                   >
-                    Delete
+                    🗑️ Delete
                   </button>
                 </div>
 
