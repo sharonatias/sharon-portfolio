@@ -93,6 +93,27 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
   const accentColor = caseStudy.brand_color || '#000000'
 
+  // Helper function to get YouTube embed URL
+  const getYouTubeEmbedUrl = (url: string) => {
+    try {
+      if (url.includes('youtube.com/watch')) {
+        const videoId = url.split('v=')[1].split('&')[0]
+        return `https://www.youtube.com/embed/${videoId}`
+      } else if (url.includes('youtu.be')) {
+        const videoId = url.split('/').pop()
+        return `https://www.youtube.com/embed/${videoId}`
+      }
+    } catch (e) {
+      return null
+    }
+    return null
+  }
+
+  const isYouTubeUrl = (url: string | undefined) => {
+    if (!url) return false
+    return url.includes('youtube.com') || url.includes('youtu.be')
+  }
+
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Header */}
@@ -141,7 +162,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* HERO SECTION */}
       <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px' }}>
-        {/* Video Background (if video file exists) */}
+        {/* Uploaded Video File */}
         {caseStudy.video_file && (
           <video
             className="absolute inset-0 w-full h-full object-cover"
@@ -152,8 +173,20 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           </video>
         )}
 
+        {/* YouTube Video (if watch_film_link is a YouTube URL) */}
+        {!caseStudy.video_file && isYouTubeUrl(caseStudy.watch_film_link) && getYouTubeEmbedUrl(caseStudy.watch_film_link!) ? (
+          <iframe
+            className="absolute inset-0 w-full h-full"
+            src={getYouTubeEmbedUrl(caseStudy.watch_film_link!)!}
+            title="Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : null}
+
         {/* Background Image with Gradient Overlay (fallback if no video) */}
-        {!caseStudy.video_file && caseStudy.hero_image && (
+        {!caseStudy.video_file && !isYouTubeUrl(caseStudy.watch_film_link) && caseStudy.hero_image && (
           <>
             <div
               className="absolute inset-0 bg-cover bg-center"
