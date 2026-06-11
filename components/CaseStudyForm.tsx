@@ -272,6 +272,18 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         </div>
 
         <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-black">Section Label (Custom Name)</label>
+          <input
+            type="text"
+            value={section.label || sectionLabel}
+            onChange={(e) => handleSectionChange(sectionName, 'label', e.target.value || undefined)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder={sectionLabel}
+          />
+          <p className="text-xs text-gray-600 mt-1">Leave empty to use default: {sectionLabel}</p>
+        </div>
+
+        <div className="mb-4">
           <label className="block text-sm font-medium mb-2 text-black">Title</label>
           <input
             type="text"
