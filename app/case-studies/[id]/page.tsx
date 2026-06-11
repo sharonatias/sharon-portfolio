@@ -302,33 +302,50 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* PROCESS SECTION */}
       {caseStudy.process_blocks && caseStudy.process_blocks.length > 0 && (
-        <section className="border-b border-gray-800 py-12 px-6">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-light mb-12" style={{ color: accentColor }}>
-              PROCESS
-            </h2>
-            <div className="space-y-12">
-              {caseStudy.process_blocks.map((block, idx) => (
-                <div key={idx} className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-                  <div>
-                    <div className="text-5xl font-light text-gray-600 mb-4">{String(block.number).padStart(2, '0')}</div>
-                    <h3 className="text-2xl font-light mb-4 text-white">{block.title}</h3>
-                    <p className="text-gray-300 leading-relaxed">{block.description}</p>
-                  </div>
-                  {block.image && (
-                    <div className="aspect-video overflow-hidden rounded-lg bg-gray-900">
-                      <img src={block.image} alt={block.title} className="w-full h-full object-cover" />
+        <section className="border-b border-gray-800">
+          <div className="py-12 px-6">
+            <div className="max-w-6xl mx-auto">
+              <div className="space-y-12">
+                {caseStudy.process_blocks.map((block, idx) => {
+                  // Section numbering: 1-5 are standard sections, 6+ are process blocks
+                  const blockNumber = 5 + idx + 1; // 6, 7, 8, etc.
+                  return (
+                    <div key={idx} className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch">
+                      {/* Text Content */}
+                      <div className="pl-0 pr-8 border-r-2 border-gray-700 h-full flex flex-col py-6 max-w-sm" style={{ marginLeft: '-300px' }}>
+                        <div className="mb-1 text-xs tracking-widest text-gray-500 uppercase">{String(blockNumber).padStart(2, '0')}</div>
+                        <h2 className="text-3xl font-light mb-3 text-white">
+                          {block.title}
+                        </h2>
+                        <p className="text-gray-300 text-base leading-tight whitespace-pre-wrap">{block.description}</p>
+                      </div>
+
+                      {/* Image */}
+                      {block.image && (
+                        <div className="flex" style={{ backgroundColor: '#000000', gap: '8px', marginLeft: '-440px' }}>
+                          <div key={idx} className="overflow-hidden bg-gray-900 flex-shrink-0" style={{ width: '600px', height: '412px' }}>
+                            <img src={block.image} alt={block.title} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  )
+                })}
+              </div>
             </div>
           </div>
         </section>
       )}
 
       {/* OUTCOME SECTION */}
-      {caseStudy.outcome && <CaseSection section={caseStudy.outcome} label={caseStudy.outcome.label || "OUTCOME"} number={6} accentColor={accentColor} />}
+      {caseStudy.outcome && (
+        <CaseSection
+          section={caseStudy.outcome}
+          label={caseStudy.outcome.label || "OUTCOME"}
+          number={5 + (caseStudy.process_blocks?.length || 0) + 1}
+          accentColor={accentColor}
+        />
+      )}
 
       {/* MY ROLE SECTION */}
       {caseStudy.my_role_title && (
