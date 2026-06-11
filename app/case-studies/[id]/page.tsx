@@ -163,8 +163,33 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
       {/* HERO SECTION */}
       <section className="relative flex items-center overflow-hidden w-screen -mx-[calc((100vw-100%)/2)]" style={{ height: '800px' }}>
-        {/* Hero Image Background */}
-        {caseStudy.hero_image && (
+        {/* Uploaded Video - fill HERO when playing */}
+        {caseStudy.video_file && showVideoModal && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            controls
+            autoPlay
+            onPlay={() => setShowVideoModal(true)}
+            onEnded={() => setShowVideoModal(false)}
+          >
+            <source src={caseStudy.video_file} type="video/mp4" />
+          </video>
+        )}
+
+        {/* YouTube Video - fill HERO when playing */}
+        {!caseStudy.video_file && isYouTubeUrl(caseStudy.watch_film_link) && showVideoModal && getYouTubeEmbedUrl(caseStudy.watch_film_link!) && (
+          <iframe
+            className="absolute inset-0 w-full h-full"
+            src={getYouTubeEmbedUrl(caseStudy.watch_film_link!)!}
+            title="Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        )}
+
+        {/* Hero Image Background - show when not playing video */}
+        {!showVideoModal && caseStudy.hero_image && (
           <>
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -347,30 +372,6 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           accentColor={accentColor}
         />
       ))}
-
-      {/* Video Modal */}
-      {showVideoModal && (
-        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setShowVideoModal(false)}>
-          <div className="w-full max-w-4xl aspect-video bg-black rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            {/* Uploaded Video */}
-            {caseStudy.video_file ? (
-              <video className="w-full h-full" controls autoPlay>
-                <source src={caseStudy.video_file} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ) : /* YouTube Video */ isYouTubeUrl(caseStudy.watch_film_link) && getYouTubeEmbedUrl(caseStudy.watch_film_link!) ? (
-              <iframe
-                className="w-full h-full"
-                src={getYouTubeEmbedUrl(caseStudy.watch_film_link!)!}
-                title="Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : null}
-          </div>
-        </div>
-      )}
 
       {/* Footer */}
       <footer className="border-t border-gray-800 p-6">
