@@ -169,7 +169,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             className="absolute inset-0 w-full h-full object-cover"
             controls
             autoPlay
-            onPlay={() => setShowVideoModal(true)}
+            muted={false}
             onEnded={() => setShowVideoModal(false)}
           >
             <source src={caseStudy.video_file} type="video/mp4" />
