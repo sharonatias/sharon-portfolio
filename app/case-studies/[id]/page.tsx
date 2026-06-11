@@ -320,12 +320,29 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
                         <p className="text-gray-300 text-base leading-tight whitespace-pre-wrap">{block.description}</p>
                       </div>
 
-                      {/* Image */}
-                      {block.image && (
+                      {/* Images */}
+                      {block.images && block.images.length > 0 && (
                         <div className="flex" style={{ backgroundColor: '#000000', gap: '8px', marginLeft: '-440px' }}>
-                          <div key={idx} className="overflow-hidden bg-gray-900 flex-shrink-0" style={{ width: '600px', height: '412px' }}>
-                            <img src={block.image} alt={block.title} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
-                          </div>
+                          {block.images.map((img, imgIdx) => {
+                            let imageWidth: number, imageHeight: number;
+
+                            if (block.images!.length === 1) {
+                              imageWidth = 1200;
+                              imageHeight = 412;
+                            } else if (block.images!.length === 2) {
+                              imageWidth = 600;
+                              imageHeight = 412;
+                            } else {
+                              imageWidth = 412;
+                              imageHeight = 412;
+                            }
+
+                            return (
+                              <div key={imgIdx} className="overflow-hidden bg-gray-900 flex-shrink-0" style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}>
+                                <img src={img} alt={`${block.title} ${imgIdx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                     </div>

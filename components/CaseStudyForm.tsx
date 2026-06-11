@@ -711,10 +711,17 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-black">Image (Optional)</label>
+                  <label className="block text-sm font-medium mb-1 text-black">Images (Max 4)</label>
                   <CldUploadWidget
                     uploadPreset="sharon_portfolio"
-                    onSuccess={(result: any) => handleProcessBlockImageUpload(result, index)}
+                    onSuccess={(result: any) => {
+                      if (block.images && block.images.length >= 4) {
+                        alert('Maximum 4 images allowed per block')
+                        return
+                      }
+                      const newImages = [...(block.images || []), result.info?.secure_url || result.info?.url]
+                      updateProcessBlock(index, 'images', newImages)
+                    }}
                     options={{
                       resourceType: 'auto',
                       maxFileSize: 100000000,
@@ -722,15 +729,37 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
                   >
                     {({ open }) => (
                       <div className="space-y-2">
-                        <button
-                          type="button"
-                          onClick={() => open()}
-                          className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 text-sm"
-                        >
-                          Upload Image
-                        </button>
-                        {block.image && (
-                          <img src={block.image} alt={`Block ${index + 1}`} className="w-32 h-32 object-cover rounded" />
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => open()}
+                            disabled={block.images && block.images.length >= 4}
+                            className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                          >
+                            + Add Image
+                          </button>
+                          {block.images && block.images.length > 0 && (
+                            <span className="text-sm text-gray-600">({block.images.length}/4)</span>
+                          )}
+                        </div>
+                        {block.images && block.images.length > 0 && (
+                          <div className="grid grid-cols-4 gap-2">
+                            {block.images.map((img, imgIdx) => (
+                              <div key={imgIdx} className="relative group">
+                                <img src={img} alt={`Block ${index + 1} Image ${imgIdx + 1}`} className="w-full h-24 object-cover rounded" />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = block.images?.filter((_, i) => i !== imgIdx) || []
+                                    updateProcessBlock(index, 'images', updated)
+                                  }}
+                                  className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-xs"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            ))}
+                          </div>
                         )}
                       </div>
                     )}
