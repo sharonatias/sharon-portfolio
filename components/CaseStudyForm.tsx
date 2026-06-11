@@ -175,13 +175,15 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   }
 
   const updateProcessBlock = (index: number, field: string, value: any) => {
-    const blocks = formData.process_blocks || []
-    const updated = [...blocks]
-    updated[index] = { ...updated[index], [field]: value }
-    setFormData((prev) => ({
-      ...prev,
-      process_blocks: updated,
-    }))
+    setFormData((prev) => {
+      const blocks = prev.process_blocks || []
+      const updated = [...blocks]
+      updated[index] = { ...updated[index], [field]: value }
+      return {
+        ...prev,
+        process_blocks: updated,
+      }
+    })
   }
 
   const removeProcessBlock = (index: number) => {
