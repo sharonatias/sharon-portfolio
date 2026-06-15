@@ -141,8 +141,21 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       {/* Menu */}
       {menuOpen && (
         <>
-          <div className="fixed inset-0 z-20 bg-black/30" onClick={() => setMenuOpen(false)} />
-          <nav className="fixed top-0 right-0 w-1/2 h-96 bg-black z-20 flex flex-col items-start justify-end px-16 pb-16 backdrop-blur">
+          {/* Blur Overlay */}
+          <div
+            className="fixed inset-0 z-10 backdrop-blur-sm bg-black/40 transition-all duration-300 ease-out"
+            onClick={() => setMenuOpen(false)}
+            style={{
+              animation: 'fadeIn 0.3s ease-out'
+            }}
+          />
+          {/* Navigation Menu */}
+          <nav
+            className="fixed top-0 right-0 w-full sm:w-1/2 h-screen sm:h-96 bg-black z-20 flex flex-col items-start justify-end px-8 sm:px-16 pb-16 shadow-2xl"
+            style={{
+              animation: 'slideInRight 0.4s ease-out'
+            }}
+          >
             <div className="flex flex-col gap-3 text-2xl font-medium tracking-wide w-full">
               <a href="/" onClick={() => setMenuOpen(false)} className="text-white hover:text-pink-500 transition text-left">
                 Home
