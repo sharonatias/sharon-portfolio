@@ -286,7 +286,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         setFormData(prev => ({
           ...prev,
           [sectionName]: {
-            ...prev[sectionName as keyof typeof prev],
+            ...(prev[sectionName as keyof typeof prev] as Record<string, unknown>),
             isDeleted: true,
           }
         }))
@@ -298,7 +298,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       setFormData(prev => ({
         ...prev,
         [sectionName]: {
-          ...prev[sectionName as keyof typeof prev],
+          ...(prev[sectionName as keyof typeof prev] as Record<string, unknown>),
           isDeleted: false,
         }
       }))
