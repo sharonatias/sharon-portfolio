@@ -93,6 +93,7 @@ export interface CaseStudySection {
   accentColor?: string
   label?: string
   isDeleted?: boolean
+  order?: number
 }
 
 export interface DynamicSection extends CaseStudySection {

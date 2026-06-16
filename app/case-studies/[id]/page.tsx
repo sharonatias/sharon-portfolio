@@ -315,12 +315,35 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
         </div>
       </section>
 
-      {/* CASE STUDY SECTIONS - IN ORDER */}
-      {caseStudy.problem && !caseStudy.problem.isDeleted && <CaseSection section={caseStudy.problem} label={caseStudy.problem.label || "THE BRIEF"} number={1} accentColor={accentColor} />}
-      {caseStudy.insight && !caseStudy.insight.isDeleted && <CaseSection section={caseStudy.insight} label={caseStudy.insight.label || "THE CHALLENGE"} number={2} accentColor={accentColor} />}
-      {caseStudy.approach && !caseStudy.approach.isDeleted && <CaseSection section={caseStudy.approach} label={caseStudy.approach.label || "CREATIVE CONCEPT"} number={3} accentColor={accentColor} />}
-      {caseStudy.flow && !caseStudy.flow.isDeleted && <CaseSection section={caseStudy.flow} label={caseStudy.flow.label || "FLOW"} number={4} accentColor={accentColor} />}
-      {caseStudy.interaction && !caseStudy.interaction.isDeleted && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={5} accentColor={accentColor} />}
+      {/* CASE STUDY SECTIONS - SORTED BY ORDER */}
+      {(() => {
+        const sections: { key: string; label: string; section?: any }[] = [
+          { key: 'problem', label: 'THE BRIEF', section: caseStudy.problem },
+          { key: 'insight', label: 'THE CHALLENGE', section: caseStudy.insight },
+          { key: 'approach', label: 'CREATIVE CONCEPT', section: caseStudy.approach },
+          { key: 'flow', label: 'FLOW', section: caseStudy.flow },
+          { key: 'interaction', label: 'VISUAL LANGUAGE', section: caseStudy.interaction },
+        ]
+
+        // Sort sections by order, or use default index if no order
+        const sorted = sections.sort((a, b) => {
+          const aOrder = a.section?.order ?? sections.indexOf(a)
+          const bOrder = b.section?.order ?? sections.indexOf(b)
+          return aOrder - bOrder
+        })
+
+        return sorted.map((item, idx) =>
+          item.section && !item.section.isDeleted ? (
+            <CaseSection
+              key={item.key}
+              section={item.section}
+              label={item.section.label || item.label}
+              number={idx + 1}
+              accentColor={accentColor}
+            />
+          ) : null
+        )
+      })()}
 
       {/* PROCESS SECTION */}
       {caseStudy.process_blocks && caseStudy.process_blocks.length > 0 && (

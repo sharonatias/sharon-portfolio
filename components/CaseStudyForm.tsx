@@ -240,14 +240,25 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       const url = caseStudy?.id ? `/api/case-studies/${caseStudy.id}` : '/api/case-studies'
       const method = caseStudy?.id ? 'PUT' : 'POST'
 
+      // Add order to each section based on sectionOrder
+      const dataToSave = { ...formData }
+      sectionOrder.forEach((sectionKey, index) => {
+        if ((dataToSave as any)[sectionKey]) {
+          (dataToSave as any)[sectionKey] = {
+            ...(dataToSave as any)[sectionKey],
+            order: index
+          }
+        }
+      })
+
       console.log('📤 Submitting formData:')
-      console.log('  problem:', JSON.stringify(formData.problem, null, 2))
-      console.log('Full body being sent:', JSON.stringify(formData, null, 2))
+      console.log('  problem:', JSON.stringify(dataToSave.problem, null, 2))
+      console.log('Full body being sent:', JSON.stringify(dataToSave, null, 2))
 
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSave),
       })
 
       if (res.ok) {
