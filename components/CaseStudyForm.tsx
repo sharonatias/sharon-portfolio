@@ -251,9 +251,14 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   const renderSectionForm = (sectionName: string, sectionLabel: string) => {
     const section = (formData as any)[sectionName]
 
+    // Don't render if section is deleted
+    if (section?.isDeleted) {
+      return null
+    }
+
     const deleteSection = () => {
-      if (window.confirm(`Delete ${sectionLabel}? This will clear only this section.`)) {
-        // Reset only this specific section to empty
+      if (window.confirm(`Delete ${sectionLabel}? This section will be hidden from the form.`)) {
+        // Mark this section as deleted
         setFormData(prev => ({
           ...prev,
           [sectionName]: {
@@ -261,6 +266,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
             description: '',
             images: [],
             accentColor: undefined,
+            isDeleted: true,
           }
         }))
       }

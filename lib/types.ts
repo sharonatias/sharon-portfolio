@@ -92,6 +92,7 @@ export interface CaseStudySection {
   images: string[]
   accentColor?: string
   label?: string
+  isDeleted?: boolean
 }
 
 export interface DynamicSection extends CaseStudySection {
