@@ -251,25 +251,46 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   const renderSectionForm = (sectionName: string, sectionLabel: string) => {
     const section = (formData as any)[sectionName]
 
-    // Don't render if section is deleted
-    if (section?.isDeleted) {
-      return null
-    }
-
     const deleteSection = () => {
       if (window.confirm(`Delete ${sectionLabel}? This section will be hidden from the form.`)) {
         // Mark this section as deleted
         setFormData(prev => ({
           ...prev,
           [sectionName]: {
-            title: '',
-            description: '',
-            images: [],
-            accentColor: undefined,
+            ...prev[sectionName as keyof typeof prev],
             isDeleted: true,
           }
         }))
       }
+    }
+
+    const restoreSection = () => {
+      // Restore the section
+      setFormData(prev => ({
+        ...prev,
+        [sectionName]: {
+          ...prev[sectionName as keyof typeof prev],
+          isDeleted: false,
+        }
+      }))
+    }
+
+    // Show restore button if section is deleted
+    if (section?.isDeleted) {
+      return (
+        <div key={sectionName} className="bg-red-50 rounded-lg p-4 mb-4 border-2 border-red-300">
+          <div className="flex justify-between items-center">
+            <p className="text-red-700 font-medium">{sectionLabel} - Deleted</p>
+            <button
+              type="button"
+              onClick={restoreSection}
+              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+            >
+              ↩️ Restore
+            </button>
+          </div>
+        </div>
+      )
     }
 
     return (
