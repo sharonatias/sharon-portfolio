@@ -373,7 +373,7 @@ export default function ProjectsPage() {
 
                         {/* Title Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                          <h3 className="text-4xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                             {project.title}
                           </h3>
                         </div>
@@ -413,7 +413,7 @@ export default function ProjectsPage() {
                             {/* Title Overlay */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                               {design.title && (
-                                <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                                <h3 className="text-4xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                                   {design.title}
                                 </h3>
                               )}
@@ -436,7 +436,7 @@ export default function ProjectsPage() {
                             {/* Title Overlay */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                               {design.title && (
-                                <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                                <h3 className="text-4xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                                   {design.title}
                                 </h3>
                               )}
@@ -473,7 +473,7 @@ export default function ProjectsPage() {
 
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-4xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {design.title}
                             </h3>
                           </div>
@@ -489,7 +489,7 @@ export default function ProjectsPage() {
                           </div>
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-4xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {design.title}
                             </h3>
                           </div>
@@ -578,7 +578,7 @@ export default function ProjectsPage() {
 
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-4xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {videoCase.title}
                             </h3>
                           </div>
