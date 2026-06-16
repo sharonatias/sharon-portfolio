@@ -85,6 +85,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
   const [formData, setFormData] = useState<AppCase>(buildFormData(caseStudy))
   const [uploading, setUploading] = useState(false)
   const [sectionOrder, setSectionOrder] = useState<string[]>(['problem', 'insight', 'approach', 'flow', 'interaction', 'outcome'])
+  const [showVideoPreview, setShowVideoPreview] = useState(false)
 
   const moveSectionUp = (sectionName: string) => {
     const index = sectionOrder.indexOf(sectionName)
@@ -646,11 +647,19 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
                     <div className="text-sm text-green-600">
                       ✅ Video uploaded: {formData.video_file.substring(0, 50)}...
                     </div>
-                    <video
-                      src={formData.video_file}
-                      controls
-                      className="w-32 h-32 object-cover rounded bg-gray-900"
-                    />
+                    <div className="flex gap-2">
+                      <video
+                        src={formData.video_file}
+                        className="w-32 h-32 object-cover rounded bg-gray-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowVideoPreview(true)}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm h-fit"
+                      >
+                        ▶️ Play
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -893,6 +902,31 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       >
         {uploading ? 'Saving...' : caseStudy?.id ? 'Update Case Study' : 'Create Case Study'}
       </button>
+
+      {/* Video Preview Modal */}
+      {showVideoPreview && formData.video_file && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-4xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-white font-bold">Video Preview</h3>
+              <button
+                onClick={() => setShowVideoPreview(false)}
+                className="text-white text-2xl hover:opacity-70"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="bg-black">
+              <video
+                src={formData.video_file}
+                controls
+                autoPlay
+                className="w-full"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   )
 }
