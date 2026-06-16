@@ -12,6 +12,7 @@ import AboutForm from '@/components/AboutForm'
 import AppCaseForm from '@/components/AppCaseForm'
 import CaseStudyForm from '@/components/CaseStudyForm'
 import ManageOrderBrandDigital from '@/components/ManageOrderBrandDigital'
+import CategoryHeroesForm from '@/components/CategoryHeroesForm'
 import Link from 'next/link'
 
 // Error Boundary Component
@@ -73,7 +74,7 @@ export default function AdminDashboard() {
   const [editingBrandDesign, setEditingBrandDesign] = useState<BrandDesign | null>(null)
   const [editingAppCase, setEditingAppCase] = useState<AppCase | null>(null)
   const [editingVideoCase, setEditingVideoCase] = useState<AppCase | null>(null)
-  const [activeTab, setActiveTab] = useState<'projects' | 'hero' | 'brand' | 'about' | 'app' | 'manage-order' | 'video-case-studies'>('projects')
+  const [activeTab, setActiveTab] = useState<'projects' | 'hero' | 'brand' | 'about' | 'app' | 'manage-order' | 'video-case-studies' | 'category-heroes'>('projects')
 
   useEffect(() => {
     const isAdmin = sessionStorage.getItem('isAdmin')
@@ -330,6 +331,16 @@ export default function AdminDashboard() {
             }`}
           >
             Video Case Studies
+          </button>
+          <button
+            onClick={() => setActiveTab('category-heroes')}
+            className={`px-4 py-2 font-medium transition ${
+              activeTab === 'category-heroes'
+                ? 'border-b-2 border-black text-black'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Category Heroes
           </button>
         </div>
 
@@ -763,6 +774,18 @@ export default function AdminDashboard() {
             {videoCaseStudies.length === 0 && !showVideoCaseForm && (
               <div className="text-center text-gray-500 py-8">No video case studies yet</div>
             )}
+          </>
+        )}
+
+        {/* Category Heroes Tab */}
+        {activeTab === 'category-heroes' && (
+          <>
+            <h2 className="text-2xl font-bold mb-6">Edit Category Heroes</h2>
+            <CategoryHeroesForm
+              onSave={() => {
+                // Optionally refresh or show success message
+              }}
+            />
           </>
         )}
       </div>

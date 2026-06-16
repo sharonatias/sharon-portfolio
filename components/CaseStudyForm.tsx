@@ -20,7 +20,7 @@ const emptyProcessBlock: ProcessBlock = {
   number: 1,
   title: '',
   description: '',
-  image: '',
+  images: [],
 }
 
 export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps) {
@@ -166,7 +166,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       number: ((formData.process_blocks?.length || 0) + 1),
       title: '',
       description: '',
-      image: '',
+      images: [],
     }
     setFormData((prev) => ({
       ...prev,
