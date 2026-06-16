@@ -316,11 +316,11 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       </section>
 
       {/* CASE STUDY SECTIONS - IN ORDER */}
-      {caseStudy.problem && <CaseSection section={caseStudy.problem} label={caseStudy.problem.label || "THE BRIEF"} number={1} accentColor={accentColor} />}
-      {caseStudy.insight && <CaseSection section={caseStudy.insight} label={caseStudy.insight.label || "THE CHALLENGE"} number={2} accentColor={accentColor} />}
-      {caseStudy.approach && <CaseSection section={caseStudy.approach} label={caseStudy.approach.label || "CREATIVE CONCEPT"} number={3} accentColor={accentColor} />}
-      {caseStudy.flow && <CaseSection section={caseStudy.flow} label={caseStudy.flow.label || "FLOW"} number={4} accentColor={accentColor} />}
-      {caseStudy.interaction && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={5} accentColor={accentColor} />}
+      {caseStudy.problem && !caseStudy.problem.isDeleted && <CaseSection section={caseStudy.problem} label={caseStudy.problem.label || "THE BRIEF"} number={1} accentColor={accentColor} />}
+      {caseStudy.insight && !caseStudy.insight.isDeleted && <CaseSection section={caseStudy.insight} label={caseStudy.insight.label || "THE CHALLENGE"} number={2} accentColor={accentColor} />}
+      {caseStudy.approach && !caseStudy.approach.isDeleted && <CaseSection section={caseStudy.approach} label={caseStudy.approach.label || "CREATIVE CONCEPT"} number={3} accentColor={accentColor} />}
+      {caseStudy.flow && !caseStudy.flow.isDeleted && <CaseSection section={caseStudy.flow} label={caseStudy.flow.label || "FLOW"} number={4} accentColor={accentColor} />}
+      {caseStudy.interaction && !caseStudy.interaction.isDeleted && <CaseSection section={caseStudy.interaction} label={caseStudy.interaction.label || "VISUAL LANGUAGE"} number={5} accentColor={accentColor} />}
 
       {/* PROCESS SECTION */}
       {caseStudy.process_blocks && caseStudy.process_blocks.length > 0 && (
@@ -377,7 +377,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       )}
 
       {/* OUTCOME SECTION */}
-      {caseStudy.outcome && (
+      {caseStudy.outcome && !caseStudy.outcome.isDeleted && (
         <CaseSection
           section={caseStudy.outcome}
           label={caseStudy.outcome.label || "OUTCOME"}
