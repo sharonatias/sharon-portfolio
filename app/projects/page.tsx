@@ -68,7 +68,7 @@ export default function ProjectsPage() {
     }, 100)
 
     return () => clearTimeout(timer)
-  }, [projects, brandDesigns, appCases, videoCaseStudies])
+  }, [projects, brandDesigns, appCases, videoCaseStudies, selectedCategory])
 
   const fetchCategoryHeros = async () => {
     try {
