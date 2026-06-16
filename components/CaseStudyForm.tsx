@@ -252,11 +252,17 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
     const section = (formData as any)[sectionName]
 
     const deleteSection = () => {
-      if (window.confirm(`Delete ${sectionLabel}? This will remove all content.`)) {
-        handleSectionChange(sectionName, 'title', '')
-        handleSectionChange(sectionName, 'description', '')
-        handleSectionChange(sectionName, 'images', [])
-        handleSectionChange(sectionName, 'accentColor', undefined)
+      if (window.confirm(`Delete ${sectionLabel}? This will clear only this section.`)) {
+        // Reset only this specific section to empty
+        setFormData(prev => ({
+          ...prev,
+          [sectionName]: {
+            title: '',
+            description: '',
+            images: [],
+            accentColor: undefined,
+          }
+        }))
       }
     }
 
