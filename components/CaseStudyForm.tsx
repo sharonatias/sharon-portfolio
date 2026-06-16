@@ -84,6 +84,23 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
 
   const [formData, setFormData] = useState<AppCase>(buildFormData(caseStudy))
   const [uploading, setUploading] = useState(false)
+  const [sectionOrder, setSectionOrder] = useState<string[]>(['problem', 'insight', 'approach', 'flow', 'interaction', 'outcome'])
+
+  const moveSectionUp = (sectionName: string) => {
+    const index = sectionOrder.indexOf(sectionName)
+    if (index <= 0) return
+    const newOrder = [...sectionOrder]
+    ;[newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]]
+    setSectionOrder(newOrder)
+  }
+
+  const moveSectionDown = (sectionName: string) => {
+    const index = sectionOrder.indexOf(sectionName)
+    if (index >= sectionOrder.length - 1) return
+    const newOrder = [...sectionOrder]
+    ;[newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]]
+    setSectionOrder(newOrder)
+  }
 
   // Update form data when caseStudy changes (e.g., switching between editing different cases)
   useEffect(() => {
@@ -297,13 +314,31 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       <div key={sectionName} className="bg-gray-100 rounded-lg p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-bold text-black">{sectionLabel}</h3>
-          <button
-            type="button"
-            onClick={deleteSection}
-            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
-          >
-            🗑️ Delete
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => moveSectionUp(sectionName)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm disabled:bg-gray-400"
+              disabled={sectionOrder.indexOf(sectionName) === 0}
+            >
+              ⬆️ Up
+            </button>
+            <button
+              type="button"
+              onClick={() => moveSectionDown(sectionName)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm disabled:bg-gray-400"
+              disabled={sectionOrder.indexOf(sectionName) === sectionOrder.length - 1}
+            >
+              ⬇️ Down
+            </button>
+            <button
+              type="button"
+              onClick={deleteSection}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
+            >
+              🗑️ Delete
+            </button>
+          </div>
         </div>
 
         <div className="mb-4">
@@ -643,13 +678,18 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         </div>
       </div>
 
-      {/* Case Study Sections */}
-      {renderSectionForm('problem', 'THE BRIEF')}
-      {renderSectionForm('insight', 'THE CHALLENGE')}
-      {renderSectionForm('approach', 'CREATIVE CONCEPT')}
-      {renderSectionForm('interaction', 'VISUAL LANGUAGE')}
-      {renderSectionForm('flow', 'PROCESS')}
-      {renderSectionForm('outcome', 'OUTCOME')}
+      {/* Case Study Sections - Sorted by User Order */}
+      {sectionOrder.map(sectionKey => {
+        const labels: { [key: string]: string } = {
+          problem: 'THE BRIEF',
+          insight: 'THE CHALLENGE',
+          approach: 'CREATIVE CONCEPT',
+          flow: 'PROCESS',
+          interaction: 'VISUAL LANGUAGE',
+          outcome: 'OUTCOME'
+        }
+        return renderSectionForm(sectionKey, labels[sectionKey])
+      })}
 
       {/* Gallery Images */}
       <div className="bg-white rounded-lg p-6">
