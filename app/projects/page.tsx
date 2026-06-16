@@ -179,7 +179,7 @@ export default function ProjectsPage() {
             <h2 className="text-sm font-light tracking-widest text-gray-300">CREATIVE & DIRECTOR</h2>
           </div>
         </Link>
-        <div className="text-2xl font-medium tracking-wide mr-20">Selected Work</div>
+        <div className="text-3xl mr-20" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>WORK</div>
       </header>
 
       {/* Hamburger Menu Button */}
