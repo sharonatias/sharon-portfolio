@@ -330,12 +330,12 @@ export default function ProjectsPage() {
                       {/* Title & Description Overlay */}
                       <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                         {project.title && (
-                          <h3 className="text-lg font-bold mb-2" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                          <h3 className="text-lg font-bold mb-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                             {project.title}
                           </h3>
                         )}
                         {project.description && (
-                          <p className="text-sm text-gray-200 line-clamp-2" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 300 }}>
+                          <p className="text-sm text-gray-200 line-clamp-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
                             {project.description}
                           </p>
                         )}
@@ -373,7 +373,7 @@ export default function ProjectsPage() {
 
                         {/* Title Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3 className="text-2xl font-bold" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                          <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                             {project.title}
                           </h3>
                         </div>
@@ -413,12 +413,12 @@ export default function ProjectsPage() {
                             {/* Title Overlay */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                               {design.title && (
-                                <h3 className="text-2xl font-bold" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                                <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                                   {design.title}
                                 </h3>
                               )}
                               {design.story && (
-                                <p className="text-sm text-gray-200 mt-2 line-clamp-2" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 300 }}>
+                                <p className="text-sm text-gray-200 mt-2 line-clamp-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
                                   {design.story}
                                 </p>
                               )}
@@ -436,7 +436,7 @@ export default function ProjectsPage() {
                             {/* Title Overlay */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                               {design.title && (
-                                <h3 className="text-2xl font-bold" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                                <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                                   {design.title}
                                 </h3>
                               )}
@@ -473,7 +473,7 @@ export default function ProjectsPage() {
 
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {design.title}
                             </h3>
                           </div>
@@ -489,7 +489,7 @@ export default function ProjectsPage() {
                           </div>
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {design.title}
                             </h3>
                           </div>
@@ -528,12 +528,12 @@ export default function ProjectsPage() {
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                             {appCase.title && (
-                              <h3 className="text-lg font-bold line-clamp-2" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                              <h3 className="text-lg font-bold line-clamp-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                                 {appCase.title}
                               </h3>
                             )}
                             {appCase.subtitle && (
-                              <p className="text-sm text-gray-200 mt-2 line-clamp-1" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 300 }}>
+                              <p className="text-sm text-gray-200 mt-2 line-clamp-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
                                 {appCase.subtitle}
                               </p>
                             )}
@@ -542,7 +542,7 @@ export default function ProjectsPage() {
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black flex-col">
                           {appCase.title && (
-                            <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-lg font-bold text-white" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {appCase.title}
                             </h3>
                           )}
@@ -578,7 +578,7 @@ export default function ProjectsPage() {
 
                           {/* Title Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold" style={{ fontFamily: 'Nanno Book, sans-serif', fontWeight: 400 }}>
+                            <h3 className="text-2xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                               {videoCase.title}
                             </h3>
                           </div>
