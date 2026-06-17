@@ -112,7 +112,7 @@ export default function Home() {
       {/* Stats Section */}
       <section className="bg-black">
         <div className="max-w-7xl mx-auto px-8 py-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-48">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-56">
             <div className="text-center">
               <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">10+</div>
               <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
@@ -128,7 +128,7 @@ export default function Home() {
             <div className="text-center">
               <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">3</div>
               <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
-              <p className="text-sm text-gray-400 mt-1">FILM • DESIGN • AI</p>
+              <p className="text-sm text-gray-400 mt-0">FILM • DESIGN • AI</p>
             </div>
           </div>
         </div>
