@@ -108,13 +108,26 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   }
 
   const handleVideoReady = () => {
-    setTimeout(() => {
-      setVideoLoaded(true)
-    }, 2500)
+    setVideoLoaded(true)
   }
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden" suppressHydrationWarning>
+    <div className="relative w-full h-screen bg-black overflow-hidden">
+      {/* Loading Spinner - Always on top until video loads */}
+      <div
+        className="absolute inset-0 z-50 bg-black flex items-center justify-center"
+        style={{
+          opacity: videoLoaded ? 0 : 1,
+          pointerEvents: videoLoaded ? 'none' : 'auto',
+          transition: 'opacity 0.3s ease-out'
+        }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-2 border-gray-600 border-t-white rounded-full" style={{ animation: 'spin 1s linear infinite' }} />
+          <p className="text-gray-400 text-sm tracking-widest">LOADING</p>
+        </div>
+      </div>
+
       {/* Video Background */}
       {video.video_url && (
         <div className="absolute inset-0 z-0">
@@ -141,16 +154,6 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
             </video>
           )}
           <div className="absolute inset-0 bg-black/30" />
-
-          {/* Loading Spinner */}
-          {isClient && !videoLoaded && (
-            <div className="absolute inset-0 z-10 bg-black flex items-center justify-center" data-loading="true">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-2 border-gray-600 border-t-white rounded-full" style={{ animation: 'spin 1s linear infinite' }} />
-                <p className="text-gray-400 text-sm tracking-widest">LOADING</p>
-              </div>
-            </div>
-          )}
         </div>
       )}
 
