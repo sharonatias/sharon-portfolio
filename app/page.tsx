@@ -112,21 +112,21 @@ export default function Home() {
       {/* Stats Section */}
       <section className="bg-black">
         <div className="max-w-7xl mx-auto px-8 py-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-32">
             <div className="text-left">
-              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">10+</div>
+              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">10+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
             </div>
             <div className="text-left">
-              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">50+</div>
+              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">50+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
             </div>
             <div className="text-left">
-              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">8+</div>
+              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">8+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
             </div>
             <div className="text-left">
-              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">3</div>
+              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">3</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 mb-3 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
               <p className="text-xs text-gray-400">FILM • DESIGN • AI</p>
             </div>
