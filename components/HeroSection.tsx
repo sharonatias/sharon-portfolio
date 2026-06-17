@@ -328,8 +328,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               {renderTextWithChars('brands and visual experiences.')}
             </h2>
             <p className="text-lg lg:text-xl text-gray-400 leading-relaxed">
-              10+ years crafting stories<br />
-              through film, design and emerging technologies.
+              Blending design and AI-driven creation.
             </p>
           </div>
 
