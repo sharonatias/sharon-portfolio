@@ -338,7 +338,7 @@ export default function ProjectsPage() {
                   }}
                   onClick={() => project.video_url && setSelectedProject(project)}
                 >
-                  <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
+                  <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
                     {project.image_url ? (
                       <>
                         <img
@@ -372,7 +372,7 @@ export default function ProjectsPage() {
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
                       {design.cover_image_url ? (
                         <>
                           <img
@@ -415,7 +415,7 @@ export default function ProjectsPage() {
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
                       {appCase.hero_image ? (
                         <>
                           <img
@@ -450,7 +450,7 @@ export default function ProjectsPage() {
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
                       {videoCase.hero_image ? (
                         <>
                           <img
