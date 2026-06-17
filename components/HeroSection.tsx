@@ -18,6 +18,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [isClient, setIsClient] = useState(true)
   const titleRef = useRef<HTMLDivElement>(null)
+  const velocityRef = useRef<{ [key: number]: { x: number; y: number } }>({})
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
     const chars = titleRef.current.querySelectorAll('[data-char]')
     const newOffsets: { [key: number]: { x: number; y: number } } = {}
+    const newVelocities: { [key: number]: { x: number; y: number } } = {}
 
     chars.forEach((char, index) => {
       const rect = char.getBoundingClientRect()
@@ -58,24 +60,43 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
       const deltaY = mouseY - charCenterY
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
 
-      // If mouse is close enough, make character move away
-      if (distance < 100) {
+      // If mouse is close, apply gentle push force
+      if (distance < 120) {
         const angle = Math.atan2(deltaY, deltaX)
-        const pushDistance = 100 - distance
-        newOffsets[index] = {
-          x: Math.cos(angle) * pushDistance * 0.8,
-          y: Math.sin(angle) * pushDistance * 0.8
+        const pushDistance = 120 - distance
+        const force = pushDistance * 0.15 // Gentler force
+
+        // Apply velocity instead of direct offset for "floating" effect
+        newVelocities[index] = {
+          x: Math.cos(angle) * force,
+          y: Math.sin(angle) * force
         }
-      } else {
-        newOffsets[index] = { x: 0, y: 0 }
       }
+
+      // Current offset with damping (resistance)
+      const currentOffset = charOffsets[index] || { x: 0, y: 0 }
+      const currentVel = velocityRef.current[index] || { x: 0, y: 0 }
+
+      // Apply velocity and add damping for smooth deceleration
+      const newVel = {
+        x: (newVelocities[index]?.x || 0) + currentVel.x * 0.92,
+        y: (newVelocities[index]?.y || 0) + currentVel.y * 0.92
+      }
+
+      newOffsets[index] = {
+        x: currentOffset.x + newVel.x,
+        y: currentOffset.y + newVel.y
+      }
+
+      velocityRef.current[index] = newVel
     })
 
     setCharOffsets(newOffsets)
   }
 
   const handleMouseLeave = () => {
-    setCharOffsets({})
+    // Slowly reset with momentum
+    velocityRef.current = {}
   }
 
   const renderTextWithChars = (text: string) => {
