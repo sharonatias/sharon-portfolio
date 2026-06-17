@@ -16,7 +16,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const [charOffsets, setCharOffsets] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [videoLoaded, setVideoLoaded] = useState(false)
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(true)
   const titleRef = useRef<HTMLDivElement>(null)
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
 

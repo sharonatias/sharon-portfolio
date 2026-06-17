@@ -183,7 +183,7 @@ export default function Home() {
       )}
 
       {/* Projects Header */}
-      {heroVideos.length === 0 && (
+      {heroLoaded && heroVideos.length === 0 && (
         <header className="border-b border-gray-800 p-6" suppressHydrationWarning>
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <Link href="/" className="hover:opacity-80 transition">
