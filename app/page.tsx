@@ -138,8 +138,8 @@ export default function Home() {
       <section className="bg-black border-b border-gray-800">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
-            <h3 className="text-4xl lg:text-5xl font-light tracking-widest" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.05em' }}>
-              F E A T U R E D  W O R K
+            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+              FEATURED  WORK
             </h3>
             <Link href="/projects" className="text-xs tracking-widest hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
               VIEW ALL PROJECTS →
