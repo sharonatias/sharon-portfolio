@@ -234,118 +234,98 @@ export default function ProjectsPage() {
         </nav>
       )}
 
-      {/* Hero Section */}
-      <section className="w-full">
-        <div className="relative w-full" style={{ height: '800px', overflow: 'visible' }}>
-          {/* Background Image */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${categoryHeros[selectedCategory || 'films_video'].image})`,
-              transition: 'background-image 0.6s ease-out'
-            }}
-          />
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
+      {/* Top Section - Breadcrumb & Title */}
+      <section className="relative pt-32 pb-16 px-8 lg:px-20">
+        {/* Breadcrumb */}
+        <div className="mb-12">
+          <p className="text-sm lg:text-base tracking-widest text-gray-400" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+            HOME / WORKS
+          </p>
+        </div>
 
-          {/* Content with Arrow - Title at Bottom */}
-          <div className="absolute inset-0 flex flex-col items-start justify-end px-12 lg:px-20 pb-12">
-            <div className="flex items-center gap-8 lg:gap-12 w-full">
-              <div
-                className="max-w-3xl"
-                style={{
-                  opacity: selectedCategory ? 1 : 0.5,
-                  transition: 'opacity 0.6s ease-out'
-                }}
-              >
-                <h1
-                  className="text-6xl lg:text-8xl text-white uppercase whitespace-nowrap"
-                  style={{
-                    transition: 'all 0.6s ease-out',
-                    transform: 'translateY(0)',
-                    letterSpacing: '-0.02em',
-                    fontFamily: '"Bebas Neue", sans-serif',
-                    fontWeight: 400,
-                    fontSize: 'clamp(3rem, 8vw, 7rem)'
-                  }}
-                >
-                  {categoryHeros[selectedCategory || 'films_video'].title}
-                </h1>
-              </div>
+        {/* Main Title */}
+        <h1 className="text-6xl lg:text-8xl mb-6 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
+          WORKS
+        </h1>
 
-              {/* Right Arrow Navigation */}
-              <button
-                onClick={goToNextCategory}
-                className="text-white hover:text-pink-500 transition flex-shrink-0 h-16 flex items-center"
-                aria-label="Next category"
-              >
-                <svg className="w-12 h-12 lg:w-16 lg:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
+        {/* Subtitle */}
+        <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mb-16 leading-relaxed">
+          Selected projects across film, documentary, branded content, design and emerging technologies.
+        </p>
+
+        {/* Category Bar */}
+        <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 mb-16 border-b border-gray-700">
+          {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS'].map((cat) => (
+            <button
+              key={cat}
+              className="text-xs lg:text-sm tracking-widest whitespace-nowrap pb-4 transition"
+              style={{
+                fontFamily: '"Bebas Neue", sans-serif',
+                fontWeight: 400,
+                color: cat === 'ALL' ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                borderBottom: cat === 'ALL' ? '2px solid white' : 'none',
+                paddingBottom: cat === 'ALL' ? 'calc(1rem - 2px)' : '1rem'
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+          <div className="flex-shrink-0 w-px bg-gray-700" />
+          <button
+            className="text-xs lg:text-sm tracking-widest whitespace-nowrap pb-4 text-gray-400 hover:text-white transition"
+            style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}
+          >
+            SORT BY ↓
+          </button>
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section className="mx-auto px-4 sm:px-6 py-16">
-        {/* All Projects, Brands & Cases - Conditional Grid */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 mx-auto w-full" style={{ maxWidth: '2200px' }}>
+      {/* Featured Work Section */}
+      <section className="px-8 lg:px-20 mb-24">
+        <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
+          FEATURED WORK
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24 w-full">
+          {projects.slice(0, 3).map((project) => (
+            <Link key={project.id} href={`/projects/${project.id}`}>
+              <div className="group cursor-pointer">
+                <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-4" style={{ aspectRatio: '4 / 3' }}>
+                  {project.image_url ? (
+                    <>
+                      <img
+                        src={project.image_url}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
+                  )}
+                </div>
+                <h3 className="text-lg font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                  {project.title}
+                </h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Projects Section - Grid of 4 */}
+      <section className="px-8 lg:px-20 pb-24">
+        <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
+          ALL PROJECTS
+        </h2>
+
+        {/* All Projects, Brands & Cases - Grid of 4 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto w-full">
           {/* Combined and sorted items */}
           {allItems.map((item) => {
             // Render project
             if (item.itemType === 'project') {
               const project = item as typeof item & { itemType: 'project' }
-              // Large card for Brand & Digital Design
-              if (selectedCategory === 'brand_digital_design') {
-                const itemId = `project-${project.id}`
-                const isVisible = visibleItems.has(itemId)
-                return (
-                  <div
-                    key={itemId}
-                    id={itemId}
-                    data-item-id="true"
-                    className="group cursor-pointer transition-all duration-700 ease-out w-full"
-                    style={{
-                      opacity: visibleItems.size > 0 ? (isVisible ? 1 : 0) : 1,
-                      transform: visibleItems.size > 0 ? (isVisible ? 'translateY(0)' : 'translateY(20px)') : 'translateY(0)',
-                    }}
-                    onClick={() => project.video_url && setSelectedProject(project)}
-                  >
-                    <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '1055 / 614' }}>
-                      {project.image_url ? (
-                        <img
-                          src={project.image_url}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
-                      )}
-
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
-
-                      {/* Title & Description Overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        {project.title && (
-                          <h3 className="text-lg font-bold mb-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                            {project.title}
-                          </h3>
-                        )}
-                        {project.description && (
-                          <p className="text-sm text-gray-200 line-clamp-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
-                            {project.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )
-              }
-
-              // Small card for other categories
               const itemId = `project-${project.id}`
               const isVisible = visibleItems.has(itemId)
               return (
@@ -360,7 +340,7 @@ export default function ProjectsPage() {
                   }}
                   onClick={() => project.video_url && setSelectedProject(project)}
                 >
-                  <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '1055 / 614' }}>
+                  <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
                     {project.image_url ? (
                       <>
                         <img
@@ -368,20 +348,17 @@ export default function ProjectsPage() {
                           alt={project.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                         />
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-
-                        {/* Title Overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3 className="text-5xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', marginBottom: '10px' }}>
-                            {project.title}
-                          </h3>
-                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                       </>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
                     )}
                   </div>
+                  {project.title && (
+                    <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                      {project.title}
+                    </h3>
+                  )}
                 </div>
               )
             }
@@ -389,78 +366,15 @@ export default function ProjectsPage() {
             // Render brand design
             if (item.itemType === 'brand') {
               const design = item as typeof item & { itemType: 'brand' }
-              // Large card for Brand & Digital Design
-              if (selectedCategory === 'brand_digital_design') {
-                const itemId = `brand-${design.id}`
-                const isVisible = visibleItems.has(itemId)
-                return (
-                  <Link key={itemId} href={`/brand/${design.id}`}>
-                    <div className="group cursor-pointer opacity-0 transition-all duration-700 ease-out w-full" style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                    }} id={itemId} data-item-id="true">
-                      <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '1055 / 614' }}>
-                        {design.cover_image_url ? (
-                          <>
-                            <img
-                              src={design.cover_image_url}
-                              alt={design.title}
-                              className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                            />
-                            {/* Gradient Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-
-                            {/* Title Overlay */}
-                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                              {design.title && (
-                                <h3 className="text-5xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', marginBottom: '10px' }}>
-                                  {design.title}
-                                </h3>
-                              )}
-                              {design.story && (
-                                <p className="text-sm text-gray-200 mt-2 line-clamp-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
-                                  {design.story}
-                                </p>
-                              )}
-                            </div>
-                          </>
-                        ) : design.logo_url ? (
-                          <>
-                            <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                              <img
-                                src={design.logo_url}
-                                alt={design.title}
-                                className="w-2/3 h-2/3 object-contain group-hover:scale-110 transition duration-300"
-                              />
-                            </div>
-                            {/* Title Overlay */}
-                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                              {design.title && (
-                                <h3 className="text-5xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', marginBottom: '10px' }}>
-                                  {design.title}
-                                </h3>
-                              )}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                )
-              }
-
-              // Small card for other categories
               const itemId = `brand-${design.id}`
               const isVisible = visibleItems.has(itemId)
               return (
                 <Link key={itemId} href={`/brand/${design.id}`}>
-                  <div className="group cursor-pointer opacity-0 transition-all duration-700 ease-out w-full" style={{
+                  <div className="group cursor-pointer transition-all duration-700 ease-out w-full" style={{
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '1055 / 614' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
                       {design.cover_image_url ? (
                         <>
                           <img
@@ -468,36 +382,25 @@ export default function ProjectsPage() {
                             alt={design.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                           />
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-
-                          {/* Title Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-5xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', marginBottom: '10px' }}>
-                              {design.title}
-                            </h3>
-                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                         </>
                       ) : design.logo_url ? (
-                        <>
-                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                            <img
-                              src={design.logo_url}
-                              alt={design.title}
-                              className="w-2/3 h-2/3 object-contain group-hover:scale-110 transition duration-300"
-                            />
-                          </div>
-                          {/* Title Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-5xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', marginBottom: '10px' }}>
-                              {design.title}
-                            </h3>
-                          </div>
-                        </>
+                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                          <img
+                            src={design.logo_url}
+                            alt={design.title}
+                            className="w-2/3 h-2/3 object-contain group-hover:scale-110 transition duration-300"
+                          />
+                        </div>
                       ) : (
-                        <div className="text-gray-600">No image</div>
+                        <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
                       )}
                     </div>
+                    {design.title && (
+                      <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                        {design.title}
+                      </h3>
+                    )}
                   </div>
                 </Link>
               )
@@ -510,11 +413,11 @@ export default function ProjectsPage() {
               const isVisible = visibleItems.has(itemId)
               return (
                 <Link key={itemId} href={`/case-studies/${appCase.id}`}>
-                  <div className="group cursor-pointer opacity-0 transition-all duration-700 ease-out" style={{
+                  <div className="group cursor-pointer transition-all duration-700 ease-out w-full" style={{
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '1055 / 614' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
                       {appCase.hero_image ? (
                         <>
                           <img
@@ -522,33 +425,17 @@ export default function ProjectsPage() {
                             alt={appCase.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                           />
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-
-                          {/* Title Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            {appCase.title && (
-                              <h3 className="text-lg font-bold line-clamp-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                                {appCase.title}
-                              </h3>
-                            )}
-                            {appCase.subtitle && (
-                              <p className="text-sm text-gray-200 mt-2 line-clamp-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
-                                {appCase.subtitle}
-                              </p>
-                            )}
-                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                         </>
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black flex-col">
-                          {appCase.title && (
-                            <h3 className="text-lg font-bold text-white" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                              {appCase.title}
-                            </h3>
-                          )}
-                        </div>
+                        <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
                       )}
                     </div>
+                    {appCase.title && (
+                      <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                        {appCase.title}
+                      </h3>
+                    )}
                   </div>
                 </Link>
               )
@@ -561,11 +448,11 @@ export default function ProjectsPage() {
               const isVisible = visibleItems.has(itemId)
               return (
                 <Link key={itemId} href={`/case-studies/${videoCase.id}`}>
-                  <div className="group cursor-pointer opacity-0 transition-all duration-700 ease-out w-full" style={{
+                  <div className="group cursor-pointer transition-all duration-700 ease-out w-full" style={{
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '1055 / 614' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '1 / 1' }}>
                       {videoCase.hero_image ? (
                         <>
                           <img
@@ -573,20 +460,17 @@ export default function ProjectsPage() {
                             alt={videoCase.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                           />
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-
-                          {/* Title Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                            <h3 className="text-5xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', marginBottom: '10px' }}>
-                              {videoCase.title}
-                            </h3>
-                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                         </>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
                       )}
                     </div>
+                    {videoCase.title && (
+                      <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                        {videoCase.title}
+                      </h3>
+                    )}
                   </div>
                 </Link>
               )
