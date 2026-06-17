@@ -150,25 +150,10 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
           {/* Loading Spinner */}
           {!videoLoaded && (
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'black',
-              zIndex: 10
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <div style={{
-                  width: '3rem',
-                  height: '3rem',
-                  border: '2px solid rgb(75, 85, 99)',
-                  borderTopColor: 'white',
-                  borderRadius: '9999px',
-                  animation: 'spin 1s linear infinite'
-                }} />
-                <p style={{ color: 'rgb(156, 163, 175)', fontSize: '0.875rem', letterSpacing: '0.1em' }}>LOADING</p>
+            <div className="absolute inset-0 z-10 bg-black flex items-center justify-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-2 border-gray-600 border-t-white rounded-full" style={{ animation: 'spin 1s linear infinite' }} />
+                <p className="text-gray-400 text-sm tracking-widest">LOADING</p>
               </div>
             </div>
           )}
