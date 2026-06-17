@@ -125,7 +125,7 @@ export default function Home() {
               <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">8+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light mt-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
             </div>
-            <div className="text-left">
+            <div className="text-center">
               <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">3</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light mt-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
               <p className="text-xs text-gray-400 mt-2">FILM • DESIGN • AI</p>
