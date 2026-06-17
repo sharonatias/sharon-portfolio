@@ -338,7 +338,7 @@ export default function ProjectsPage() {
                   }}
                   onClick={() => project.video_url && setSelectedProject(project)}
                 >
-                  <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '4 / 3' }}>
+                  <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
                     {project.image_url ? (
                       <>
                         <img
@@ -351,12 +351,21 @@ export default function ProjectsPage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
                     )}
+
+                    {/* Text Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                      {project.title && (
+                        <h3 className="text-lg lg:text-xl font-bold text-white mb-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>
+                          {project.title}
+                        </h3>
+                      )}
+                      {project.description && (
+                        <p className="text-xs lg:text-sm text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300, letterSpacing: '0.02em', lineHeight: '1.4' }}>
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  {project.title && (
-                    <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                      {project.title}
-                    </h3>
-                  )}
                 </div>
               )
             }
