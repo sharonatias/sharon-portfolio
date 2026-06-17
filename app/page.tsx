@@ -117,11 +117,11 @@ export default function Home() {
               <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">10+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light mt-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
             </div>
-            <div className="text-left">
+            <div className="text-center">
               <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">50+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light mt-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
             </div>
-            <div className="text-left">
+            <div className="text-center">
               <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">8+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light mt-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
             </div>
