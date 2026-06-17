@@ -355,12 +355,12 @@ export default function ProjectsPage() {
                     {/* Text Overlay */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                       {project.title && (
-                        <h3 className="text-lg lg:text-xl font-bold text-white mb-6" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>
+                        <h3 className="text-xl lg:text-2xl font-bold text-white mb-6" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>
                           {project.title}
                         </h3>
                       )}
                       {project.description && (
-                        <p className="text-xs lg:text-sm text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300, letterSpacing: '0.02em', lineHeight: '1.4' }}>
+                        <p className="text-sm lg:text-base text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300, letterSpacing: '0.02em', lineHeight: '1.4' }}>
                           {project.description}
                         </p>
                       )}
