@@ -172,7 +172,7 @@ export default function ProjectsPage() {
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-10 px-8 lg:px-20 pt-8 pb-16 transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 z-50 px-8 lg:px-20 pt-8 pb-16 transition-all duration-300 bg-black">
         <Link href="/" className="max-w-7xl block hover:opacity-80 transition">
           <h1 className="text-2xl font-light tracking-widest text-white" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>SHARON MOSHE ATTIAS</h1>
         </Link>
