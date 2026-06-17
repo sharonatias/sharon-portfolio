@@ -143,7 +143,7 @@ export default function Home() {
       <section className="bg-black border-b border-gray-800">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
-            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em' }}>
+            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}>
               CURRENTLY EXPLORING
             </h3>
             <span className="text-xs tracking-widest text-gray-400" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
@@ -157,7 +157,7 @@ export default function Home() {
               { title: 'MIRI', subtitle: 'AI PLATFORM FOR EDUCATORS', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop' },
               { title: 'RED CAMERA', subtitle: 'SHORT FILM IN DEVELOPMENT', image: 'https://images.unsplash.com/photo-1533390523327-130207cee930?w=800&h=600&fit=crop' }
             ].map((item, index) => (
-              <div key={index} className="group cursor-pointer animate-bounce" style={{ animationDelay: `${index * 0.1}s` }}>
+              <div key={index} className="group cursor-pointer">
                 <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
                   <img
                     src={item.image}
