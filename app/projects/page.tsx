@@ -245,12 +245,12 @@ export default function ProjectsPage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mb-16 leading-relaxed">
+        <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mb-16 leading-relaxed" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>
           Selected projects across film, documentary, branded content, design and emerging technologies.
         </p>
 
         {/* Category Bar */}
-        <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 mb-16 border-b border-gray-700">
+        <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 mb-16 border-b border-gray-700 -mx-8 lg:-mx-20 px-8 lg:px-20">
           {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS'].map((cat) => (
             <button
               key={cat}
