@@ -113,22 +113,24 @@ export default function Home() {
       <section className="bg-black">
         <div className="max-w-7xl mx-auto px-8 py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-32">
-            <div className="text-left flex flex-col justify-end">
-              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">10+</div>
-              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
+            <div className="text-left flex items-center gap-6">
+              <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">10+</div>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS<br />EXPERIENCE</h3>
             </div>
-            <div className="text-left flex flex-col justify-end">
-              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">50+</div>
-              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
+            <div className="text-left flex items-center gap-6">
+              <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">50+</div>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS<br />DELIVERED</h3>
             </div>
-            <div className="text-left flex flex-col justify-end">
-              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">8+</div>
-              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
+            <div className="text-left flex items-center gap-6">
+              <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">8+</div>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN<br />PRODUCTION</h3>
             </div>
-            <div className="text-left flex flex-col justify-end">
-              <div className="text-5xl lg:text-6xl font-light mb-2 tracking-tighter text-white">3</div>
-              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 mb-3 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
-              <p className="text-xs text-gray-400">FILM • DESIGN • AI</p>
+            <div className="text-left flex items-center gap-6">
+              <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">3</div>
+              <div>
+                <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 mb-2 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE<br />DISCIPLINES</h3>
+                <p className="text-xs text-gray-400">FILM • DESIGN • AI</p>
+              </div>
             </div>
           </div>
         </div>
