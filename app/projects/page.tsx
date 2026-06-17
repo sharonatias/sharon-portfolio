@@ -318,7 +318,7 @@ export default function ProjectsPage() {
         </h2>
 
         {/* All Projects, Brands & Cases - Grid of 4 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mx-auto w-full">
           {/* Combined and sorted items */}
           {allItems.map((item) => {
             // Render project
@@ -338,7 +338,7 @@ export default function ProjectsPage() {
                   }}
                   onClick={() => project.video_url && setSelectedProject(project)}
                 >
-                  <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
+                  <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '4 / 3' }}>
                     {project.image_url ? (
                       <>
                         <img
@@ -372,7 +372,7 @@ export default function ProjectsPage() {
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '4 / 3' }}>
                       {design.cover_image_url ? (
                         <>
                           <img
@@ -415,7 +415,7 @@ export default function ProjectsPage() {
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '4 / 3' }}>
                       {appCase.hero_image ? (
                         <>
                           <img
@@ -450,7 +450,7 @@ export default function ProjectsPage() {
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                   }} id={itemId} data-item-id="true">
-                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '16 / 9' }}>
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '4 / 3' }}>
                       {videoCase.hero_image ? (
                         <>
                           <img
