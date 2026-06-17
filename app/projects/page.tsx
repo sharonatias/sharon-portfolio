@@ -172,14 +172,10 @@ export default function ProjectsPage() {
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-10 p-8 flex justify-between items-start">
-        <Link href="/" className="hover:opacity-80 transition">
-          <div>
-            <h1 className="text-lg font-light tracking-widest text-white mb-1">SHARON MOSHE ATTIAS</h1>
-            <h2 className="text-sm font-light tracking-widest text-gray-300">CREATIVE & DIRECTOR</h2>
-          </div>
+      <header className="fixed top-0 left-0 right-0 z-10 px-8 lg:px-20 pt-8 pb-16 transition-all duration-300">
+        <Link href="/" className="max-w-7xl block hover:opacity-80 transition">
+          <h1 className="text-2xl font-light tracking-widest text-white" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>SHARON MOSHE ATTIAS</h1>
         </Link>
-        <div className="text-3xl mr-20" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>WORK</div>
       </header>
 
       {/* Hamburger Menu Button */}
