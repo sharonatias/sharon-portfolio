@@ -150,7 +150,7 @@ export default function Home() {
             {projects.slice(0, 3).map((project) => (
               <Link key={project.id} href={`/projects/${project.id}`}>
                 <div className="group cursor-pointer">
-                  <div className="relative overflow-hidden bg-gray-900" style={{ aspectRatio: '16 / 10' }}>
+                  <div className="relative overflow-hidden bg-gray-900" style={{ aspectRatio: '3 / 2' }}>
                     {project.image_url ? (
                       <>
                         <img
