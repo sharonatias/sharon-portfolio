@@ -248,33 +248,33 @@ export default function ProjectsPage() {
         <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mb-16 leading-relaxed" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em' }}>
           Selected projects across film, documentary, branded content, design and emerging technologies.
         </p>
-
-        {/* Category Bar */}
-        <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 mb-16 border-b border-gray-700 -mx-8 lg:-mx-20 px-8 lg:px-20">
-          {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS'].map((cat) => (
-            <button
-              key={cat}
-              className="text-xs lg:text-sm tracking-widest whitespace-nowrap pb-4 transition"
-              style={{
-                fontFamily: '"Bebas Neue", sans-serif',
-                fontWeight: 400,
-                color: cat === 'ALL' ? 'white' : 'rgba(255, 255, 255, 0.5)',
-                borderBottom: cat === 'ALL' ? '2px solid white' : 'none',
-                paddingBottom: cat === 'ALL' ? 'calc(1rem - 2px)' : '1rem'
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-          <div className="flex-shrink-0 w-px bg-gray-700" />
-          <button
-            className="text-xs lg:text-sm tracking-widest whitespace-nowrap pb-4 text-gray-400 hover:text-white transition"
-            style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}
-          >
-            SORT BY ↓
-          </button>
-        </div>
       </section>
+
+      {/* Category Bar - Full Width */}
+      <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 border-b border-gray-700 px-8 lg:px-20">
+        {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS'].map((cat) => (
+          <button
+            key={cat}
+            className="text-xs lg:text-sm tracking-widest whitespace-nowrap pb-4 transition"
+            style={{
+              fontFamily: '"Bebas Neue", sans-serif',
+              fontWeight: 400,
+              color: cat === 'ALL' ? 'white' : 'rgba(255, 255, 255, 0.5)',
+              borderBottom: cat === 'ALL' ? '2px solid white' : 'none',
+              paddingBottom: cat === 'ALL' ? 'calc(1rem - 2px)' : '1rem'
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+        <div className="flex-shrink-0 w-px bg-gray-700" />
+        <button
+          className="text-xs lg:text-sm tracking-widest whitespace-nowrap pb-4 text-gray-400 hover:text-white transition"
+          style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}
+        >
+          SORT BY ↓
+        </button>
+      </div>
 
       {/* Featured Work Section */}
       <section className="px-8 lg:px-20 mb-24">
