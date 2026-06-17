@@ -279,7 +279,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Featured Work Section */}
-      <section className="px-8 lg:px-20 mb-24 mt-16">
+      <section className="px-8 lg:px-20 mb-24 mt-8">
         <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
           FEATURED WORK
         </h2>
