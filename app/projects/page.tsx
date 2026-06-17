@@ -245,7 +245,7 @@ export default function ProjectsPage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg lg:text-xl text-gray-400 mb-16" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', lineHeight: '1.8', maxWidth: '600px' }}>
+        <p className="text-xl lg:text-2xl text-gray-400 mb-16" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.02em', lineHeight: '1.5', maxWidth: '600px' }}>
           Selected projects across film, documentary, branded content, design and emerging technologies.
         </p>
       </section>
