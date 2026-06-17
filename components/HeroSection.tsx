@@ -17,8 +17,10 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [isClient, setIsClient] = useState(true)
+  const [isMouseNear, setIsMouseNear] = useState(false)
   const titleRef = useRef<HTMLDivElement>(null)
   const velocityRef = useRef<{ [key: number]: { x: number; y: number } }>({})
+  const directionRef = useRef<{ [key: number]: { x: number; y: number } }>({})
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
 
   useEffect(() => {
@@ -44,9 +46,9 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!titleRef.current) return
 
+    setIsMouseNear(true)
     const chars = titleRef.current.querySelectorAll('[data-char]')
     const newOffsets: { [key: number]: { x: number; y: number } } = {}
-    const newVelocities: { [key: number]: { x: number; y: number } } = {}
 
     chars.forEach((char, index) => {
       const rect = char.getBoundingClientRect()
@@ -60,27 +62,37 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
       const deltaY = mouseY - charCenterY
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
 
-      // If mouse is close, apply gentle push force
-      if (distance < 120) {
+      // Store initial direction on first interaction
+      if (!directionRef.current[index] && distance < 150) {
         const angle = Math.atan2(deltaY, deltaX)
-        const pushDistance = 120 - distance
-        const force = pushDistance * 0.15 // Gentler force
-
-        // Apply velocity instead of direct offset for "floating" effect
-        newVelocities[index] = {
-          x: Math.cos(angle) * force,
-          y: Math.sin(angle) * force
+        directionRef.current[index] = {
+          x: Math.cos(angle),
+          y: Math.sin(angle)
         }
       }
 
-      // Current offset with damping (resistance)
       const currentOffset = charOffsets[index] || { x: 0, y: 0 }
       const currentVel = velocityRef.current[index] || { x: 0, y: 0 }
+      const direction = directionRef.current[index]
 
-      // Apply velocity and add damping for smooth deceleration
-      const newVel = {
-        x: (newVelocities[index]?.x || 0) + currentVel.x * 0.92,
-        y: (newVelocities[index]?.y || 0) + currentVel.y * 0.92
+      let newVel = { x: currentVel.x, y: currentVel.y }
+
+      // If mouse is close, give a tiny push in character's direction
+      if (distance < 150 && direction) {
+        const pushDistance = 150 - distance
+        const force = pushDistance * 0.08 // Very gentle force
+
+        // Push character in its natural direction
+        newVel = {
+          x: direction.x * force + currentVel.x * 0.95,
+          y: direction.y * force + currentVel.y * 0.95
+        }
+      } else if (distance >= 150 && direction) {
+        // Continue floating in direction with light damping
+        newVel = {
+          x: currentVel.x * 0.96,
+          y: currentVel.y * 0.96
+        }
       }
 
       newOffsets[index] = {
@@ -94,9 +106,57 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
     setCharOffsets(newOffsets)
   }
 
+  useEffect(() => {
+    // Animation loop to return to center when mouse leaves
+    if (isMouseNear) return
+
+    const animationFrame = setInterval(() => {
+      setCharOffsets(prev => {
+        const newOffsets: { [key: number]: { x: number; y: number } } = {}
+        let hasMovement = false
+
+        Object.keys(prev).forEach(keyStr => {
+          const index = parseInt(keyStr)
+          const currentOffset = prev[index]
+
+          // Spring back towards center with damping
+          const returnForce = -currentOffset.x * 0.05
+          const returnForceY = -currentOffset.y * 0.05
+
+          const newVel = {
+            x: (velocityRef.current[index]?.x || 0) * 0.85 + returnForce,
+            y: (velocityRef.current[index]?.y || 0) * 0.85 + returnForceY
+          }
+
+          const newOffset = {
+            x: currentOffset.x + newVel.x,
+            y: currentOffset.y + newVel.y
+          }
+
+          // Stop movement when very close to center
+          if (Math.abs(newOffset.x) < 0.5 && Math.abs(newOffset.y) < 0.5) {
+            newOffsets[index] = { x: 0, y: 0 }
+            velocityRef.current[index] = { x: 0, y: 0 }
+          } else {
+            newOffsets[index] = newOffset
+            velocityRef.current[index] = newVel
+            hasMovement = true
+          }
+        })
+
+        if (!hasMovement) {
+          directionRef.current = {}
+        }
+
+        return newOffsets
+      })
+    }, 16)
+
+    return () => clearInterval(animationFrame)
+  }, [isMouseNear])
+
   const handleMouseLeave = () => {
-    // Slowly reset with momentum
-    velocityRef.current = {}
+    setIsMouseNear(false)
   }
 
   const renderTextWithChars = (text: string) => {
