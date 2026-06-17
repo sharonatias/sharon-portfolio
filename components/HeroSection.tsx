@@ -14,6 +14,7 @@ interface HeroSectionProps {
 export default function HeroSection({ video, showHeader = true, onMenuToggle, menuOpen = false }: HeroSectionProps) {
   const [charOffsets, setCharOffsets] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [videoLoaded, setVideoLoaded] = useState(false)
   const titleRef = useRef<HTMLDivElement>(null)
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
 
@@ -113,6 +114,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               frameBorder="0"
               allow="autoplay"
               allowFullScreen
+              onLoad={() => setVideoLoaded(true)}
             />
           ) : (
             <video
@@ -122,11 +124,22 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               playsInline
               preload="auto"
               className="w-full h-full object-cover"
+              onCanPlay={() => setVideoLoaded(true)}
             >
               <source src={video.video_url} type="video/mp4" />
             </video>
           )}
           <div className="absolute inset-0 bg-black/30" />
+
+          {/* Loading Spinner */}
+          {!videoLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-2 border-gray-600 border-t-white rounded-full animate-spin" />
+                <p className="text-gray-400 text-sm tracking-widest">LOADING</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
