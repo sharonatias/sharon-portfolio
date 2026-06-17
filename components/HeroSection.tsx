@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { HeroVideo } from '@/lib/types'
 
@@ -15,8 +15,17 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const [charOffsets, setCharOffsets] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [videoLoaded, setVideoLoaded] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const titleRef = useRef<HTMLDivElement>(null)
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
+
+  useEffect(() => {
+    setMounted(true)
+    const timer = setTimeout(() => {
+      console.log('Minimum load time reached')
+    }, 1200)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -103,8 +112,12 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   }
 
   const handleVideoReady = () => {
-    setTimeout(() => setVideoLoaded(true), 800)
+    setTimeout(() => {
+      setVideoLoaded(true)
+    }, 1200)
   }
+
+  console.log('Rendering HeroSection with videoLoaded:', videoLoaded, 'video.video_url:', video.video_url)
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
@@ -137,10 +150,25 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
           {/* Loading Spinner */}
           {!videoLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-2 border-gray-600 border-t-white rounded-full animate-spin" />
-                <p className="text-gray-400 text-sm tracking-widest">LOADING</p>
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'black',
+              zIndex: 10
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                <div style={{
+                  width: '3rem',
+                  height: '3rem',
+                  border: '2px solid rgb(75, 85, 99)',
+                  borderTopColor: 'white',
+                  borderRadius: '9999px',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <p style={{ color: 'rgb(156, 163, 175)', fontSize: '0.875rem', letterSpacing: '0.1em' }}>LOADING</p>
               </div>
             </div>
           )}
