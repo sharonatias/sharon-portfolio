@@ -87,21 +87,21 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
       let newVel = { x: currentVel.x, y: currentVel.y }
 
-      // If mouse is close, give a tiny push in character's direction
+      // If mouse is close, give a very subtle push like air hockey
       if (distance < 150 && direction) {
         const pushDistance = 150 - distance
-        const force = pushDistance * 0.08 // Very gentle force
+        const force = pushDistance * 0.03 // Ultra gentle force (like air)
 
-        // Push character in its natural direction
+        // Push character in its natural direction with heavy damping
         newVel = {
-          x: direction.x * force + currentVel.x * 0.95,
-          y: direction.y * force + currentVel.y * 0.95
+          x: direction.x * force + currentVel.x * 0.97,
+          y: direction.y * force + currentVel.y * 0.97
         }
       } else if (distance >= 150 && direction) {
-        // Continue floating in direction with light damping
+        // Continue floating in direction with almost no damping
         newVel = {
-          x: currentVel.x * 0.96,
-          y: currentVel.y * 0.96
+          x: currentVel.x * 0.98,
+          y: currentVel.y * 0.98
         }
       }
 
@@ -129,13 +129,13 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
           const index = parseInt(keyStr)
           const currentOffset = prev[index]
 
-          // Spring back towards center with damping
-          const returnForce = -currentOffset.x * 0.05
-          const returnForceY = -currentOffset.y * 0.05
+          // Very gentle spring back towards center (like air resistance)
+          const returnForce = -currentOffset.x * 0.02
+          const returnForceY = -currentOffset.y * 0.02
 
           const newVel = {
-            x: (velocityRef.current[index]?.x || 0) * 0.85 + returnForce,
-            y: (velocityRef.current[index]?.y || 0) * 0.85 + returnForceY
+            x: (velocityRef.current[index]?.x || 0) * 0.92 + returnForce,
+            y: (velocityRef.current[index]?.y || 0) * 0.92 + returnForceY
           }
 
           const newOffset = {
