@@ -114,44 +114,43 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-8 py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-20">
             <div className="text-left">
-              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">50+</div>
-              <h3 className="text-lg lg:text-xl tracking-widest text-white mb-2 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
-              <p className="text-sm text-gray-400">across all mediums</p>
-            </div>
-            <div className="text-left">
               <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">10+</div>
-              <h3 className="text-lg lg:text-xl tracking-widest text-white mb-2 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
-              <p className="text-sm text-gray-400">in creative direction</p>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
             </div>
             <div className="text-left">
-              <h3 className="text-5xl lg:text-6xl tracking-widest text-white mb-6 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>DIRECTOR</h3>
-              <p className="text-sm text-gray-400">Documentary & Branded Content</p>
+              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">50+</div>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
             </div>
             <div className="text-left">
-              <h3 className="text-5xl lg:text-6xl tracking-widest text-white mb-6 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE</h3>
-              <p className="text-sm text-gray-400">Film • Design • AI</p>
+              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">8+</div>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
+            </div>
+            <div className="text-left">
+              <div className="text-5xl lg:text-6xl font-light mb-6 tracking-tighter text-white">3</div>
+              <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 mb-3 font-light" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
+              <p className="text-xs text-gray-400">FILM • DESIGN • AI</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Selected Work Section */}
+      {/* Featured Work Section */}
       <section className="bg-black border-b border-gray-800">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-12 pb-24">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-3xl lg:text-4xl font-light tracking-widest" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '0.05em' }}>
-              S E L E C T E D  W O R K
+          <div className="flex justify-between items-center mb-12">
+            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+              FEATURED WORK
             </h3>
             <Link href="/projects" className="text-xs tracking-widest hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-              VIEW ALL WORK →
+              VIEW ALL PROJECTS →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-            {projects.slice(0, 4).map((project) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+            {projects.slice(0, 3).map((project) => (
               <Link key={project.id} href={`/projects/${project.id}`}>
                 <div className="group cursor-pointer">
-                  <div className="relative overflow-hidden bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
+                  <div className="relative overflow-hidden bg-gray-900" style={{ aspectRatio: '9 / 10' }}>
                     {project.image_url ? (
                       <>
                         <img
