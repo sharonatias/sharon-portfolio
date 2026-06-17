@@ -46,8 +46,9 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!titleRef.current) return
 
-    // If mouse crosses to right half of screen, reset
-    if (e.clientX > window.innerWidth / 2) {
+    // If mouse crosses past center-left area, reset immediately
+    const resetBoundary = window.innerWidth * 0.45 // 45% from left
+    if (e.clientX > resetBoundary) {
       setIsMouseNear(false)
       setCharOffsets({})
       velocityRef.current = {}
