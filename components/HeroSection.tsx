@@ -175,8 +175,9 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
     directionRef.current = {}
   }
 
-  const renderTextWithChars = (text: string) => {
+  const renderTextWithChars = (text: string, baseIndex: number = 0) => {
     return text.split('').map((char, i) => {
+      const charIndex = baseIndex + i
       const nextChar = text[i + 1]
       const prevChar = text[i - 1]
       const isPunct = /[.,!?;:']/.test(char)
@@ -184,11 +185,11 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
       return (
         <span
-          key={i}
-          data-char={i}
+          key={charIndex}
+          data-char={charIndex}
           style={{
             display: 'inline-block',
-            transform: `translate(${charOffsets[i]?.x || 0}px, ${charOffsets[i]?.y || 0}px)`,
+            transform: `translate(${charOffsets[charIndex]?.x || 0}px, ${charOffsets[charIndex]?.y || 0}px)`,
             transition: 'transform 0.2s ease-out',
             marginRight: char === ' ' ? '0.15em' : (isPunct && isAfterLetter ? '-0.05em' : '0'),
             marginLeft: isPunct && isAfterLetter ? '-0.1em' : '0'
@@ -322,7 +323,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               className="text-5xl lg:text-7xl mb-8 leading-tight"
               style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em', textWrap: 'balance' }}
             >
-              {renderTextWithChars('Creating documentaries,')}
+              {renderTextWithChars('Creating documentaries,', 0)}
               <br />
               {renderTextWithChars('brands and visual experiences.')}
             </h2>
