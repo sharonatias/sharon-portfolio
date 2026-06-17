@@ -131,3 +131,23 @@ p, h1, h2, h3, h4, h5, h6 {
     transform: rotate(360deg);
   }
 }
+
+@keyframes elegantGlow {
+  0%, 100% {
+    opacity: 0.7;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes subtleShimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
