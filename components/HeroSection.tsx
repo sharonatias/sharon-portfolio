@@ -102,6 +102,10 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
     return videoId ? `https://www.youtube.com/embed/${videoId}` : ''
   }
 
+  const handleVideoReady = () => {
+    setTimeout(() => setVideoLoaded(true), 800)
+  }
+
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
       {/* Video Background */}
@@ -114,7 +118,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               frameBorder="0"
               allow="autoplay"
               allowFullScreen
-              onLoad={() => setVideoLoaded(true)}
+              onLoad={handleVideoReady}
             />
           ) : (
             <video
@@ -124,7 +128,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               playsInline
               preload="auto"
               className="w-full h-full object-cover"
-              onCanPlay={() => setVideoLoaded(true)}
+              onCanPlay={handleVideoReady}
             >
               <source src={video.video_url} type="video/mp4" />
             </video>
