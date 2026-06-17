@@ -242,7 +242,7 @@ export default function ProjectsPage() {
         </div>
 
         {/* Main Title */}
-        <h1 className="text-7xl lg:text-9xl mb-2 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
+        <h1 className="text-7xl lg:text-9xl mb-2 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 600, letterSpacing: '-0.02em' }}>
           WORKS
         </h1>
 
