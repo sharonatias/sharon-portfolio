@@ -113,7 +113,7 @@ export default function Home() {
       <section className="bg-black">
         <div className="max-w-7xl mx-auto px-8 py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-32">
-            <div className="text-left">
+            <div className="text-center">
               <div className="text-5xl lg:text-6xl font-light tracking-tighter text-white">10+</div>
               <h3 className="text-xs lg:text-sm tracking-widest text-gray-300 font-light mt-2" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
             </div>
