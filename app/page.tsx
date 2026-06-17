@@ -146,7 +146,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
             {projects.slice(0, 3).map((project) => (
               <Link key={project.id} href={`/projects/${project.id}`}>
                 <div className="group cursor-pointer">
