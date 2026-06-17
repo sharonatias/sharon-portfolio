@@ -115,13 +115,14 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Loading Spinner - Always on top until video loads */}
+      {/* Loading Spinner - Always render, opacity controlled by videoLoaded */}
       <div
         className="absolute inset-0 z-50 bg-black flex items-center justify-center"
         style={{
           opacity: videoLoaded ? 0 : 1,
           pointerEvents: videoLoaded ? 'none' : 'auto',
-          transition: 'opacity 0.3s ease-out'
+          transition: 'opacity 0.2s ease-out',
+          willChange: 'opacity'
         }}
       >
         <div className="flex flex-col items-center gap-4">
@@ -130,9 +131,9 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
         </div>
       </div>
 
-      {/* Video Background */}
+      {/* Video Background - Hidden until loaded */}
       {video.video_url && (
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0" style={{ opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.3s ease-out' }}>
           {isYouTubeUrl(video.video_url) ? (
             <iframe
               src={getYouTubeEmbedUrl(video.video_url)}
@@ -170,8 +171,8 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
         <span className={`block w-8 h-0.5 bg-white transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2.5' : ''}`} />
       </button>
 
-      {/* Header */}
-      {showHeader && (
+      {/* Header - Hidden until video loads */}
+      {showHeader && videoLoaded && (
         <header className={`fixed top-0 left-0 right-0 px-8 lg:px-20 pt-8 pb-16 transition-all duration-300 ${showHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} z-40`}>
           <Link href="/" className="max-w-7xl block hover:opacity-80 transition">
             <h1 className="text-2xl font-light tracking-widest text-white" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>SHARON MOSHE ATTIAS</h1>
@@ -182,9 +183,10 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
       {/* Gradient Overlay at Bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-screen z-5 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-      {/* Content */}
+      {/* Content - Hidden until video loads */}
       <div
         className="relative z-10 h-full flex flex-col justify-between text-white px-8 lg:px-20 py-16"
+        style={{ opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.3s ease-out' }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
