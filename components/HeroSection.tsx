@@ -9,9 +9,10 @@ interface HeroSectionProps {
   showHeader?: boolean
   onMenuToggle?: (open: boolean) => void
   menuOpen?: boolean
+  onVideoLoaded?: () => void
 }
 
-export default function HeroSection({ video, showHeader = true, onMenuToggle, menuOpen = false }: HeroSectionProps) {
+export default function HeroSection({ video, showHeader = true, onMenuToggle, menuOpen = false, onVideoLoaded }: HeroSectionProps) {
   const [charOffsets, setCharOffsets] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [videoLoaded, setVideoLoaded] = useState(false)
@@ -109,6 +110,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
   const handleVideoReady = () => {
     setVideoLoaded(true)
+    onVideoLoaded?.()
   }
 
   return (

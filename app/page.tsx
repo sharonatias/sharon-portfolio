@@ -10,6 +10,7 @@ export default function Home() {
   const [heroVideos, setHeroVideos] = useState<HeroVideo[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [heroLoaded, setHeroLoaded] = useState(false)
 
   useEffect(() => {
     fetchHeroVideos()
@@ -59,6 +60,7 @@ export default function Home() {
               showHeader={index === 0}
               menuOpen={menuOpen}
               onMenuToggle={setMenuOpen}
+              onVideoLoaded={() => setHeroLoaded(true)}
             />
             {index < heroVideos.length - 1 && (
               <div className="h-1 bg-black border-t border-b border-gray-900" />
@@ -109,7 +111,8 @@ export default function Home() {
         </nav>
       )}
 
-      {/* Stats Section */}
+      {/* Stats Section - Only show after hero loads */}
+      {heroLoaded && (
       <section className="bg-black">
         <div className="max-w-7xl mx-auto px-8 py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-56">
@@ -133,8 +136,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Featured Work Section */}
+      {heroLoaded && (
       <section className="bg-black border-b border-gray-800">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
@@ -175,6 +180,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Projects Header */}
       {heroVideos.length === 0 && (
@@ -195,6 +201,7 @@ export default function Home() {
       )}
 
       {/* Footer - Always at bottom */}
+      {heroLoaded && (
       <footer className="border-t border-gray-800 p-6">
         <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-gray-400">
           <div className="flex gap-4">
@@ -208,6 +215,7 @@ export default function Home() {
           <p>© 2026 Sharon Moshe Attias | OpenMindStudio</p>
         </div>
       </footer>
+      )}
     </div>
   )
 }
