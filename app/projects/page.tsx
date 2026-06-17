@@ -251,7 +251,7 @@ export default function ProjectsPage() {
       </section>
 
       {/* Category Bar - Full Width */}
-      <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 border-b border-gray-700 px-8 lg:px-20">
+      <div className="flex gap-6 lg:gap-10 overflow-x-auto pb-4 px-8 lg:px-20" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
         {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS'].map((cat) => (
           <button
             key={cat}
@@ -277,7 +277,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Featured Work Section */}
-      <section className="px-8 lg:px-20 mb-24">
+      <section className="px-8 lg:px-20 mb-24 mt-16">
         <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
           FEATURED WORK
         </h2>
