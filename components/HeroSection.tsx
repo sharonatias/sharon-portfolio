@@ -157,6 +157,10 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
   const handleMouseLeave = () => {
     setIsMouseNear(false)
+    // Immediately reset on mouse leave
+    setCharOffsets({})
+    velocityRef.current = {}
+    directionRef.current = {}
   }
 
   const renderTextWithChars = (text: string) => {
