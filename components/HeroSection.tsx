@@ -87,27 +87,29 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
       let newVel = { x: currentVel.x, y: currentVel.y }
 
-      // If mouse is close, give a very subtle push like air hockey
+      // If mouse is close, give a very subtle push
       if (distance < 150 && direction) {
         const pushDistance = 150 - distance
-        const force = pushDistance * 0.03 // Ultra gentle force (like air)
+        const force = pushDistance * 0.02 // Even more gentle
 
-        // Push character in its natural direction with heavy damping
+        // Push with strong damping to stop quickly
         newVel = {
-          x: direction.x * force + currentVel.x * 0.97,
-          y: direction.y * force + currentVel.y * 0.97
+          x: direction.x * force + currentVel.x * 0.85,
+          y: direction.y * force + currentVel.y * 0.85
         }
       } else if (distance >= 150 && direction) {
-        // Continue floating in direction with almost no damping
+        // Stop quickly after push
         newVel = {
-          x: currentVel.x * 0.98,
-          y: currentVel.y * 0.98
+          x: currentVel.x * 0.80,
+          y: currentVel.y * 0.80
         }
       }
 
+      // Limit max movement - only small drift
+      const maxOffset = 20
       newOffsets[index] = {
-        x: currentOffset.x + newVel.x,
-        y: currentOffset.y + newVel.y
+        x: Math.max(-maxOffset, Math.min(maxOffset, currentOffset.x + newVel.x)),
+        y: Math.max(-maxOffset, Math.min(maxOffset, currentOffset.y + newVel.y))
       }
 
       velocityRef.current[index] = newVel
