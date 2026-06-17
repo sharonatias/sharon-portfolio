@@ -138,6 +138,49 @@ export default function Home() {
       </section>
       )}
 
+      {/* Currently Exploring Section */}
+      {heroLoaded && (
+      <section className="bg-black border-b border-gray-800">
+        <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
+          <div className="flex justify-between items-center mb-12">
+            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em' }}>
+              CURRENTLY EXPLORING
+            </h3>
+            <span className="text-xs tracking-widest text-gray-400" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+              VIEW ALL EXPERIMENTS →
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+            {[
+              { title: 'GENESIS', subtitle: 'AI CINEMATIC UNIVERSE', image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&h=600&fit=crop' },
+              { title: 'MIRI', subtitle: 'AI PLATFORM FOR EDUCATORS', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop' },
+              { title: 'RED CAMERA', subtitle: 'SHORT FILM IN DEVELOPMENT', image: 'https://images.unsplash.com/photo-1533390523327-130207cee930?w=800&h=600&fit=crop' }
+            ].map((item, index) => (
+              <div key={index} className="group cursor-pointer animate-bounce" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h4 className="text-lg lg:text-xl font-bold mb-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                      {item.title}
+                    </h4>
+                    <p className="text-xs lg:text-sm text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
+                      {item.subtitle}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
+
       {/* Featured Work Section */}
       {heroLoaded && (
       <section className="bg-black border-b border-gray-800">
@@ -176,49 +219,6 @@ export default function Home() {
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-      )}
-
-      {/* Currently Exploring Section */}
-      {heroLoaded && (
-      <section className="bg-black border-b border-gray-800">
-        <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
-          <div className="flex justify-between items-center mb-12">
-            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em' }}>
-              CURRENTLY EXPLORING
-            </h3>
-            <span className="text-xs tracking-widest text-gray-400" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-              VIEW ALL EXPERIMENTS →
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-            {[
-              { title: 'GENESIS', subtitle: 'AI CINEMATIC UNIVERSE', image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&h=600&fit=crop' },
-              { title: 'MIRI', subtitle: 'AI PLATFORM FOR EDUCATORS', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop' },
-              { title: 'RED CAMERA', subtitle: 'SHORT FILM IN DEVELOPMENT', image: 'https://images.unsplash.com/photo-1533390523327-130207cee930?w=800&h=600&fit=crop' }
-            ].map((item, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h4 className="text-lg lg:text-xl font-bold mb-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                      {item.title}
-                    </h4>
-                    <p className="text-xs lg:text-sm text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </div>
-              </div>
             ))}
           </div>
         </div>
