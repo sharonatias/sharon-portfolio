@@ -1,4 +1,4 @@
-export type Category = 'films_video' | 'brand_digital_design' | 'ai_creative_technology'
+export type Category = 'featured' | 'documentary' | 'commercial' | 'television' | 'music' | 'brand_design' | 'ai_experiments' | 'currently_exploring'
 
 export interface HeroVideo {
   id?: string
@@ -19,6 +19,7 @@ export interface Project {
   image_url: string
   video_url?: string
   images?: string[] // array of image URLs for gallery
+  files?: string[] // array of file URLs (PDFs, documents, etc)
   display_order?: number
   textStyles?: {
     description?: TextStyle
@@ -144,8 +145,73 @@ export interface AppCase {
   updated_at?: string
 }
 
+export interface BrandCaseStudyImage {
+  url: string
+  size: 'thumbnail' | 'medium' | 'large' // responsive image sizes
+  caption?: string
+}
+
+export interface BrandCaseStudySection {
+  title: string
+  description: string
+  images: BrandCaseStudyImage[]
+  isDeleted?: boolean
+}
+
+export interface BrandCaseStudy {
+  id?: string
+  title: string
+  subtitle?: string
+  year?: string
+  client?: string
+  role?: string
+
+  hero_image: string
+  hero_description: string
+  central_description: string // Main text describing the project
+
+  // 7 Design System Sections
+  idea?: BrandCaseStudySection
+  system?: BrandCaseStudySection
+  shape?: BrandCaseStudySection
+  motion?: BrandCaseStudySection
+  applications?: BrandCaseStudySection
+  color?: BrandCaseStudySection
+  type?: BrandCaseStudySection
+
+  // Color Palette
+  color_palette: string[] // Array of hex colors like #FF0000
+
+  // Videos (can be placed freely)
+  videos?: Array<{
+    url: string
+    title?: string
+    section?: string // which section it belongs to (optional)
+  }>
+
+  // CTO/Leader Section
+  cto?: {
+    name: string
+    title: string
+    image: string
+    description: string
+  }
+
+  sections_order?: string[]
+
+  category?: Category
+  display_order?: number
+  created_at?: string
+  updated_at?: string
+}
+
 export const CATEGORIES: { value: Category; label: string }[] = [
-  { value: 'films_video', label: 'Films & Video' },
-  { value: 'brand_digital_design', label: 'Brand & Digital Design' },
-  { value: 'ai_creative_technology', label: 'AI & Creative Technology' },
+  { value: 'featured', label: 'FEATURED' },
+  { value: 'documentary', label: 'DOCUMENTARY' },
+  { value: 'commercial', label: 'COMMERCIAL' },
+  { value: 'television', label: 'TELEVISION' },
+  { value: 'music', label: 'MUSIC' },
+  { value: 'brand_design', label: 'BRAND DESIGN' },
+  { value: 'ai_experiments', label: 'AI EXPERIMENTS' },
+  { value: 'currently_exploring', label: 'CURRENTLY EXPLORING' },
 ]
