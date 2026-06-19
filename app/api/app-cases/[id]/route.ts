@@ -68,7 +68,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       interaction: sanitizeSection(body.interaction),
       outcome: sanitizeSection(body.outcome),
       brand_color: body.brand_color,
-      category: body.category || 'brand_digital_design',
+      category: body.category || 'brand_design',
       brand_design_id: body.brand_design_id || null,
     }
 

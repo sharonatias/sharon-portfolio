@@ -38,7 +38,7 @@ export default function ManageOrderBrandDigital() {
       // Filter by Brand & Digital Design and create items
       const filtered: OrderItem[] = [
         ...projects
-          .filter((p) => p.category === 'brand_digital_design')
+          .filter((p) => p.category === 'brand_design')
           .map((p, i) => ({
             id: p.id!,
             title: p.title,
@@ -52,7 +52,7 @@ export default function ManageOrderBrandDigital() {
           order: b.display_order ?? i,
         })),
         ...cases
-          .filter((c) => c.category === 'brand_digital_design')
+          .filter((c) => c.category === 'brand_design')
           .map((c, i) => ({
             id: c.id!,
             title: c.title,

@@ -26,7 +26,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+const updateCaseStudy = async (request: Request, params: Promise<{ id: string }>) => {
   try {
     const { id } = await params
     const body = await request.json()
@@ -48,6 +48,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     console.error('API error:', error)
     return NextResponse.json({ error: 'Failed to update case study' }, { status: 500 })
   }
+}
+
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  return updateCaseStudy(request, params)
+}
+
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  return updateCaseStudy(request, params)
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {

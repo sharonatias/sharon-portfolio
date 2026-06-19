@@ -4,6 +4,18 @@ import { useState, useEffect } from 'react'
 import { Project, HeroVideo, CATEGORIES } from '@/lib/types'
 import Link from 'next/link'
 import HeroSection from '@/components/HeroSection'
+import {
+  FadeInText,
+  SlideInUpText,
+  SlideInLeftText,
+  StaggerContainer,
+  StaggerItem,
+  AnimatedCounter,
+  RevealOnScroll,
+  BlurReveal,
+  GradientText,
+  ScrollProgressBar,
+} from '@/components/animations'
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -45,6 +57,7 @@ export default function Home() {
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-col" suppressHydrationWarning>
+      <ScrollProgressBar />
       {/* Hero Videos */}
       <div className="flex-1">
         {heroVideos.map((video, index) => (
@@ -115,25 +128,51 @@ export default function Home() {
       {heroLoaded && (
       <section className="bg-black">
         <div className="max-w-7xl mx-auto px-8 py-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-56">
-            <div className="text-center">
-              <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">10+</div>
-              <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
+          <StaggerContainer delay={0.2}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-56">
+              <StaggerItem>
+                <BlurReveal>
+                  <div className="text-center">
+                    <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">
+                      <AnimatedCounter to={10} duration={2} suffix="+" />
+                    </div>
+                    <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS EXPERIENCE</h3>
+                  </div>
+                </BlurReveal>
+              </StaggerItem>
+              <StaggerItem>
+                <BlurReveal>
+                  <div className="text-center">
+                    <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">
+                      <AnimatedCounter to={50} duration={2} suffix="+" />
+                    </div>
+                    <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
+                  </div>
+                </BlurReveal>
+              </StaggerItem>
+              <StaggerItem>
+                <BlurReveal>
+                  <div className="text-center">
+                    <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">
+                      <AnimatedCounter to={8} duration={2} suffix="+" />
+                    </div>
+                    <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
+                  </div>
+                </BlurReveal>
+              </StaggerItem>
+              <StaggerItem>
+                <BlurReveal>
+                  <div className="text-center">
+                    <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">
+                      <AnimatedCounter to={3} duration={1.5} />
+                    </div>
+                    <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
+                    <p className="text-sm text-gray-400 mt-0">FILM • DESIGN • AI</p>
+                  </div>
+                </BlurReveal>
+              </StaggerItem>
             </div>
-            <div className="text-center">
-              <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">50+</div>
-              <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>PROJECTS DELIVERED</h3>
-            </div>
-            <div className="text-center">
-              <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">8+</div>
-              <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>YEARS IN PRODUCTION</h3>
-            </div>
-            <div className="text-center">
-              <div className="text-6xl lg:text-7xl font-light tracking-tighter text-white">3</div>
-              <h3 className="text-sm lg:text-base tracking-widest text-gray-300 font-light mt-4" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>CREATIVE DISCIPLINES</h3>
-              <p className="text-sm text-gray-400 mt-0">FILM • DESIGN • AI</p>
-            </div>
-          </div>
+          </StaggerContainer>
         </div>
       </section>
       )}
@@ -143,40 +182,50 @@ export default function Home() {
       <section className="bg-black">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
-            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em', animation: 'elegantGlow 4s ease-in-out infinite' }}>
-              CURRENTLY EXPLORING
-            </h3>
-            <span className="text-xs tracking-widest text-gray-400" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-              VIEW ALL EXPERIMENTS →
-            </span>
+            <SlideInLeftText>
+              <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em', animation: 'elegantGlow 4s ease-in-out infinite' }}>
+                CURRENTLY EXPLORING
+              </h3>
+            </SlideInLeftText>
+            <RevealOnScroll direction="right">
+              <span className="text-xs tracking-widest text-gray-400" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                VIEW ALL EXPERIMENTS →
+              </span>
+            </RevealOnScroll>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-            {[
-              { title: 'GENESIS', subtitle: 'AI CINEMATIC UNIVERSE', image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&h=600&fit=crop' },
-              { title: 'MIRI', subtitle: 'AI PLATFORM FOR EDUCATORS', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop' },
-              { title: 'RED CAMERA', subtitle: 'SHORT FILM IN DEVELOPMENT', image: 'https://images.unsplash.com/photo-1533390523327-130207cee930?w=800&h=600&fit=crop' }
-            ].map((item, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h4 className="text-lg lg:text-xl font-bold mb-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                      {item.title}
-                    </h4>
-                    <p className="text-xs lg:text-sm text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <StaggerContainer>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+              {[
+                { title: 'GENESIS', subtitle: 'AI CINEMATIC UNIVERSE', image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&h=600&fit=crop' },
+                { title: 'MIRI', subtitle: 'AI PLATFORM FOR EDUCATORS', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop' },
+                { title: 'RED CAMERA', subtitle: 'SHORT FILM IN DEVELOPMENT', image: 'https://images.unsplash.com/photo-1533390523327-130207cee930?w=800&h=600&fit=crop' }
+              ].map((item, index) => (
+                <StaggerItem key={index}>
+                  <RevealOnScroll direction="up">
+                    <div className="group cursor-pointer">
+                      <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <h4 className="text-lg lg:text-xl font-bold mb-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                            {item.title}
+                          </h4>
+                          <p className="text-xs lg:text-sm text-gray-300" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 300 }}>
+                            {item.subtitle}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </RevealOnScroll>
+                </StaggerItem>
+              ))}
+            </div>
+          </StaggerContainer>
         </div>
       </section>
       )}
@@ -186,41 +235,51 @@ export default function Home() {
       <section className="bg-black border-b border-gray-800">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
-            <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em' }}>
-              FEATURED WORK
-            </h3>
-            <Link href="/projects" className="text-xs tracking-widest hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-              VIEW ALL PROJECTS →
-            </Link>
+            <SlideInLeftText>
+              <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em' }}>
+                FEATURED WORK
+              </h3>
+            </SlideInLeftText>
+            <RevealOnScroll direction="right">
+              <Link href="/projects" className="text-xs tracking-widest hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                VIEW ALL PROJECTS →
+              </Link>
+            </RevealOnScroll>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-            {projects.slice(0, 3).map((project) => (
-              <Link key={project.id} href={`/projects/${project.id}`}>
-                <div className="group cursor-pointer">
-                  <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
-                    {project.image_url ? (
-                      <>
-                        <img
-                          src={project.image_url}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h4 className="text-lg lg:text-xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                            {project.title}
-                          </h4>
+          <StaggerContainer>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+              {projects.slice(0, 3).map((project) => (
+                <StaggerItem key={project.id}>
+                  <RevealOnScroll direction="up">
+                    <Link href={`/projects/${project.id}`}>
+                      <div className="group cursor-pointer">
+                        <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
+                          {project.image_url ? (
+                            <>
+                              <img
+                                src={project.image_url}
+                                alt={project.title}
+                                className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                <h4 className="text-lg lg:text-xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                                  {project.title}
+                                </h4>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
+                          )}
                         </div>
-                      </>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                      </div>
+                    </Link>
+                  </RevealOnScroll>
+                </StaggerItem>
+              ))}
+            </div>
+          </StaggerContainer>
         </div>
       </section>
       )}

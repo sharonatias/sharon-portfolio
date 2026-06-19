@@ -11,8 +11,8 @@ interface CategoryHero {
 }
 
 const CATEGORIES = [
-  { key: 'films_video', label: 'Films & Video' },
-  { key: 'brand_digital_design', label: 'Brand & Digital Design' },
+  { key: 'featured', label: 'Films & Video' },
+  { key: 'brand_design', label: 'Brand & Digital Design' },
   { key: 'ai_creative_technology', label: 'AI & Creative Technology' },
 ]
 

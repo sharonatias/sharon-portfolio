@@ -35,7 +35,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
         client: '',
         duration: '',
         format: '',
-        category: 'films_video',
+        category: 'featured',
         hero_image: '',
         hero_description: '',
         watch_film_link: '',
@@ -63,7 +63,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
       client: (caseData as any).client || '',
       duration: caseData.duration || '',
       format: caseData.format || '',
-      category: caseData.category || 'films_video',
+      category: caseData.category || 'featured',
       hero_image: caseData.hero_image || '',
       hero_description: caseData.hero_description || '',
       watch_film_link: caseData.watch_film_link || '',
@@ -551,7 +551,7 @@ export default function CaseStudyForm({ caseStudy, onSave }: CaseStudyFormProps)
           <div>
             <label className="block text-sm font-medium mb-2 text-black">Category</label>
             <select
-              value={(formData as any).category || 'films_video'}
+              value={(formData as any).category || 'featured'}
               onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value as any }))}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
             >

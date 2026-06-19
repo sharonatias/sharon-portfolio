@@ -14,7 +14,7 @@ export default function BrandDesignForm({ project, onSave }: BrandDesignFormProp
     project || {
       title: '',
       story: '',
-      category: 'brand_digital_design',
+      category: 'brand_design',
       logo_url: '',
       logo_size: 100,
       cover_image_url: '',

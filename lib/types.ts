@@ -168,6 +168,7 @@ export interface BrandCaseStudy {
 
   hero_image: string
   hero_description: string
+  hero_video?: string
   central_description: string // Main text describing the project
 
   // 7 Design System Sections

@@ -1,15 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { About } from '@/lib/types'
-
-interface TextStyle {
-  fontSize: number
-  fontFamily: string
-  alignment: string
-  bold: boolean
-  lineHeight: number
-}
+import { About, TextStyle } from '@/lib/types'
 
 export default function AdminAboutEditorV3() {
   const [about, setAbout] = useState<About | null>(null)
@@ -177,8 +169,14 @@ export default function AdminAboutEditorV3() {
                   setFormData((prev) => ({
                     ...prev,
                     textStyles: {
-                      ...prev.textStyles,
-                      main: { ...prev.textStyles?.main, fontSize: parseInt(e.target.value) } as TextStyle,
+                      main: {
+                        ...prev.textStyles?.main,
+                        fontSize: parseInt(e.target.value),
+                        fontFamily: (prev.textStyles?.main?.fontFamily || 'mono') as 'mono' | 'serif' | 'sans',
+                        alignment: (prev.textStyles?.main?.alignment || 'center') as string,
+                        bold: prev.textStyles?.main?.bold || false,
+                        lineHeight: prev.textStyles?.main?.lineHeight || 1.6
+                      } as TextStyle,
                     },
                   }))
                 }
@@ -193,8 +191,14 @@ export default function AdminAboutEditorV3() {
                   setFormData((prev) => ({
                     ...prev,
                     textStyles: {
-                      ...prev.textStyles,
-                      main: { ...prev.textStyles?.main, fontFamily: e.target.value } as TextStyle,
+                      main: {
+                        ...prev.textStyles?.main,
+                        fontFamily: e.target.value as 'mono' | 'serif' | 'sans',
+                        fontSize: prev.textStyles?.main?.fontSize || 16,
+                        alignment: (prev.textStyles?.main?.alignment || 'center') as string,
+                        bold: prev.textStyles?.main?.bold || false,
+                        lineHeight: prev.textStyles?.main?.lineHeight || 1.6
+                      } as TextStyle,
                     },
                   }))
                 }
@@ -213,8 +217,14 @@ export default function AdminAboutEditorV3() {
                   setFormData((prev) => ({
                     ...prev,
                     textStyles: {
-                      ...prev.textStyles,
-                      main: { ...prev.textStyles?.main, alignment: e.target.value } as TextStyle,
+                      main: {
+                        ...prev.textStyles?.main,
+                        alignment: e.target.value,
+                        fontSize: prev.textStyles?.main?.fontSize || 16,
+                        fontFamily: (prev.textStyles?.main?.fontFamily || 'mono') as 'mono' | 'serif' | 'sans',
+                        bold: prev.textStyles?.main?.bold || false,
+                        lineHeight: prev.textStyles?.main?.lineHeight || 1.6
+                      } as TextStyle,
                     },
                   }))
                 }
@@ -237,8 +247,14 @@ export default function AdminAboutEditorV3() {
                   setFormData((prev) => ({
                     ...prev,
                     textStyles: {
-                      ...prev.textStyles,
-                      main: { ...prev.textStyles?.main, lineHeight: parseFloat(e.target.value) } as TextStyle,
+                      main: {
+                        ...prev.textStyles?.main,
+                        lineHeight: parseFloat(e.target.value),
+                        fontSize: prev.textStyles?.main?.fontSize || 16,
+                        fontFamily: (prev.textStyles?.main?.fontFamily || 'mono') as 'mono' | 'serif' | 'sans',
+                        alignment: (prev.textStyles?.main?.alignment || 'center') as string,
+                        bold: prev.textStyles?.main?.bold || false
+                      } as TextStyle,
                     },
                   }))
                 }
@@ -254,8 +270,14 @@ export default function AdminAboutEditorV3() {
                     setFormData((prev) => ({
                       ...prev,
                       textStyles: {
-                        ...prev.textStyles,
-                        main: { ...prev.textStyles?.main, bold: e.target.checked } as TextStyle,
+                        main: {
+                          ...prev.textStyles?.main,
+                          bold: e.target.checked,
+                          fontSize: prev.textStyles?.main?.fontSize || 16,
+                          fontFamily: (prev.textStyles?.main?.fontFamily || 'mono') as 'mono' | 'serif' | 'sans',
+                          alignment: (prev.textStyles?.main?.alignment || 'center') as string,
+                          lineHeight: prev.textStyles?.main?.lineHeight || 1.6
+                        } as TextStyle,
                       },
                     }))
                   }

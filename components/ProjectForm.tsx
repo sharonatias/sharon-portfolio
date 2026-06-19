@@ -13,7 +13,7 @@ export default function ProjectForm({ project, onSave }: ProjectFormProps) {
   const defaultProject: Project = {
     title: '',
     description: '',
-    category: 'films_video',
+    category: 'featured',
     image_url: '',
     video_url: '',
     images: [],
@@ -35,7 +35,7 @@ export default function ProjectForm({ project, onSave }: ProjectFormProps) {
       // Ensure all required fields exist
       title: project.title || '',
       description: project.description || '',
-      category: project.category || 'films_video',
+      category: project.category || 'featured',
       image_url: project.image_url || '',
       video_url: project.video_url || '',
       images: project.images || [],

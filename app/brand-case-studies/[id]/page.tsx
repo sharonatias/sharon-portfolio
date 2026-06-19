@@ -1,0 +1,568 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
+import { BrandCaseStudy } from '@/lib/types'
+
+const SECTION_LABELS: { [key: string]: string } = {
+  idea: 'Idea',
+  system: 'System',
+  shape: 'Shape',
+  motion: 'Motion',
+  applications: 'Applications',
+  color: 'Color',
+  type: 'Type'
+}
+
+export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: string }> }) {
+  const [caseStudy, setCaseStudy] = useState<BrandCaseStudy | null>(null)
+  const [id, setId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [nextProject, setNextProject] = useState<BrandCaseStudy | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [visibleImages, setVisibleImages] = useState<Set<string>>(new Set())
+  const [hoveredColorIdx, setHoveredColorIdx] = useState<number | null>(null)
+
+  useEffect(() => {
+    params.then((p) => {
+      setId(p.id)
+    })
+  }, [params])
+
+  useEffect(() => {
+    if (!id) return
+    fetchCaseStudy()
+  }, [id])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setVisibleImages(prev => new Set([...prev, entry.target.id]))
+        }
+      })
+    }, { threshold: 0.1 })
+
+    document.querySelectorAll('[data-image-id]').forEach(el => {
+      observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [caseStudy])
+
+  const fetchCaseStudy = async () => {
+    try {
+      const res = await fetch(`/api/brand-case-studies/${id}`)
+      const data = await res.json()
+
+      if (data && data.id) {
+        setCaseStudy(data)
+
+        try {
+          const allRes = await fetch('/api/brand-case-studies')
+          const allData = await allRes.json()
+          if (Array.isArray(allData)) {
+            const currentIndex = allData.findIndex(cs => cs.id === data.id)
+            if (currentIndex !== -1 && currentIndex < allData.length - 1) {
+              setNextProject(allData[currentIndex + 1])
+            } else if (currentIndex === allData.length - 1 && allData.length > 0) {
+              setNextProject(allData[0])
+            }
+          }
+        } catch (err) {
+          console.error('Failed to fetch all case studies:', err)
+        }
+      } else {
+        setCaseStudy(null)
+      }
+    } catch (error) {
+      console.error('Failed to fetch case study:', error)
+      setCaseStudy(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getGradientColor = () => {
+    if (!caseStudy?.color_palette || caseStudy.color_palette.length === 0) {
+      return 'from-blue-500 to-purple-500'
+    }
+    const colors = caseStudy.color_palette
+    return `from-[${colors[0]}] to-[${colors[colors.length - 1]}]`
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white text-black min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-gray-300 border-t-black rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!caseStudy) {
+    return (
+      <div className="bg-white text-black min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-gray-600">Case study not found</p>
+        <a href="/projects" className="text-blue-600 hover:text-blue-800">
+          ← Back to Projects
+        </a>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white text-black overflow-x-hidden">
+      {/* Hero Section - Full Height */}
+      <section className="relative w-screen h-screen overflow-hidden -mx-[calc((100vw-100%)/2)] flex items-end">
+        {/* Hero Video Background */}
+        {(caseStudy as any).hero_video && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+          >
+            <source src={(caseStudy as any).hero_video} type="video/mp4" />
+          </video>
+        )}
+
+        {/* Hero Image Background */}
+        {!((caseStudy as any).hero_video) && caseStudy.hero_image && (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${caseStudy.hero_image})` }}
+          />
+        )}
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+
+        {/* Header - Positioned on Hero */}
+        <header className="absolute top-0 left-0 right-0 z-50 px-8 lg:px-20 pt-6">
+          <Link href="/" className="hover:opacity-70 transition inline-block">
+            <h1 className="text-xl font-light tracking-widest text-black">SHARON MOSHE ATTIAS</h1>
+          </Link>
+        </header>
+
+        {/* Hamburger */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="absolute top-6 right-8 lg:right-20 flex flex-col gap-2 w-8 h-8 justify-center items-center cursor-pointer hover:opacity-70 transition z-50"
+        >
+          <span className={`block w-8 h-0.5 bg-black transition-all ${menuOpen ? 'rotate-45 translate-y-2.5' : ''}`} />
+          <span className={`block w-8 h-0.5 bg-black transition-all ${menuOpen ? 'opacity-0' : ''}`} />
+          <span className={`block w-8 h-0.5 bg-black transition-all ${menuOpen ? '-rotate-45 -translate-y-2.5' : ''}`} />
+        </button>
+
+        {/* Menu */}
+        {menuOpen && (
+          <>
+            <div
+              className="fixed inset-0 z-10 bg-white/40 backdrop-blur"
+              onClick={() => setMenuOpen(false)}
+            />
+            <nav className="fixed top-0 left-0 w-full sm:w-1/2 h-screen z-20 flex flex-col items-start justify-end px-8 sm:px-16 pb-16 bg-white border-l border-gray-200">
+              <div className="flex flex-col gap-4 w-full">
+                <a href="/" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">Home</a>
+                <a href="/projects" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">Work</a>
+                <a href="/about" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">About</a>
+                <a href="/contact" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">Contact</a>
+              </div>
+            </nav>
+          </>
+        )}
+
+        {/* Hero Content */}
+        <div className="relative z-20 w-full px-8 lg:px-20 pb-20">
+          <div className="max-w-4xl">
+            {/* Categories */}
+            <div className="flex gap-4 mb-8 flex-wrap">
+              {caseStudy.category && (
+                <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
+                  {caseStudy.category.replace(/_/g, ' ').toUpperCase()}
+                </span>
+              )}
+              {caseStudy.year && (
+                <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
+                  {caseStudy.year}
+                </span>
+              )}
+              {caseStudy.client && (
+                <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
+                  {caseStudy.client}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-light mb-6 leading-tight text-black">{caseStudy.title}</h1>
+            {caseStudy.subtitle && (
+              <p className="text-lg lg:text-2xl text-gray-700 mb-6 font-light">{caseStudy.subtitle}</p>
+            )}
+            {caseStudy.hero_description && (
+              <p className="text-base lg:text-lg text-gray-600 leading-relaxed max-w-2xl font-light">{caseStudy.hero_description}</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Project Meta - Compact */}
+      <section className="py-8 px-8 lg:px-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-12">
+          {caseStudy.year && (
+            <div>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Year</p>
+              <p className="text-base lg:text-lg text-black font-light">{caseStudy.year}</p>
+            </div>
+          )}
+          {caseStudy.client && (
+            <div>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Client</p>
+              <p className="text-base lg:text-lg text-black font-light">{caseStudy.client}</p>
+            </div>
+          )}
+          {caseStudy.role && (
+            <div>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Role</p>
+              <p className="text-base lg:text-lg text-black font-light">{caseStudy.role}</p>
+            </div>
+          )}
+          {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
+            <div>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Palette</p>
+              <div className="flex gap-2">
+                {caseStudy.color_palette.slice(0, 3).map((color, i) => (
+                  <div key={i} className="w-6 h-6 rounded-full border border-gray-300" style={{ backgroundColor: color }} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Central Description - Large */}
+      {caseStudy.central_description && (
+        <section className="py-16 lg:py-20 px-8 lg:px-20 -ml-16 lg:-ml-32 mb-48 lg:mb-64">
+          <div className="max-w-sm mx-auto">
+            <div className="text-xl lg:text-2xl xl:text-3xl leading-relaxed text-black font-light">
+              {caseStudy.central_description.split('\n').map((line, i) => {
+                const words = line.split(' ').filter(w => w.length > 0)
+                const wordsPerLine = 8
+                const lines = []
+                for (let i = 0; i < words.length; i += wordsPerLine) {
+                  lines.push(words.slice(i, i + wordsPerLine))
+                }
+                let globalWordCount = 0
+                return (
+                  <div key={i}>
+                    {lines.map((lineWords, lineIdx) => (
+                      <div key={lineIdx} className="mb-2">
+                        {lineWords.map((word, j) => {
+                          globalWordCount++
+                          const isHighlight = word.length > 5 && Math.random() > 0.7
+                          if (isHighlight && caseStudy.color_palette && caseStudy.color_palette.length > 0) {
+                            const colorIndex = (globalWordCount - 1) % caseStudy.color_palette.length
+                            const nextColorIndex = (colorIndex + 1) % caseStudy.color_palette.length
+                            return (
+                              <span
+                                key={j}
+                                className="inline-block"
+                                style={{
+                                  background: `linear-gradient(135deg, ${caseStudy.color_palette[colorIndex]}, ${caseStudy.color_palette[nextColorIndex]})`,
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent',
+                                  backgroundClip: 'text',
+                                  fontWeight: '600',
+                                  marginRight: '0.35rem'
+                                }}
+                              >
+                                {word}
+                              </span>
+                            )
+                          }
+                          return <span key={j} className="inline" style={{marginRight: '0.35rem'}}>{word}</span>
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTO/Leader Section */}
+      {caseStudy.cto && (
+        <section className="min-h-screen flex bg-white relative overflow-hidden -mt-24">
+          {/* Image Column */}
+          {caseStudy.cto.image && (
+            <div className="w-1/2 flex items-center justify-center overflow-visible order-2 relative">
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-3/4 h-3/4 flex items-center justify-center">
+                  <img
+                    src={caseStudy.cto.image}
+                    alt={caseStudy.cto.name}
+                    className="w-full h-full object-cover opacity-75 -translate-y-12 -rotate-2 transition-transform duration-500 hover:opacity-90"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Content Column */}
+          <div className={`${caseStudy.cto.image ? 'w-1/2' : 'w-full'} flex items-start justify-end px-8 lg:px-0 pt-32 lg:pt-40 pb-0 order-1 relative z-10 pr-8 lg:pr-16`}>
+            <div className="max-w-lg lg:max-w-xl">
+              <h2 className="text-5xl lg:text-6xl font-light mb-4 text-black">
+                {caseStudy.cto.name}
+              </h2>
+              <h3 className="text-2xl lg:text-3xl font-light text-gray-700 mb-8">{caseStudy.cto.title}</h3>
+
+              <div className="text-2xl lg:text-3xl xl:text-4xl leading-relaxed font-light block">
+                {caseStudy.cto.description.split('\n').map((line, i) => {
+                  const words = line.split(' ')
+                  let wordCount = 0
+                  return (
+                    <div key={i} className="mb-6">
+                      {words.map((word, j) => {
+                        wordCount++
+                        const isHighlight = word.length > 5 && Math.random() > 0.7
+                        if (isHighlight && caseStudy.color_palette && caseStudy.color_palette.length > 0) {
+                          const colorIndex = (wordCount - 1) % caseStudy.color_palette.length
+                          const nextColorIndex = (colorIndex + 1) % caseStudy.color_palette.length
+                          return (
+                            <span
+                              key={j}
+                              style={{
+                                background: `linear-gradient(135deg, ${caseStudy.color_palette[colorIndex]}, ${caseStudy.color_palette[nextColorIndex]})`,
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text',
+                                fontWeight: '600'
+                              }}
+                            >
+                              {word}{j < words.length - 1 ? ' ' : ''}
+                            </span>
+                          )
+                        }
+                        return <span key={j} className="text-gray-700">{word}{j < words.length - 1 ? ' ' : ''}</span>
+                      })}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Color Palette - Enhanced Digital Fan */}
+      {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
+        <section className="min-h-screen flex flex-col items-center px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-96 lg:-mt-[28rem] pt-80 lg:pt-96">
+          <div className="max-w-7xl mx-auto w-full">
+            <h2 className="text-5xl lg:text-6xl font-light mb-16 text-black">Color Palette</h2>
+            <div className="flex items-center justify-between gap-12">
+              <div className="relative w-1/2 h-96 flex items-center justify-center">
+              <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+                {caseStudy.color_palette.map((_, idx) => {
+                  const angle = (idx / caseStudy.color_palette!.length) * 360 - 90
+                  const radius = 100
+                  const x = 300 + Math.cos((angle * Math.PI) / 180) * radius
+                  const y = 150 + Math.sin((angle * Math.PI) / 180) * radius
+                  return <line key={idx} x1="300" y1="150" x2={x} y2={y} stroke="#e5e7eb" strokeWidth="1" />
+                })}
+              </svg>
+
+              {caseStudy.color_palette.map((color, idx) => {
+                const angle = (idx / caseStudy.color_palette!.length) * 360 - 90
+                const radius = 130
+                const x = Math.cos((angle * Math.PI) / 180) * radius
+                const y = Math.sin((angle * Math.PI) / 180) * radius
+
+                return (
+                  <div
+                    key={idx}
+                    className="absolute flex flex-col items-center cursor-pointer"
+                    style={{
+                      left: '50%',
+                      top: '50%',
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    }}
+                    onMouseEnter={() => setHoveredColorIdx(idx)}
+                    onMouseLeave={() => setHoveredColorIdx(null)}
+                  >
+                    {hoveredColorIdx === idx && caseStudy.color_palette && (
+                      <svg className="absolute w-48 h-48 animate-pulse" style={{ left: '-96px', top: '-96px' }} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        {caseStudy.color_palette.map((fanColor, fanIdx) => {
+                          const fanAngle = (fanIdx / caseStudy.color_palette!.length) * 360
+                          const nextAngle = ((fanIdx + 1) / caseStudy.color_palette!.length) * 360
+                          const midAngle = (fanAngle + nextAngle) / 2
+                          const radius = 80
+                          const x1 = 100 + Math.cos((fanAngle * Math.PI) / 180) * radius
+                          const y1 = 100 + Math.sin((fanAngle * Math.PI) / 180) * radius
+                          const x2 = 100 + Math.cos((nextAngle * Math.PI) / 180) * radius
+                          const y2 = 100 + Math.sin((nextAngle * Math.PI) / 180) * radius
+                          return (
+                            <path
+                              key={fanIdx}
+                              d={`M 100 100 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`}
+                              fill={fanColor}
+                              opacity="0.8"
+                            />
+                          )
+                        })}
+                      </svg>
+                    )}
+                    <div
+                      className="w-20 h-20 rounded-full shadow-xl border-4 border-white transition-all relative z-10"
+                      style={{
+                        backgroundColor: color,
+                        transform: hoveredColorIdx === idx ? 'scale(1.3)' : 'scale(1)',
+                        boxShadow: hoveredColorIdx === idx ? '0 20px 25px -5px rgba(0, 0, 0, 0.3)' : ''
+                      }}
+                      title={color}
+                    />
+                    <span className="text-xs mt-4 text-gray-700 font-mono transition whitespace-nowrap" style={{fontWeight: hoveredColorIdx === idx ? 'bold' : 'normal'}}>
+                      {color}
+                    </span>
+                  </div>
+                )
+              })}
+              </div>
+              <div className="w-1/2 flex items-center">
+                <p className="text-lg lg:text-xl font-light text-gray-800 leading-relaxed">
+                  A spectrum-driven<br />palette expressing energy<br />and optimism.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Design System Sections */}
+      {(() => {
+        const defaultOrder = ['idea', 'system', 'shape', 'motion', 'applications', 'color', 'type']
+        const sectionsOrder = (caseStudy as any).sections_order || defaultOrder
+        return sectionsOrder.map((sectionKey: string, sectionIdx: number) => {
+        const section = caseStudy[sectionKey as keyof BrandCaseStudy] as any
+        if (!section || section.isDeleted) return null
+
+        const hasImages = section.images && section.images.length > 0
+        const isImageLeft = sectionIdx % 2 === 0
+
+        const sectionLabel = (section as any).label || SECTION_LABELS[sectionKey]
+        return (
+          <section key={sectionKey} className={`${sectionKey === 'idea' ? 'h-auto' : 'min-h-screen'} flex py-12 ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+            {/* Images Column */}
+            {hasImages && (
+              <div className={`w-1/2 flex items-center justify-center overflow-hidden ${isImageLeft ? 'order-1' : 'order-2'}`}>
+                <div className="w-full h-full flex items-center justify-center">
+                  {section.images.map((img: any, idx: number) => {
+                    const imageId = `${sectionKey}-${idx}`
+                    return (
+                      <div key={idx} className="w-full h-full flex items-center justify-center">
+                        <div className="overflow-hidden rounded-lg w-full h-full transition-all duration-1000 opacity-100">
+                          <img
+                            src={img.url}
+                            alt={`${sectionLabel} ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Content Column */}
+            <div className={`${hasImages ? 'w-1/2' : 'w-full'} flex items-center justify-center px-8 lg:px-16 py-16 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
+              <div className={sectionKey === 'motion' ? 'w-full' : 'max-w-md lg:max-w-lg'}>
+                <h2 className="text-5xl lg:text-6xl font-light mb-4 text-black">
+                  {sectionLabel}
+                </h2>
+                {section.title && (
+                  <h3 className="text-2xl lg:text-3xl font-light text-gray-700 mb-8">{section.title}</h3>
+                )}
+
+                {section.description && (
+                  <div className="text-xl lg:text-2xl text-gray-700 leading-relaxed font-light space-y-4 mb-8">
+                    {section.description.split('\n').map((paragraph, idx) => (
+                      <p key={idx} className="text-justify">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {sectionKey === 'motion' && caseStudy.videos && caseStudy.videos.length > 0 && (
+                  <div className="space-y-6">
+                    {caseStudy.videos.map((video, vidIdx) => (
+                      <div key={vidIdx} className="aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg">
+                        <video className="w-full h-full object-cover" autoPlay muted loop controls>
+                          <source src={video.url} type="video/mp4" />
+                        </video>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )
+        })
+      })()}
+
+
+      {/* Next Project */}
+      {nextProject && (
+        <section className="min-h-screen flex items-center px-8 lg:px-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto w-full">
+            <h2 className="text-4xl lg:text-5xl font-light mb-12 text-black uppercase tracking-tight">Next Project</h2>
+            <Link href={`/brand-case-studies/${nextProject.id}`}>
+              <div className="group cursor-pointer">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-center">
+                  {nextProject.hero_image && (
+                    <div className="lg:col-span-2">
+                      <div className="relative overflow-hidden rounded-lg bg-gray-300 h-96">
+                        <img
+                          src={nextProject.hero_image}
+                          alt={nextProject.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-3xl lg:text-4xl font-light mb-3 text-black group-hover:text-gray-700 transition">
+                      {nextProject.title}
+                    </h3>
+                    {nextProject.subtitle && (
+                      <p className="text-lg text-gray-700 mb-6 font-light">{nextProject.subtitle}</p>
+                    )}
+                    <p className="text-sm text-gray-600 group-hover:text-black transition font-light">Explore →</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Footer */}
+      <footer className="py-8 px-8 lg:px-20 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+          <div className="flex gap-6">
+            <a href="https://www.instagram.com/sharon.attias/" target="_blank" rel="noopener noreferrer" className="hover:text-black transition font-light">Instagram</a>
+            <a href="https://www.youtube.com/@sharonattias7274" target="_blank" rel="noopener noreferrer" className="hover:text-black transition font-light">YouTube</a>
+          </div>
+          <p className="font-light">© 2026 Sharon Moshe Attias</p>
+        </div>
+      </footer>
+    </div>
+  )
+}

@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       interaction: sanitizeSection(body.interaction),
       outcome: sanitizeSection(body.outcome),
       brand_color: body.brand_color || '#000000',
-      category: body.category || 'brand_digital_design',
+      category: body.category || 'brand_design',
       brand_design_id: body.brand_design_id || null,
     }
 
