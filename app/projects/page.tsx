@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Project, BrandDesign, AppCase, CATEGORIES } from '@/lib/types'
+import { Project, BrandDesign, AppCase, BrandCaseStudy, CATEGORIES } from '@/lib/types'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -11,28 +11,15 @@ export default function ProjectsPage() {
   const [brandDesigns, setBrandDesigns] = useState<BrandDesign[]>([])
   const [appCases, setAppCases] = useState<AppCase[]>([])
   const [videoCaseStudies, setVideoCaseStudies] = useState<AppCase[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string | null>('films_video')
+  const [brandCaseStudies, setBrandCaseStudies] = useState<BrandCaseStudy[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string | null>('all')
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set())
-  const [categoryHeros, setCategoryHeros] = useState<Record<string, { title: string; image: string }>>({
-    films_video: {
-      title: 'Films & Video',
-      image: ''
-    },
-    brand_digital_design: {
-      title: 'Brand & Digital Design',
-      image: ''
-    },
-    ai_creative_technology: {
-      title: 'AI & Creative Technology',
-      image: ''
-    }
-  })
 
-  const categoryList = ['films_video', 'brand_digital_design', 'ai_creative_technology']
+  const categoryList = ['all', 'featured', 'documentary', 'commercial', 'television', 'music', 'brand_design', 'ai_experiments', 'currently_exploring']
 
-  const getCurrentCategoryIndex = () => categoryList.indexOf(selectedCategory || 'films_video')
+  const getCurrentCategoryIndex = () => categoryList.indexOf(selectedCategory || 'featured')
 
   const goToNextCategory = () => {
     const currentIndex = getCurrentCategoryIndex()
@@ -45,6 +32,7 @@ export default function ProjectsPage() {
     fetchBrandDesigns()
     fetchAppCases()
     fetchVideoCaseStudies()
+    fetchBrandCaseStudies()
     fetchCategoryHeros()
   }, [])
 
@@ -70,25 +58,10 @@ export default function ProjectsPage() {
     }, 100)
 
     return () => clearTimeout(timer)
-  }, [projects, brandDesigns, appCases, videoCaseStudies, selectedCategory])
+  }, [projects, brandDesigns, appCases, videoCaseStudies, brandCaseStudies, selectedCategory])
 
   const fetchCategoryHeros = async () => {
-    try {
-      const res = await fetch('/api/category-heroes')
-      const data = await res.json()
-      if (Array.isArray(data)) {
-        const heroMap: Record<string, { title: string; image: string }> = {}
-        data.forEach((hero: any) => {
-          heroMap[hero.category_key] = {
-            title: hero.title,
-            image: hero.image_url || ''
-          }
-        })
-        setCategoryHeros(prev => ({ ...prev, ...heroMap }))
-      }
-    } catch (error) {
-      console.error('Failed to fetch category heroes:', error)
-    }
+    // No longer needed with new category system
   }
 
   const fetchProjects = async () => {
@@ -131,38 +104,44 @@ export default function ProjectsPage() {
     }
   }
 
-  const filteredProjects = selectedCategory
-    ? projects.filter((p) => p.category === selectedCategory)
-    : projects
+  const fetchBrandCaseStudies = async () => {
+    try {
+      const res = await fetch('/api/brand-case-studies')
+      const data = await res.json()
+      setBrandCaseStudies(data)
+    } catch (error) {
+      console.error('Failed to fetch brand case studies:', error)
+    }
+  }
 
-  const filteredBrandDesigns = selectedCategory === 'brand_digital_design' || !selectedCategory
+  const filteredProjects = selectedCategory === 'all'
+    ? projects
+    : projects.filter((p) => p.category === selectedCategory)
+
+  const filteredBrandDesigns = selectedCategory === 'all' || selectedCategory === 'brand_design'
     ? brandDesigns
     : []
 
-  const filteredAppCases = selectedCategory === 'brand_digital_design' || !selectedCategory
-    ? appCases.filter((c) => c.category === 'brand_digital_design')
+  const filteredAppCases = selectedCategory === 'all' || selectedCategory === 'brand_design'
+    ? appCases.filter((c) => c.category === 'brand_design')
     : []
 
-  const filteredVideoCases = selectedCategory === 'films_video' || !selectedCategory
-    ? videoCaseStudies.filter((c) => c.category === 'films_video' || !c.category)
+  const filteredVideoCases = selectedCategory === 'all' || selectedCategory === 'documentary' || selectedCategory === 'commercial' || selectedCategory === 'television' || selectedCategory === 'music'
+    ? videoCaseStudies.filter((c) => !selectedCategory || selectedCategory === 'all' || c.category === selectedCategory)
     : []
 
-  // Combine all items and sort by display_order for Brand & Digital Design category
-  const allItems = selectedCategory === 'brand_digital_design'
-    ? [
-        ...filteredProjects.map(p => ({ ...p, itemType: 'project' as const })),
-        ...filteredBrandDesigns.map(b => ({ ...b, itemType: 'brand' as const })),
-        ...filteredAppCases.map(c => ({ ...c, itemType: 'appcase' as const })),
-      ].sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999))
-    : selectedCategory === 'films_video'
-    ? [
-        ...filteredProjects.map(p => ({ ...p, itemType: 'project' as const })),
-        ...filteredVideoCases.map(c => ({ ...c, itemType: 'videocase' as const })),
-      ]
-    : [
-        ...filteredProjects.map(p => ({ ...p, itemType: 'project' as const })),
-        ...filteredBrandDesigns.map(b => ({ ...b, itemType: 'brand' as const })),
-      ]
+  const filteredBrandCaseStudies = selectedCategory === 'all' || selectedCategory === 'brand_design'
+    ? brandCaseStudies.filter((c) => !selectedCategory || selectedCategory === 'all' || c.category === selectedCategory)
+    : []
+
+  // Combine all items
+  const allItems = [
+    ...filteredProjects.map(p => ({ ...p, itemType: 'project' as const })),
+    ...filteredBrandDesigns.map(b => ({ ...b, itemType: 'brand' as const })),
+    ...filteredAppCases.map(c => ({ ...c, itemType: 'appcase' as const })),
+    ...filteredVideoCases.map(c => ({ ...c, itemType: 'videocase' as const })),
+    ...filteredBrandCaseStudies.map(c => ({ ...c, itemType: 'brandcase' as const })),
+  ].sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999))
 
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
 
@@ -255,21 +234,29 @@ export default function ProjectsPage() {
       {/* Category Bar - Full Width */}
       <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginBottom: '2rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
         <div className="flex gap-12 lg:gap-16 overflow-x-auto pb-6 pt-6 px-8 lg:px-20">
-          {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS'].map((cat) => (
-            <button
-              key={cat}
-              className="text-sm lg:text-base tracking-widest whitespace-nowrap transition"
-              style={{
-                fontFamily: '"Bebas Neue", sans-serif',
-                fontWeight: 400,
-                color: cat === 'ALL' ? 'white' : 'rgba(255, 255, 255, 0.5)',
-                borderBottom: cat === 'ALL' ? '2px solid white' : 'none',
-                paddingBottom: cat === 'ALL' ? 'calc(1.5rem - 2px)' : '1.5rem'
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+          {['ALL', 'FEATURED', 'DOCUMENTARY', 'COMMERCIAL', 'TELEVISION', 'MUSIC', 'BRAND DESIGN', 'AI EXPERIMENTS', 'CURRENTLY EXPLORING'].map((cat) => {
+            const categoryKey = cat === 'ALL' ? 'all' : cat.toLowerCase().replace(/ /g, '_')
+            const isSelected = selectedCategory === categoryKey
+            return (
+              <button
+                key={cat}
+                onClick={() => {
+                  console.log('Category clicked:', categoryKey)
+                  setSelectedCategory(categoryKey)
+                }}
+                className="text-sm lg:text-base tracking-widest whitespace-nowrap transition hover:text-white"
+                style={{
+                  fontFamily: '"Bebas Neue", sans-serif',
+                  fontWeight: 400,
+                  color: isSelected ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                  borderBottom: isSelected ? '2px solid white' : 'none',
+                  paddingBottom: isSelected ? 'calc(1.5rem - 2px)' : '1.5rem'
+                }}
+              >
+                {cat}
+              </button>
+            )
+          })}
           <div className="flex-shrink-0 w-px bg-gray-700" />
           <button
             className="text-sm lg:text-base tracking-widest whitespace-nowrap text-gray-400 hover:text-white transition"
@@ -280,44 +267,13 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Featured Work Section */}
-      <section className="px-8 lg:px-20 mb-24 mt-8">
-        <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
-          FEATURED WORK
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24 w-full">
-          {projects.slice(0, 3).map((project) => (
-            <Link key={project.id} href={`/projects/${project.id}`}>
-              <div className="group cursor-pointer">
-                <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-4" style={{ aspectRatio: '4 / 3' }}>
-                  {project.image_url ? (
-                    <>
-                      <img
-                        src={project.image_url}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                    </>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
-                  )}
-                </div>
-                <h3 className="text-lg font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                  {project.title}
-                </h3>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* Projects Section - Grid of 4 */}
       <section className="px-8 lg:px-20 pb-24">
-        <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
-          ALL PROJECTS
-        </h2>
+        {selectedCategory !== 'all' && (
+          <h2 className="text-3xl lg:text-4xl mb-12 leading-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em' }}>
+            {selectedCategory?.toUpperCase().replace(/_/g, ' ')}
+          </h2>
+        )}
 
         {/* All Projects, Brands & Cases - Grid of 4 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mx-auto w-full">
@@ -478,6 +434,41 @@ export default function ProjectsPage() {
                     {videoCase.title && (
                       <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
                         {videoCase.title}
+                      </h3>
+                    )}
+                  </div>
+                </Link>
+              )
+            }
+
+            // Render brand case study
+            if (item.itemType === 'brandcase') {
+              const brandCase = item as typeof item & { itemType: 'brandcase' }
+              const itemId = `brandcase-${brandCase.id}`
+              const isVisible = visibleItems.has(itemId)
+              return (
+                <Link key={itemId} href={`/brand-case-studies/${brandCase.id}`}>
+                  <div className="group cursor-pointer transition-all duration-700 ease-out w-full" style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                  }} id={itemId} data-item-id="true">
+                    <div className="relative overflow-hidden rounded-lg bg-gray-900 mb-3" style={{ aspectRatio: '4 / 3' }}>
+                      {brandCase.hero_image ? (
+                        <>
+                          <img
+                            src={brandCase.hero_image}
+                            alt={brandCase.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
+                      )}
+                    </div>
+                    {brandCase.title && (
+                      <h3 className="text-sm lg:text-base font-bold text-white group-hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                        {brandCase.title}
                       </h3>
                     )}
                   </div>
