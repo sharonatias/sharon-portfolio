@@ -442,21 +442,21 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         </section>
       )}
 
-      {/* Brand Applications / Mockups Section */}
+      {/* Brand Applications / Mockups Section - Fullscreen Gallery */}
       {caseStudy.applications_images && caseStudy.applications_images.length > 0 && (
-        <section className="w-screen h-screen flex items-center justify-center bg-black overflow-hidden">
-          <div className="relative w-full h-full flex items-center justify-center">
-            {caseStudy.applications_images.map((img, idx) => (
-              <div key={idx} className="absolute inset-0">
+        <>
+          {caseStudy.applications_images.map((img, idx) => (
+            <section key={idx} className="w-screen h-screen flex items-center justify-center bg-black overflow-hidden">
+              <div className="w-full h-full flex items-center justify-center">
                 <img
                   src={img}
                   alt={`Brand application ${idx + 1}`}
                   className="w-full h-full object-cover"
                 />
               </div>
-            ))}
-          </div>
-        </section>
+            </section>
+          ))}
+        </>
       )}
 
       {/* Design System Sections */}
