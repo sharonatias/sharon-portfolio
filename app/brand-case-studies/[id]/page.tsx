@@ -444,22 +444,17 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Brand Applications / Mockups Section */}
       {caseStudy.applications_images && caseStudy.applications_images.length > 0 && (
-        <section className="min-h-screen flex flex-col items-center justify-center px-8 lg:px-20 bg-white py-24">
-          <div className="max-w-7xl mx-auto w-full">
-            <h2 className="text-5xl lg:text-6xl font-light mb-16 text-black">Brand Applications</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-              {caseStudy.applications_images.map((img, idx) => (
-                <div key={idx} className="flex items-center justify-center group">
-                  <div className="w-full overflow-hidden rounded-lg shadow-xl transition-transform duration-300 group-hover:shadow-2xl">
-                    <img
-                      src={img}
-                      alt={`Brand application ${idx + 1}`}
-                      className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+        <section className="w-screen h-screen flex items-center justify-center bg-black overflow-hidden">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {caseStudy.applications_images.map((img, idx) => (
+              <div key={idx} className="absolute inset-0">
+                <img
+                  src={img}
+                  alt={`Brand application ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
           </div>
         </section>
       )}
