@@ -240,17 +240,23 @@ export default function ProjectsPage() {
             return (
               <button
                 key={cat}
+                type="button"
                 onClick={() => {
-                  console.log('Category clicked:', categoryKey)
+                  console.log('🔹 Category clicked:', categoryKey, 'from', selectedCategory)
                   setSelectedCategory(categoryKey)
+                  console.log('🔹 State updated to:', categoryKey)
                 }}
-                className="text-sm lg:text-base tracking-widest whitespace-nowrap transition hover:text-white"
+                className="text-sm lg:text-base tracking-widest whitespace-nowrap transition hover:text-white focus:outline-none"
                 style={{
                   fontFamily: '"Bebas Neue", sans-serif',
                   fontWeight: 400,
                   color: isSelected ? 'white' : 'rgba(255, 255, 255, 0.5)',
                   borderBottom: isSelected ? '2px solid white' : 'none',
-                  paddingBottom: isSelected ? 'calc(1.5rem - 2px)' : '1.5rem'
+                  paddingBottom: isSelected ? 'calc(1.5rem - 2px)' : '1.5rem',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: `${isSelected ? 'calc(1.5rem - 2px)' : '1.5rem'} 0`
                 }}
               >
                 {cat}
