@@ -9,7 +9,7 @@ interface AdminBrandCaseStudyEditorProps {
   onClose: () => void
 }
 
-type Tab = 'basic' | 'hero' | 'description' | 'sections' | 'colors' | 'videos' | 'cto'
+type Tab = 'basic' | 'hero' | 'description' | 'sections' | 'colors' | 'videos' | 'applications' | 'cto'
 
 const SECTION_NAMES: (keyof Omit<BrandCaseStudy, 'id' | 'title' | 'subtitle' | 'year' | 'client' | 'role' | 'hero_image' | 'hero_description' | 'central_description' | 'color_palette' | 'videos' | 'category' | 'display_order' | 'created_at' | 'updated_at'>)[] = [
   'idea', 'system', 'shape', 'motion', 'applications', 'color', 'type'
@@ -41,6 +41,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
     { id: 'sections', label: 'Sections', icon: '🎨' },
     { id: 'colors', label: 'Colors', icon: '🎭' },
     { id: 'videos', label: 'Videos', icon: '🎥' },
+    { id: 'applications', label: 'Applications', icon: '📱' },
     { id: 'cto', label: 'CTO', icon: '👤' }
   ]
 
@@ -635,6 +636,68 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         className="text-red-400 hover:text-red-300"
                       >
                         ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'applications' && (
+            <div className="space-y-4 max-w-3xl">
+              <label className="block text-sm text-gray-400 mb-4">Brand Applications / Mockups</label>
+              <button
+                onClick={() => {
+                  const input = document.createElement('input')
+                  input.type = 'file'
+                  input.accept = 'image/*'
+                  input.onchange = async (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0]
+                    if (file) {
+                      setUploading(true)
+                      const formDataUpload = new FormData()
+                      formDataUpload.append('file', file)
+                      try {
+                        const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
+                        const data = await res.json()
+                        if (res.ok) {
+                          setFormData({
+                            ...formData,
+                            applications_images: [...(formData.applications_images || []), data.url]
+                          })
+                          setMessage({ type: 'success', text: `✅ Image uploaded` })
+                          setTimeout(() => setMessage(null), 3000)
+                        }
+                      } catch (error) {
+                        setMessage({ type: 'error', text: '❌ Upload failed' })
+                        setTimeout(() => setMessage(null), 3000)
+                      } finally {
+                        setUploading(false)
+                      }
+                    }
+                  }
+                  input.click()
+                }}
+                disabled={uploading}
+                className="w-full px-4 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/40 transition-all disabled:opacity-50"
+              >
+                {uploading ? '⏳ Uploading...' : '📱 Add Application Image'}
+              </button>
+
+              {formData.applications_images && formData.applications_images.length > 0 && (
+                <div className="grid grid-cols-2 gap-3 mt-4">
+                  {formData.applications_images.map((img, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={img} alt={`Application ${idx + 1}`} className="w-full h-32 object-cover rounded" />
+                      <button
+                        onClick={() => setFormData({
+                          ...formData,
+                          applications_images: (formData.applications_images || []).filter((_, i) => i !== idx)
+                        })}
+                        className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all"
+                      >
+                        Remove
                       </button>
                     </div>
                   ))}

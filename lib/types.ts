@@ -200,6 +200,9 @@ export interface BrandCaseStudy {
 
   sections_order?: string[]
 
+  // Brand Applications/Mockups
+  applications_images?: string[]
+
   category?: Category
   display_order?: number
   created_at?: string
