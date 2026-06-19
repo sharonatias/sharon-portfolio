@@ -251,10 +251,11 @@ export default function ProjectsPage() {
                   fontFamily: '"Bebas Neue", sans-serif',
                   fontWeight: 400,
                   color: isSelected ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                  borderTop: 'none',
+                  borderLeft: 'none',
+                  borderRight: 'none',
                   borderBottom: isSelected ? '2px solid white' : 'none',
-                  paddingBottom: isSelected ? 'calc(1.5rem - 2px)' : '1.5rem',
-                  background: 'none',
-                  border: 'none',
+                  backgroundColor: 'transparent',
                   cursor: 'pointer',
                   padding: `${isSelected ? 'calc(1.5rem - 2px)' : '1.5rem'} 0`
                 }}
