@@ -80,6 +80,11 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       const customSections: any[] = []
       const cleanedData = { ...formData } as any
 
+      // Ensure hero_image is included and is a string
+      if (cleanedData.hero_image && typeof cleanedData.hero_image !== 'string') {
+        cleanedData.hero_image = cleanedData.hero_image.url || ''
+      }
+
       // Extract custom sections (premium_*, custom_*)
       Object.keys(cleanedData).forEach((key) => {
         if ((key.startsWith('premium_') || key.startsWith('custom_')) && !standardSections.includes(key as any)) {
@@ -104,6 +109,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
         sections_order: sectionOrder, // Save full order including custom/premium sections
         custom_sections: customSections // Add custom sections as array
       }
+      console.log('📤 Saving Brand Case Study:', { hero_image: dataToSave.hero_image, title: dataToSave.title })
       await onSave(dataToSave)
       setMessage({ type: 'success', text: '✅ Saved Successfully!' })
       setTimeout(() => setMessage(null), 3000)
