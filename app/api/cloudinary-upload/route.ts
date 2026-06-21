@@ -5,6 +5,7 @@ export async function POST(request: NextRequest) {
     console.log('📤 Cloudinary upload request received')
 
     let file: File | null = null
+    let dataUrl: string | null = null
     let fileName = 'upload'
 
     const contentType = request.headers.get('content-type') || ''
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
     if (contentType.includes('application/json')) {
       // Handle data URL uploads
       const body = await request.json()
-      const dataUrl = body.dataUrl
+      dataUrl = body.dataUrl
       if (!dataUrl) {
         return NextResponse.json({ error: 'No data URL provided' }, { status: 400 })
       }
