@@ -38,6 +38,8 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes)
 
     const uploadsDir = join(process.cwd(), 'public', 'uploads')
+    console.log('📍 Current working directory:', process.cwd())
+    console.log('📍 Uploads directory:', uploadsDir)
 
     if (!existsSync(uploadsDir)) {
       await mkdir(uploadsDir, { recursive: true })
