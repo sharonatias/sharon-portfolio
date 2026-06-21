@@ -132,19 +132,28 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
         const formDataUpload = new FormData()
         formDataUpload.append('file', file)
         try {
+          console.log('🔄 Uploading file:', file.name, file.size)
           const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
           const data = await res.json()
-          if (res.ok) {
+          console.log('📦 Upload response:', { ok: res.ok, data })
+          if (res.ok && data.url) {
             callback(data.url)
             setMessage({ type: 'success', text: `✅ Image uploaded: ${data.filename}` })
             setTimeout(() => setMessage(null), 3000)
+          } else {
+            console.error('❌ Upload error:', data)
+            setMessage({ type: 'error', text: `❌ Upload failed: ${data.error || 'Unknown error'}` })
+            setTimeout(() => setMessage(null), 5000)
           }
         } catch (error) {
-          setMessage({ type: 'error', text: '❌ Upload failed' })
-          setTimeout(() => setMessage(null), 3000)
+          console.error('🔴 Upload exception:', error)
+          setMessage({ type: 'error', text: `❌ Upload failed: ${error instanceof Error ? error.message : 'Network error'}` })
+          setTimeout(() => setMessage(null), 5000)
         } finally {
           setUploading(false)
         }
+      } else {
+        console.warn('⚠️ No file selected')
       }
     }
     input.click()
