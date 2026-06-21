@@ -147,38 +147,29 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       formDataUpload.append('file', file)
 
       try {
-        console.log('🔄 Uploading file:', file.name, file.size)
-        const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
+        console.log('🔄 Uploading to Cloudinary:', file.name, file.size)
 
-        // Check if response is JSON
-        const contentType = res.headers.get('content-type')
-        let data
-        if (contentType?.includes('application/json')) {
-          data = await res.json()
-        } else {
-          const text = await res.text()
-          console.error('❌ Non-JSON response:', text.substring(0, 200))
-          setMessage({ type: 'error', text: `❌ Server error: Invalid response type` })
-          setTimeout(() => setMessage(null), 5000)
-          return
+        const cloudinaryData = new FormData()
+        cloudinaryData.append('file', file)
+        cloudinaryData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads')
+
+        const cloudRes = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+          { method: 'POST', body: cloudinaryData }
+        )
+
+        if (!cloudRes.ok) {
+          throw new Error(`Cloudinary error: ${cloudRes.status}`)
         }
 
-        console.log('📦 Upload response:', { ok: res.ok, status: res.status, data })
-
-        if (res.ok && data.url) {
-          console.log('✅ Upload successful:', data.url)
-          callback(data.url)
-          setMessage({ type: 'success', text: `✅ Image uploaded: ${data.filename}` })
-          setTimeout(() => setMessage(null), 3000)
-        } else {
-          const errorMsg = data.error || `Status ${res.status}`
-          console.error('❌ Upload error:', errorMsg)
-          setMessage({ type: 'error', text: `❌ Upload failed: ${errorMsg}` })
-          setTimeout(() => setMessage(null), 5000)
-        }
+        const cloudData = await cloudRes.json()
+        console.log('✅ Cloudinary upload successful:', cloudData.secure_url)
+        callback(cloudData.secure_url)
+        setMessage({ type: 'success', text: `✅ Image uploaded: ${file.name}` })
+        setTimeout(() => setMessage(null), 3000)
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : 'Network error'
-        console.error('🔴 Upload exception:', error)
+        console.error('🔴 Upload failed:', errorMsg)
         setMessage({ type: 'error', text: `❌ Upload failed: ${errorMsg}` })
         setTimeout(() => setMessage(null), 5000)
       } finally {
