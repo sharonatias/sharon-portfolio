@@ -357,6 +357,13 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                     input.onchange = async (e) => {
                       const file = (e.target as HTMLInputElement).files?.[0]
                       if (file) {
+                        // Check video file size - max 10MB
+                        const MAX_VIDEO_SIZE = 10 * 1024 * 1024 // 10MB
+                        if (file.size > MAX_VIDEO_SIZE) {
+                          setMessage({ type: 'error', text: `❌ Video too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 10MB.` })
+                          setTimeout(() => setMessage(null), 5000)
+                          return
+                        }
                         setUploading(true)
                         const formDataUpload = new FormData()
                         formDataUpload.append('file', file)
