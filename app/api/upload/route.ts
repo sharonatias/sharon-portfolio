@@ -18,29 +18,48 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
+    // Try local filesystem first
+    try {
+      const uploadsDir = join(process.cwd(), 'public', 'uploads')
 
-    // Ensure directory exists
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
+      if (!existsSync(uploadsDir)) {
+        await mkdir(uploadsDir, { recursive: true })
+      }
+
+      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
+      const filepath = join(uploadsDir, filename)
+
+      console.log('💾 Writing to:', filepath)
+      await writeFile(filepath, buffer)
+
+      const fileUrl = `/uploads/${filename}`
+      console.log('✅ Saved to filesystem:', fileUrl)
+
+      return NextResponse.json({
+        success: true,
+        url: fileUrl,
+        filename: file.name,
+        size: file.size,
+        type: file.type
+      })
+    } catch (fsError) {
+      console.error('❌ Filesystem failed:', fsError)
+      console.log('💾 Fallback: Using Base64 data URL')
+
+      // Fallback: Convert to Base64 data URL
+      const base64 = buffer.toString('base64')
+      const dataUrl = `data:${file.type || 'image/jpeg'};base64,${base64}`
+
+      console.log('✅ Image converted to data URL')
+
+      return NextResponse.json({
+        success: true,
+        url: dataUrl,
+        filename: file.name,
+        size: file.size,
+        type: file.type
+      })
     }
-
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
-    const filepath = join(uploadsDir, filename)
-
-    console.log('💾 Writing to:', filepath)
-    await writeFile(filepath, buffer)
-
-    const fileUrl = `/uploads/${filename}`
-    console.log('✅ Upload successful:', fileUrl)
-
-    return NextResponse.json({
-      success: true,
-      url: fileUrl,
-      filename: file.name,
-      size: file.size,
-      type: file.type
-    })
   } catch (error) {
     console.error('🔴 Upload error:', error)
     const msg = error instanceof Error ? error.message : 'Unknown error'
