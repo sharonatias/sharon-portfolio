@@ -147,24 +147,22 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       formDataUpload.append('file', file)
 
       try {
-        console.log('🔄 Uploading to Cloudinary:', file.name, file.size)
+        console.log('🔄 Uploading file:', file.name, file.size)
 
-        const cloudinaryData = new FormData()
-        cloudinaryData.append('file', file)
-        cloudinaryData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads')
+        const formData = new FormData()
+        formData.append('file', file)
 
-        const cloudRes = await fetch(
-          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
-          { method: 'POST', body: cloudinaryData }
-        )
+        const res = await fetch('/api/cloudinary-upload', { method: 'POST', body: formData })
 
-        if (!cloudRes.ok) {
-          throw new Error(`Cloudinary error: ${cloudRes.status}`)
+        if (!res.ok) {
+          const text = await res.text()
+          console.error('❌ Upload error:', text)
+          throw new Error(`Upload failed: ${res.status}`)
         }
 
-        const cloudData = await cloudRes.json()
-        console.log('✅ Cloudinary upload successful:', cloudData.secure_url)
-        callback(cloudData.secure_url)
+        const data = await res.json()
+        console.log('✅ Upload successful:', data.url)
+        callback(data.url)
         setMessage({ type: 'success', text: `✅ Image uploaded: ${file.name}` })
         setTimeout(() => setMessage(null), 3000)
       } catch (error) {
@@ -350,17 +348,13 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         const file = (e.target as HTMLInputElement).files?.[0]
                         if (file) {
                           setUploading(true)
-                          const cloudinaryData = new FormData()
-                          cloudinaryData.append('file', file)
-                          cloudinaryData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads')
+                          const uploadData = new FormData()
+                          uploadData.append('file', file)
                           try {
-                            const cloudRes = await fetch(
-                              `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`,
-                              { method: 'POST', body: cloudinaryData }
-                            )
-                            if (!cloudRes.ok) throw new Error('Upload failed')
-                            const cloudData = await cloudRes.json()
-                            setFormData({ ...formData, hero_video: cloudData.secure_url })
+                            const res = await fetch('/api/cloudinary-upload', { method: 'POST', body: uploadData })
+                            if (!res.ok) throw new Error('Upload failed')
+                            const data = await res.json()
+                            setFormData({ ...formData, hero_video: data.url })
                             setMessage({ type: 'success', text: `✅ Video uploaded: ${file.name}` })
                             setTimeout(() => setMessage(null), 3000)
                           } catch (error) {
