@@ -11,34 +11,26 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File
 
     if (!file || !(file instanceof File)) {
-      console.error('❌ No file in form data or not a File')
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    console.log('📦 File received:', { name: file.name, size: file.size, type: file.type })
-
+    console.log('📦 File:', { name: file.name, size: file.size })
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
     // Try local filesystem first
     try {
       const uploadsDir = join(process.cwd(), 'public', 'uploads')
-      console.log('📍 Uploads directory:', uploadsDir)
-
       if (!existsSync(uploadsDir)) {
         await mkdir(uploadsDir, { recursive: true })
       }
 
       const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
       const filepath = join(uploadsDir, filename)
-
-      console.log('💾 Writing file to:', filepath)
       await writeFile(filepath, buffer)
+
       const fileUrl = `/uploads/${filename}`
-      console.log('✅ File saved to filesystem:', fileUrl)
+      console.log('✅ Saved to filesystem:', fileUrl)
 
       return NextResponse.json({
         success: true,
@@ -48,36 +40,43 @@ export async function POST(request: NextRequest) {
         type: file.type
       })
     } catch (fsError) {
-      console.error('❌ Filesystem write failed:', fsError)
+      console.error('❌ Filesystem failed, using Cloudinary:', fsError)
 
-      // Fallback: Use /tmp directory
-      const tmpPath = `/tmp/${Date.now()}-${file.name.replace(/\s+/g, '-')}`
-      console.log('💾 Fallback: Writing to /tmp:', tmpPath)
+      // Fallback to Cloudinary
+      const cloudinaryName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+      const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
 
-      try {
-        await writeFile(tmpPath, buffer)
-        // Return with /tmp path so browser can serve it
-        const fileUrl = tmpPath
-        console.log('✅ File saved to /tmp')
-
-        return NextResponse.json({
-          success: true,
-          url: fileUrl,
-          filename: file.name,
-          size: file.size,
-          type: file.type
-        })
-      } catch (tmpError) {
-        console.error('❌ /tmp write also failed:', tmpError)
-        throw tmpError
+      if (!cloudinaryName || !cloudinaryPreset) {
+        throw new Error('Cloudinary not configured')
       }
+
+      const cloudinaryFormData = new FormData()
+      cloudinaryFormData.append('file', new Blob([buffer], { type: file.type }), file.name)
+      cloudinaryFormData.append('upload_preset', cloudinaryPreset)
+
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload`,
+        { method: 'POST', body: cloudinaryFormData as any }
+      )
+
+      if (!cloudRes.ok) {
+        throw new Error(`Cloudinary failed: ${cloudRes.statusText}`)
+      }
+
+      const cloudData = await cloudRes.json() as any
+      console.log('✅ Uploaded to Cloudinary:', cloudData.secure_url)
+
+      return NextResponse.json({
+        success: true,
+        url: cloudData.secure_url,
+        filename: file.name,
+        size: file.size,
+        type: file.type
+      })
     }
   } catch (error) {
     console.error('🔴 Upload error:', error)
-    const errorMsg = error instanceof Error ? error.message : 'Unknown error'
-    return NextResponse.json(
-      { error: errorMsg },
-      { status: 500 }
-    )
+    const msg = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
