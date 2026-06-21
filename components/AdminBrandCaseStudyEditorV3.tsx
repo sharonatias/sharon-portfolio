@@ -125,37 +125,48 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'image/*'
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0]
-      if (file) {
-        setUploading(true)
-        const formDataUpload = new FormData()
-        formDataUpload.append('file', file)
-        try {
-          console.log('🔄 Uploading file:', file.name, file.size)
-          const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
-          const data = await res.json()
-          console.log('📦 Upload response:', { ok: res.ok, data })
-          if (res.ok && data.url) {
-            callback(data.url)
-            setMessage({ type: 'success', text: `✅ Image uploaded: ${data.filename}` })
-            setTimeout(() => setMessage(null), 3000)
-          } else {
-            console.error('❌ Upload error:', data)
-            setMessage({ type: 'error', text: `❌ Upload failed: ${data.error || 'Unknown error'}` })
-            setTimeout(() => setMessage(null), 5000)
-          }
-        } catch (error) {
-          console.error('🔴 Upload exception:', error)
-          setMessage({ type: 'error', text: `❌ Upload failed: ${error instanceof Error ? error.message : 'Network error'}` })
-          setTimeout(() => setMessage(null), 5000)
-        } finally {
-          setUploading(false)
-        }
-      } else {
+
+    const handleChange = async (e: Event) => {
+      const target = e.target as HTMLInputElement
+      const file = target.files?.[0]
+
+      if (!file) {
         console.warn('⚠️ No file selected')
+        return
+      }
+
+      setUploading(true)
+      const formDataUpload = new FormData()
+      formDataUpload.append('file', file)
+
+      try {
+        console.log('🔄 Uploading file:', file.name, file.size)
+        const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
+        const data = await res.json()
+        console.log('📦 Upload response:', { ok: res.ok, status: res.status, data })
+
+        if (res.ok && data.url) {
+          console.log('✅ Upload successful:', data.url)
+          callback(data.url)
+          setMessage({ type: 'success', text: `✅ Image uploaded: ${data.filename}` })
+          setTimeout(() => setMessage(null), 3000)
+        } else {
+          const errorMsg = data.error || `Status ${res.status}`
+          console.error('❌ Upload error:', errorMsg)
+          setMessage({ type: 'error', text: `❌ Upload failed: ${errorMsg}` })
+          setTimeout(() => setMessage(null), 5000)
+        }
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Network error'
+        console.error('🔴 Upload exception:', error)
+        setMessage({ type: 'error', text: `❌ Upload failed: ${errorMsg}` })
+        setTimeout(() => setMessage(null), 5000)
+      } finally {
+        setUploading(false)
       }
     }
+
+    input.addEventListener('change', handleChange, { once: true })
     input.click()
   }
 
