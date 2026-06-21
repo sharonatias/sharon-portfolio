@@ -155,6 +155,7 @@ export interface BrandCaseStudySection {
   title: string
   description: string
   images: BrandCaseStudyImage[]
+  video?: string // optional video URL
   isDeleted?: boolean
   // New section layout fields
   number?: string // "01", "02", etc.
