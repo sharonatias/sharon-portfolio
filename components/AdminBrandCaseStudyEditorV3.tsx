@@ -338,14 +338,54 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
               </div>
 
               {/* Hero Video */}
-              <div>
-                <label className="block text-sm text-gray-400 mb-2">Hero Video URL (Optional)</label>
+              <div className="space-y-3">
+                <label className="block text-sm text-gray-400 mb-2">Hero Video (Optional)</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      const input = document.createElement('input')
+                      input.type = 'file'
+                      input.accept = 'video/*'
+                      input.onchange = async (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0]
+                        if (file) {
+                          setUploading(true)
+                          const cloudinaryData = new FormData()
+                          cloudinaryData.append('file', file)
+                          cloudinaryData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads')
+                          try {
+                            const cloudRes = await fetch(
+                              `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`,
+                              { method: 'POST', body: cloudinaryData }
+                            )
+                            if (!cloudRes.ok) throw new Error('Upload failed')
+                            const cloudData = await cloudRes.json()
+                            setFormData({ ...formData, hero_video: cloudData.secure_url })
+                            setMessage({ type: 'success', text: `✅ Video uploaded: ${file.name}` })
+                            setTimeout(() => setMessage(null), 3000)
+                          } catch (error) {
+                            setMessage({ type: 'error', text: '❌ Video upload failed' })
+                            setTimeout(() => setMessage(null), 5000)
+                          } finally {
+                            setUploading(false)
+                          }
+                        }
+                      }
+                      input.click()
+                    }}
+                    disabled={uploading}
+                    className="px-4 py-2 bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all disabled:opacity-50"
+                  >
+                    {uploading ? '⏳ Uploading...' : '🎥 Upload Video'}
+                  </button>
+                  <span className="text-xs text-gray-500 py-2">or paste URL →</span>
+                </div>
                 <input
                   type="url"
-                  placeholder="Paste video URL (MP4, WebM, etc.)"
+                  placeholder="Or paste video URL"
                   value={(formData as any).hero_video || ''}
                   onChange={(e) => setFormData({ ...formData, hero_video: e.target.value })}
-                  className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
+                  className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
                 />
                 {(formData as any).hero_video && (
                   <div className="mt-3 p-2 bg-slate-950/30 rounded text-xs text-gray-400">
