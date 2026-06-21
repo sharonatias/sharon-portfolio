@@ -384,7 +384,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                 <label className="block text-sm text-gray-400 mb-2">Hero Video (Optional)</label>
                 <div className="flex gap-2">
                   <CldUploadWidget
-                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads'}
+                    uploadPreset="sharon_portfolio"
                     onSuccess={(result: any) => {
                       const url = result.info.secure_url
                       setFormData({ ...formData, hero_video: url })
@@ -757,7 +757,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                           {(section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
                         </label>
                         <CldUploadWidget
-                          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads'}
+                          uploadPreset="sharon_portfolio"
                           onSuccess={(result: any) => {
                             const url = result.info.secure_url
                             const sectionData = formData[sectionKey as keyof BrandCaseStudy] as any
