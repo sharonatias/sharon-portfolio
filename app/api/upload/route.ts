@@ -4,15 +4,30 @@ import { join } from 'path'
 import { existsSync } from 'fs'
 
 export async function POST(request: NextRequest) {
+  let formData
+  let file
+
   try {
     console.log('📤 Upload request received')
-    const formData = await request.formData()
-    const file = formData.get('file') as File
 
-    if (!file) {
-      console.error('❌ No file in form data')
+    try {
+      formData = await request.formData()
+      console.log('✅ FormData parsed successfully')
+    } catch (parseError) {
+      console.error('❌ FormData parse error:', parseError)
       return NextResponse.json(
-        { error: 'לא נבחר קובץ' },
+        { error: 'Invalid form data' },
+        { status: 400 }
+      )
+    }
+
+    file = formData.get('file') as File
+    console.log('📋 FormData entries:', Array.from(formData.entries()).map(([k, v]) => `${k}: ${v instanceof File ? `File(${v.name})` : v}`))
+
+    if (!file || !(file instanceof File)) {
+      console.error('❌ No file in form data or not a File:', file)
+      return NextResponse.json(
+        { error: 'No file provided' },
         { status: 400 }
       )
     }
@@ -47,8 +62,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('🔴 Upload error:', error)
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
+    console.error('Error details:', { errorMsg, stack: error instanceof Error ? error.stack : 'no stack' })
     return NextResponse.json(
-      { error: `שגיאה בהעלאת הקובץ: ${errorMsg}` },
+      { error: errorMsg },
       { status: 500 }
     )
   }
