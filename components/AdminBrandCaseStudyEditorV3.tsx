@@ -385,7 +385,6 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                 <div className="flex gap-2">
                   <CldUploadWidget
                     uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads'}
-                    resourceType="video"
                     onSuccess={(result: any) => {
                       const url = result.info.secure_url
                       setFormData({ ...formData, hero_video: url })
