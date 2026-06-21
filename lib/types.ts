@@ -156,6 +156,11 @@ export interface BrandCaseStudySection {
   description: string
   images: BrandCaseStudyImage[]
   isDeleted?: boolean
+  // New section layout fields
+  number?: string // "01", "02", etc.
+  subtitle?: string // "THE IDEA", "THE SYMBOL", etc.
+  backgroundColor?: string // hex color like #1a1a1a
+  imageLayout?: 'single' | 'grid' // single large image or 4-image grid
 }
 
 export interface BrandCaseStudy {
@@ -200,8 +205,29 @@ export interface BrandCaseStudy {
 
   sections_order?: string[]
 
-  // Brand Applications/Mockups
-  applications_images?: string[]
+  // Brand Applications/Mockups (galleries placed between sections)
+  brand_applications?: Array<{
+    id: string
+    name: string
+    images: string[]
+    position?: 'before' | 'after' // Position relative to section
+    section?: string // Which section to position this relative to (idea, system, etc.)
+    order?: number
+  }>
+
+  // Custom sections (Premium sections created by user)
+  custom_sections?: Array<{
+    id: string
+    label?: string
+    title: string
+    subtitle?: string
+    description: string
+    images: string[]
+    number?: string
+    backgroundColor?: string
+    backgroundImage?: string
+    imageLayout?: 'single' | 'grid'
+  }>
 
   category?: Category
   display_order?: number

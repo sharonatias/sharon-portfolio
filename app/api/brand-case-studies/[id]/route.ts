@@ -19,7 +19,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: 'Brand case study not found' }, { status: 404 })
     }
 
-    return NextResponse.json(data[0])
+    const caseStudy = data[0]
+    return NextResponse.json(caseStudy)
   } catch (error) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Failed to fetch brand case study' }, { status: 500 })

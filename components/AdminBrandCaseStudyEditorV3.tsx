@@ -28,11 +28,38 @@ const SECTION_LABELS: { [key: string]: string } = {
 export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose }: AdminBrandCaseStudyEditorProps) {
   const [activeTab, setActiveTab] = useState<Tab>('basic')
   const [saving, setSaving] = useState(false)
-  const [formData, setFormData] = useState<BrandCaseStudy>(caseStudy)
+  const [formData, setFormData] = useState<BrandCaseStudy>(() => {
+    // Convert custom_sections array from DB into individual form fields
+    const data = { ...caseStudy } as any
+    if (Array.isArray(data.custom_sections) && data.custom_sections.length > 0) {
+      data.custom_sections.forEach((section: any) => {
+        if (section.id) {
+          data[section.id] = section
+        }
+      })
+      delete data.custom_sections
+    }
+    return data as BrandCaseStudy
+  })
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [sectionOrder, setSectionOrder] = useState<string[]>((caseStudy as any).sections_order || SECTION_NAMES)
+  const [sectionOrder, setSectionOrder] = useState<string[]>(() => {
+    let order = (caseStudy as any).sections_order || SECTION_NAMES
+    // Ensure all standard sections are present
+    const missingStandard = SECTION_NAMES.filter(s => !order.includes(s as string))
+    if (missingStandard.length > 0) {
+      order = [...order, ...missingStandard]
+    }
+    // Add custom sections to order if they exist and not already in order
+    if (Array.isArray((caseStudy as any).custom_sections)) {
+      const customIds = (caseStudy as any).custom_sections.map((s: any) => s.id).filter((id: string) => !order.includes(id))
+      return [...order, ...customIds]
+    }
+    return order
+  })
   const [draggedSection, setDraggedSection] = useState<string | null>(null)
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
+  const [newSectionName, setNewSectionName] = useState('')
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: 'basic', label: 'Basic', icon: '📋' },
@@ -48,9 +75,34 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
   const handleSave = async () => {
     setSaving(true)
     try {
+      // Separate custom/premium sections from standard sections
+      const standardSections = SECTION_NAMES
+      const customSections: any[] = []
+      const cleanedData = { ...formData } as any
+
+      // Extract custom sections (premium_*, custom_*)
+      Object.keys(cleanedData).forEach((key) => {
+        if ((key.startsWith('premium_') || key.startsWith('custom_')) && !standardSections.includes(key as any)) {
+          const section = cleanedData[key]
+          // Ensure images are stored as array of strings
+          if (section.images && Array.isArray(section.images)) {
+            section.images = section.images.map((img: any) => typeof img === 'string' ? img : img.url || img)
+          }
+          customSections.push({
+            id: key,
+            ...section
+          })
+          delete cleanedData[key] // Remove from main data
+        }
+      })
+
+      // Remove custom_sections from cleanedData (it's a database property, not a form field)
+      delete cleanedData.custom_sections
+
       const dataToSave = {
-        ...formData,
-        sections_order: sectionOrder
+        ...cleanedData,
+        sections_order: sectionOrder, // Save full order including custom/premium sections
+        custom_sections: customSections // Add custom sections as array
       }
       await onSave(dataToSave)
       setMessage({ type: 'success', text: '✅ Saved Successfully!' })
@@ -147,7 +199,8 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
           <button onClick={onClose} className="text-gray-400 hover:text-gray-300 text-2xl">✕</button>
         </div>
 
-        {/* Basic Info - Always Visible */}
+        {/* Basic Info - Only when Basic tab is active */}
+        {activeTab === 'basic' && (
         <div className="border-b border-orange-500/20 p-6 bg-slate-950/30">
           <div className="grid grid-cols-2 gap-4 max-w-3xl">
             <input
@@ -173,6 +226,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
             <input placeholder="Role" value={formData.role || ''} onChange={(e) => setFormData({ ...formData, role: e.target.value })} className="col-span-2 bg-slate-950/50 border border-orange-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none" />
           </div>
         </div>
+        )}
 
         {/* Tabs */}
         <div className="border-b border-orange-500/20 px-6 flex gap-1 overflow-x-auto">
@@ -302,37 +356,123 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
 
           {activeTab === 'sections' && (
             <div className="space-y-6 max-w-3xl">
-              <button
-                onClick={() => {
-                  // Find deleted sections that can be restored
-                  const deletedSections = SECTION_NAMES.filter(
-                    s => (formData[s as keyof BrandCaseStudy] as any)?.isDeleted === true
-                  )
+              <div className="space-y-3 p-4 bg-slate-950/30 rounded-lg border border-orange-500/20">
+                <div className="space-y-3">
+                  <label className="block text-sm text-gray-400">➕ הוסף סקשן חדש</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="שם הסקשן החדש (למשל: Gallery, Process וכו')"
+                      value={newSectionName}
+                      onChange={(e) => setNewSectionName(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && newSectionName.trim()) {
+                          const customKey = `custom_${Date.now()}`
+                          setFormData({
+                            ...formData,
+                            [customKey]: { title: '', description: '', images: [], label: newSectionName }
+                          } as any)
+                          setSectionOrder([...sectionOrder, customKey])
+                          setNewSectionName('')
+                        }
+                      }}
+                      className="flex-1 bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
+                    />
+                    <button
+                      onClick={() => {
+                        if (newSectionName.trim()) {
+                          const customKey = `custom_${Date.now()}`
+                          setFormData({
+                            ...formData,
+                            [customKey]: { title: '', description: '', images: [], label: newSectionName }
+                          } as any)
+                          setSectionOrder([...sectionOrder, customKey])
+                          setNewSectionName('')
+                        }
+                      }}
+                      className="px-6 py-2 bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all font-medium"
+                    >
+                      הוסף
+                    </button>
+                  </div>
+                </div>
 
-                  if (deletedSections.length > 0) {
-                    const sectionToRestore = deletedSections[0]
-                    const section = formData[sectionToRestore as keyof BrandCaseStudy] as any
-                    setFormData({
-                      ...formData,
-                      [sectionToRestore]: {
-                        ...section,
-                        isDeleted: false
+                <div className="border-t border-orange-500/20 pt-3">
+                  <button
+                    onClick={() => {
+                      const premiumKey = `premium_${Date.now()}`
+                      setFormData({
+                        ...formData,
+                        [premiumKey]: {
+                          title: '',
+                          description: '',
+                          images: [],
+                          label: 'Premium Section',
+                          number: '',
+                          subtitle: '',
+                          backgroundColor: '#ffffff',
+                          backgroundImage: undefined,
+                          imageLayout: 'single'
+                        }
+                      } as any)
+                      setSectionOrder([...sectionOrder, premiumKey])
+                    }}
+                    className="w-full px-4 py-2 bg-purple-600/20 text-purple-400 rounded hover:bg-purple-600/40 transition-all font-medium"
+                  >
+                    ✨ הוסף Premium Section (עם Template)
+                  </button>
+                  <p className="text-xs text-gray-500 mt-2">סקשן עם layout מיוחד: מספור, כותרות, טקסט + תמונה גדולה או grid</p>
+                </div>
+              </div>
+
+              {(() => {
+                const deletedSections = SECTION_NAMES.filter(
+                  s => (formData[s as keyof BrandCaseStudy] as any)?.isDeleted === true
+                )
+                const hasDeletedSections = deletedSections.length > 0
+
+                return (
+                  <button
+                    onClick={() => {
+                      if (hasDeletedSections) {
+                        const sectionToRestore = deletedSections[0]
+                        const section = formData[sectionToRestore as keyof BrandCaseStudy] as any
+                        setFormData({
+                          ...formData,
+                          [sectionToRestore]: {
+                            ...section,
+                            isDeleted: false
+                          }
+                        })
+                        if (!sectionOrder.includes(sectionToRestore)) {
+                          setSectionOrder([...sectionOrder, sectionToRestore])
+                        }
                       }
-                    })
-                    if (!sectionOrder.includes(sectionToRestore)) {
-                      setSectionOrder([...sectionOrder, sectionToRestore])
-                    }
-                  } else {
-                    alert('All sections are already added or there are no deleted sections to restore.')
-                  }
-                }}
-                className="w-full px-4 py-3 bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/40 transition-all"
-              >
-                ➕ Add Section
-              </button>
+                    }}
+                    disabled={!hasDeletedSections}
+                    className={`w-full px-4 py-3 rounded-lg transition-all ${
+                      hasDeletedSections
+                        ? 'bg-orange-600/20 text-orange-400 hover:bg-orange-600/40 cursor-pointer'
+                        : 'bg-slate-950/30 text-gray-500 cursor-not-allowed opacity-50'
+                    }`}
+                  >
+                    {hasDeletedSections ? `↩️ Restore Deleted (${deletedSections.length})` : '✓ All Sections Added'}
+                  </button>
+                )
+              })()}
 
               {sectionOrder.map((sectionKey, idx) => {
                 const section = formData[sectionKey] || { title: '', description: '', images: [] }
+                const isExpanded = expandedSections.has(sectionKey)
+                const toggleExpanded = () => {
+                  const newExpanded = new Set(expandedSections)
+                  if (newExpanded.has(sectionKey)) {
+                    newExpanded.delete(sectionKey)
+                  } else {
+                    newExpanded.add(sectionKey)
+                  }
+                  setExpandedSections(newExpanded)
+                }
                 return (
                   <div
                     key={sectionKey}
@@ -350,19 +490,26 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         setDraggedSection(null)
                       }
                     }}
-                    className={`border rounded-lg p-4 cursor-move transition-all ${
+                    className={`border rounded-lg overflow-hidden transition-all ${
                       draggedSection === sectionKey
                         ? 'border-orange-500 bg-orange-500/10'
                         : 'border-orange-500/20 hover:border-orange-500/40'
                     }`}
                   >
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-gray-500 text-sm">⋮⋮</span>
-                      <h3 className="text-orange-400 font-light text-lg">{SECTION_LABELS[sectionKey]}</h3>
-                      <span className="text-gray-600 text-xs ml-auto">#{idx + 1}</span>
+                    <div className="flex items-center gap-2 p-4 bg-slate-950/30 hover:bg-slate-950/50 transition-all">
+                      <button
+                        onClick={toggleExpanded}
+                        className="flex items-center gap-2 flex-1 cursor-pointer border-none bg-transparent text-left"
+                      >
+                        <span className="text-gray-500 text-sm">⋮⋮</span>
+                        <h3 className="text-orange-400 font-light text-lg">{SECTION_LABELS[sectionKey] || (section as any).label || sectionKey}</h3>
+                        <span className="text-gray-600 text-xs ml-auto">#{idx + 1}</span>
+                        <span className="text-orange-400">{isExpanded ? '▼' : '▶'}</span>
+                      </button>
                       <button
                         onClick={() => {
-                          if (confirm(`Delete ${SECTION_LABELS[sectionKey]} section?`)) {
+                          const sectionLabel = SECTION_LABELS[sectionKey] || (section as any).label || sectionKey
+                          if (confirm(`Delete ${sectionLabel} section?`)) {
                             setFormData({
                               ...formData,
                               [sectionKey]: { ...section, isDeleted: true }
@@ -370,30 +517,60 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             setSectionOrder(sectionOrder.filter(s => s !== sectionKey))
                           }
                         }}
-                        className="ml-2 px-2 py-1 text-xs bg-red-600/20 text-red-400 rounded hover:bg-red-600/40 transition-all"
+                        className="px-3 py-1 text-xs bg-red-600/20 text-red-400 rounded hover:bg-red-600/40 transition-all"
                       >
-                        🗑️ Delete
+                        🗑️
                       </button>
                     </div>
+                    {isExpanded && (
+                    <div className="border-t border-orange-500/20 p-4">
                     <div className="space-y-3">
-                      <input
-                        placeholder="Section Label (e.g., Applications)"
-                        value={(section as any).label || SECTION_LABELS[sectionKey]}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          [sectionKey]: { ...section, label: e.target.value }
-                        })}
-                        className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
-                      />
-                      <input
-                        placeholder="Section Title"
-                        value={section.title}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          [sectionKey]: { ...section, title: e.target.value }
-                        })}
-                        className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
-                      />
+                      <div className="flex gap-2">
+                        <input
+                          placeholder="Section Label (e.g., Applications)"
+                          value={(section as any).label ?? ''}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            [sectionKey]: { ...section, label: e.target.value }
+                          })}
+                          className="flex-1 bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
+                        />
+                        {(section as any).label && (
+                          <button
+                            onClick={() => setFormData({
+                              ...formData,
+                              [sectionKey]: { ...section, label: '' }
+                            })}
+                            className="px-3 py-2 bg-red-600/20 text-red-400 rounded hover:bg-red-600/40 transition-all text-sm"
+                            title="Delete label"
+                          >
+                            🗑️ מחק
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          placeholder="Section Title"
+                          value={section.title}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            [sectionKey]: { ...section, title: e.target.value }
+                          })}
+                          className="flex-1 bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
+                        />
+                        {section.title && (
+                          <button
+                            onClick={() => setFormData({
+                              ...formData,
+                              [sectionKey]: { ...section, title: '' }
+                            })}
+                            className="px-3 py-2 bg-red-600/20 text-red-400 rounded hover:bg-red-600/40 transition-all text-sm"
+                            title="Delete title"
+                          >
+                            🗑️ מחק
+                          </button>
+                        )}
+                      </div>
                       <textarea
                         placeholder="Section Description"
                         value={section.description}
@@ -405,44 +582,130 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
                       />
 
-                      <div>
-                        <label className="block text-xs text-gray-400 mb-2">Add Images (with size)</label>
-                        <div className="flex gap-2 flex-wrap">
-                          {(['thumbnail', 'medium', 'large', 'xlarge', 'xxlarge'] as const).map((size) => {
-                            const icons = {
-                              'thumbnail': '🔲',
-                              'medium': '▪️',
-                              'large': '⬜',
-                              'xlarge': '🟫',
-                              'xxlarge': '🟪'
-                            }
-                            return (
-                              <button
-                                key={size}
-                                onClick={() => handleImageUpload((url) => addSectionImage(sectionKey, { url, size: size as any }))}
-                                disabled={uploading}
-                                className="px-3 py-1.5 text-xs bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all disabled:opacity-50"
-                              >
-                                {icons[size]} {size}
-                              </button>
-                            )
+                      <div className="grid grid-cols-2 gap-3 pt-3 border-t border-orange-500/20">
+                        <input
+                          placeholder="מיספור (01, 02, וכו')"
+                          value={(section as any).number || ''}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            [sectionKey]: { ...section, number: e.target.value }
                           })}
-                        </div>
-                      </div>
-
-                      {section.images && section.images.length > 0 && (
-                        <div className="mt-3 space-y-2">
-                          {section.images.map((img, idx) => (
-                            <div key={idx} className="flex items-center gap-2 p-2 bg-slate-950/30 rounded text-xs">
-                              <span className="text-gray-400">{img.size}</span>
+                          className="bg-slate-950/50 border border-orange-500/30 px-3 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
+                        />
+                        <input
+                          placeholder="כותרת קטנה (THE IDEA וכו')"
+                          value={(section as any).subtitle || ''}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            [sectionKey]: { ...section, subtitle: e.target.value }
+                          })}
+                          className="bg-slate-950/50 border border-orange-500/30 px-3 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
+                        />
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={(section as any).backgroundColor || '#ffffff'}
+                              onChange={(e) => setFormData({
+                                ...formData,
+                                [sectionKey]: { ...section, backgroundColor: e.target.value }
+                              })}
+                              className="w-12 h-10 rounded cursor-pointer border border-orange-500/30"
+                              title="בחר צבע רקע"
+                            />
+                            <span className="text-xs text-gray-400">צבע רקע</span>
+                          </div>
+                          <button
+                            onClick={() => handleImageUpload((url) => {
+                              const sectionData = formData[sectionKey as keyof BrandCaseStudy] as any
+                              if (sectionData) {
+                                setFormData({
+                                  ...formData,
+                                  [sectionKey]: {
+                                    ...sectionData,
+                                    backgroundImage: url
+                                  }
+                                })
+                              }
+                            })}
+                            disabled={uploading}
+                            className="w-full px-4 py-2 text-sm bg-purple-600/20 text-purple-400 rounded hover:bg-purple-600/40 transition-all disabled:opacity-50"
+                          >
+                            {uploading ? '...מעלה' : '🖼️ העלה תמונה רקע'}
+                          </button>
+                          {(section as any).backgroundImage && (
+                            <div className="flex items-center gap-2 p-2 bg-slate-950/30 rounded text-xs">
+                              <img src={(section as any).backgroundImage} alt="background" className="w-8 h-8 object-cover rounded" />
+                              <span className="text-gray-400 flex-1 truncate">תמונת רקע</span>
                               <button
-                                onClick={() => removeSectionImage(sectionKey, idx)}
-                                className="ml-auto text-red-400 hover:text-red-300"
+                                onClick={() => setFormData({
+                                  ...formData,
+                                  [sectionKey]: { ...section, backgroundImage: undefined }
+                                })}
+                                className="text-red-400 hover:text-red-300"
                               >
                                 ✕
                               </button>
                             </div>
-                          ))}
+                          )}
+                        </div>
+                        <select
+                          value={(section as any).imageLayout || 'single'}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            [sectionKey]: { ...section, imageLayout: e.target.value as 'single' | 'grid' }
+                          })}
+                          className="bg-slate-950/50 border border-orange-500/30 px-3 py-2 rounded text-white text-sm focus:border-orange-500 focus:outline-none"
+                        >
+                          <option value="single">תמונה גדולה</option>
+                          <option value="grid">Grid 4 תמונות</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-2">
+                          📤 העלה תמונות
+                          {(section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
+                        </label>
+                        <button
+                          onClick={() => handleImageUpload((url) => {
+                            const sectionData = formData[sectionKey as keyof BrandCaseStudy] as any
+                            if (sectionData) {
+                              setFormData({
+                                ...formData,
+                                [sectionKey]: {
+                                  ...sectionData,
+                                  images: [...(sectionData.images || []), url]
+                                }
+                              })
+                            }
+                          })}
+                          disabled={uploading}
+                          className="px-4 py-2 text-sm bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all disabled:opacity-50"
+                        >
+                          {uploading ? '...מעלה' : '📤 בחר תמונה'}
+                        </button>
+                      </div>
+
+                      {section.images && section.images.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          {section.images.map((img: any, idx: number) => {
+                            const isString = typeof img === 'string'
+                            const imgUrl = isString ? img : img.url
+                            const imgLabel = isString ? 'תמונה' : img.size || 'תמונה'
+                            return (
+                              <div key={idx} className="flex items-center gap-2 p-2 bg-slate-950/30 rounded text-xs">
+                                <img src={imgUrl} alt="thumbnail" className="w-8 h-8 object-cover rounded" />
+                                <span className="text-gray-400 flex-1 truncate">{imgLabel}</span>
+                                <button
+                                  onClick={() => removeSectionImage(sectionKey, idx)}
+                                  className="text-red-400 hover:text-red-300"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            )
+                          })}
                         </div>
                       )}
 
@@ -517,6 +780,8 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         </div>
                       )}
                     </div>
+                    </div>
+                    )}
                   </div>
                 )
               })}
@@ -664,7 +929,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         if (res.ok) {
                           setFormData({
                             ...formData,
-                            applications_images: [...(formData.applications_images || []), data.url]
+                            brand_applications: [...(formData.brand_applications || []), { id: Date.now().toString(), name: 'Application', images: [data.url], position: 'after', section: 'applications' }]
                           })
                           setMessage({ type: 'success', text: `✅ Image uploaded` })
                           setTimeout(() => setMessage(null), 3000)
@@ -685,20 +950,25 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                 {uploading ? '⏳ Uploading...' : '📱 Add Application Image'}
               </button>
 
-              {formData.applications_images && formData.applications_images.length > 0 && (
-                <div className="grid grid-cols-2 gap-3 mt-4">
-                  {formData.applications_images.map((img, idx) => (
-                    <div key={idx} className="relative group">
-                      <img src={img} alt={`Application ${idx + 1}`} className="w-full h-32 object-cover rounded" />
-                      <button
-                        onClick={() => setFormData({
-                          ...formData,
-                          applications_images: (formData.applications_images || []).filter((_, i) => i !== idx)
-                        })}
-                        className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all"
-                      >
-                        Remove
-                      </button>
+              {formData.brand_applications && formData.brand_applications.length > 0 && (
+                <div className="space-y-3 mt-4">
+                  {(formData.brand_applications as unknown as any[]).map((app, idx) => (
+                    <div key={app.id} className="p-3 bg-slate-950/30 rounded">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-gray-300">{app.name}</span>
+                        <button
+                          onClick={() => setFormData({
+                            ...formData,
+                            brand_applications: (formData.brand_applications || []).filter((_, i) => i !== idx)
+                          })}
+                          className="text-red-400 hover:text-red-300 text-xs"
+                        >
+                          ✕ Delete
+                        </button>
+                      </div>
+                      {app.images && app.images.map((img, imgIdx) => (
+                        <img key={imgIdx} src={img} alt={`${app.name} ${imgIdx + 1}`} className="w-full h-24 object-cover rounded mb-2" />
+                      ))}
                     </div>
                   ))}
                 </div>
