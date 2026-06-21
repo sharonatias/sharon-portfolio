@@ -867,17 +867,15 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                                   })}
                                   className="text-red-400 hover:text-red-300 text-xs"
                                 >
-                                      ✕ Remove
-                                    </button>
-                                  </div>
-                                  <video
-                                    className="w-full h-32 bg-gray-900 rounded object-cover"
-                                    controls
-                                  >
-                                    <source src={video.url} type="video/mp4" />
-                                  </video>
-                                </div>
-                              ))}
+                                  ✕
+                                </button>
+                              </div>
+                              <video
+                                className="w-full h-32 bg-gray-900 rounded object-cover"
+                                controls
+                              >
+                                <source src={(section as any).video} type="video/mp4" />
+                              </video>
                             </div>
                           )}
                         </div>
