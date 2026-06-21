@@ -819,44 +819,33 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
 
                       {sectionKey === 'motion' && (
                         <div className="space-y-3">
-                          <label className="block text-xs text-gray-400 mb-2">Add Video</label>
-                          <button
-                            onClick={() => {
-                              const input = document.createElement('input')
-                              input.type = 'file'
-                              input.accept = 'video/*'
-                              input.onchange = async (e) => {
-                                const file = (e.target as HTMLInputElement).files?.[0]
-                                if (file) {
-                                  setUploading(true)
-                                  const formDataUpload = new FormData()
-                                  formDataUpload.append('file', file)
-                                  try {
-                                    const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
-                                    const data = await res.json()
-                                    if (res.ok) {
-                                      setFormData({
-                                        ...formData,
-                                        videos: [...(formData.videos || []), { url: data.url, title: file.name }]
-                                      })
-                                      setMessage({ type: 'success', text: `✅ Video uploaded: ${file.name}` })
-                                      setTimeout(() => setMessage(null), 3000)
-                                    }
-                                  } catch (error) {
-                                    setMessage({ type: 'error', text: '❌ Upload failed' })
-                                    setTimeout(() => setMessage(null), 3000)
-                                  } finally {
-                                    setUploading(false)
-                                  }
-                                }
-                              }
-                              input.click()
+                          <label className="block text-xs text-gray-400 mb-2">🎥 Upload Motion Video</label>
+                          <CldUploadWidget
+                            uploadPreset="sharon_portfolio"
+                            onSuccess={(result: any) => {
+                              const url = result.info.secure_url
+                              setFormData({
+                                ...formData,
+                                videos: [...(formData.videos || []), { url: url, title: result.info.original_filename || 'Video' }]
+                              })
+                              setMessage({ type: 'success', text: `✅ Video uploaded` })
+                              setTimeout(() => setMessage(null), 3000)
                             }}
-                            disabled={uploading}
-                            className="w-full px-4 py-2 text-xs bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all disabled:opacity-50"
+                            onError={() => {
+                              setMessage({ type: 'error', text: `❌ Video upload failed` })
+                              setTimeout(() => setMessage(null), 5000)
+                            }}
                           >
-                            {uploading ? '⏳ Uploading...' : '🎥 Add Video'}
-                          </button>
+                            {({ open }) => (
+                              <button
+                                type="button"
+                                onClick={() => open()}
+                                className="w-full px-4 py-2 text-xs bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all"
+                              >
+                                🎥 Upload Video
+                              </button>
+                            )}
+                          </CldUploadWidget>
 
                           {formData.videos && formData.videos.length > 0 && (
                             <div className="mt-3 space-y-2">
