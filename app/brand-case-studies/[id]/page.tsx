@@ -161,22 +161,32 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         {menuOpen && (
           <>
             <div
-              className="fixed inset-0 z-10 bg-white/40 backdrop-blur"
+              className="fixed inset-0 z-10 bg-black/40 transition-all duration-300 ease-out"
               onClick={() => setMenuOpen(false)}
+              style={{
+                animation: 'fadeIn 0.3s ease-out',
+                backdropFilter: 'blur(20px)'
+              }}
             />
-            <nav className="fixed top-0 left-0 w-full sm:w-1/2 h-screen z-20 flex flex-col items-start justify-end px-8 sm:px-16 pb-16 bg-white border-l border-gray-200">
+            <nav
+              className="fixed top-0 left-0 w-full sm:w-1/2 h-screen z-20 flex flex-col items-start justify-end px-8 sm:px-16 pb-16"
+              style={{
+                animation: 'slideInLeft 0.4s ease-out',
+                background: 'transparent'
+              }}
+            >
               <div className="flex flex-col gap-4 w-full">
-                <a href="/" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">Home</a>
-                <a href="/projects" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">Work</a>
-                <a href="/about" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">About</a>
-                <a href="/contact" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-black hover:opacity-70 transition text-left uppercase">Contact</a>
+                <a href="/" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-white hover:opacity-70 transition text-left uppercase" style={{ filter: 'blur(4px)' }} onMouseEnter={(e) => e.currentTarget.style.filter = 'blur(0px)'} onMouseLeave={(e) => e.currentTarget.style.filter = 'blur(4px)'}>Home</a>
+                <a href="/projects" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-white hover:opacity-70 transition text-left uppercase">Work</a>
+                <a href="/about" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-white hover:opacity-70 transition text-left uppercase" style={{ filter: 'blur(4px)' }} onMouseEnter={(e) => e.currentTarget.style.filter = 'blur(0px)'} onMouseLeave={(e) => e.currentTarget.style.filter = 'blur(4px)'}>About</a>
+                <a href="/contact" onClick={() => setMenuOpen(false)} className="text-5xl sm:text-6xl font-light text-white hover:opacity-70 transition text-left uppercase" style={{ filter: 'blur(4px)' }} onMouseEnter={(e) => e.currentTarget.style.filter = 'blur(0px)'} onMouseLeave={(e) => e.currentTarget.style.filter = 'blur(4px)'}>Contact</a>
               </div>
             </nav>
           </>
         )}
 
         {/* Hero Content */}
-        <div className="relative z-20 w-full px-8 lg:px-20 pb-20">
+        <div className="relative z-30 w-full px-8 lg:px-20 pb-20">
           <div className="max-w-4xl">
             {/* Categories */}
             <div className="flex gap-4 mb-8 flex-wrap">
@@ -442,56 +452,150 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         </section>
       )}
 
-      {/* Brand Applications / Mockups Section - Fullscreen Gallery */}
-      {caseStudy.applications_images && caseStudy.applications_images.length > 0 && (
-        <>
-          {caseStudy.applications_images.map((img, idx) => (
-            <section key={idx} className="w-screen h-screen flex items-center justify-center bg-black overflow-hidden">
-              <div className="w-full h-full flex items-center justify-center">
-                <img
-                  src={img}
-                  alt={`Brand application ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </section>
-          ))}
-        </>
-      )}
-
       {/* Design System Sections */}
       {(() => {
         const defaultOrder = ['idea', 'system', 'shape', 'motion', 'applications', 'color', 'type']
         const sectionsOrder = (caseStudy as any).sections_order || defaultOrder
         return sectionsOrder.map((sectionKey: string, sectionIdx: number) => {
-        const section = caseStudy[sectionKey as keyof BrandCaseStudy] as any
+        let section: any
+        if (sectionKey.startsWith('custom_') || sectionKey.startsWith('premium_')) {
+          section = (caseStudy.custom_sections || []).find((s: any) => s.id === sectionKey)
+        } else {
+          section = caseStudy[sectionKey as keyof BrandCaseStudy] as any
+        }
         if (!section || section.isDeleted) return null
 
         const hasImages = section.images && section.images.length > 0
-        const isImageLeft = sectionIdx % 2 === 0
+        if (sectionKey === 'applications') {
+          console.log('🔍 Applications Section Debug:', {
+            hasImages,
+            imagesCount: section.images?.length || 0,
+            imagesArray: section.images,
+            section: JSON.stringify(section).substring(0, 200)
+          })
+        }
+        const isCustomSection = sectionKey.startsWith('custom_') || sectionKey.startsWith('premium_')
+        const sectionLabel = (section as any).label || ''
 
-        const sectionLabel = (section as any).label || SECTION_LABELS[sectionKey]
+
+        // Custom section with 25/75 layout
+        if (isCustomSection) {
+          const bgColor = (section as any).backgroundColor || 'white'
+          const bgImage = (section as any).backgroundImage
+          const imageLayout = (section as any).imageLayout || 'single'
+          // Determine text color based on background - check multiple white variations
+          const normalizedBgColor = bgColor?.toLowerCase?.() || ''
+          const isLightBg = !bgColor ||
+            normalizedBgColor === '#ffffff' ||
+            normalizedBgColor === '#fff' ||
+            normalizedBgColor === 'white' ||
+            normalizedBgColor === '#f3f4f6' ||
+            normalizedBgColor === '#fafafa'
+          // If background image exists, assume dark background for text contrast
+          const textColorClass = bgImage ? 'text-white' : (isLightBg ? 'text-black' : 'text-white')
+          const subtitleColorClass = bgImage ? 'text-gray-200' : (isLightBg ? 'text-gray-500' : 'text-gray-300')
+
+          const sectionStyle = bgImage
+            ? { backgroundImage: `url('${bgImage}')`, backgroundSize: 'cover', backgroundPosition: 'center' }
+            : { backgroundColor: bgColor }
+
+          const isWhiteTitle = section.title?.includes('system that works everywhere')
+          const pbClass = isWhiteTitle ? 'pb-8 lg:pb-12' : 'pb-24 lg:pb-32'
+          const ptClass = isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-64 lg:pt-80'
+
+          return (
+            <section key={sectionKey} style={sectionStyle} className={`flex items-center ${ptClass} ${pbClass} relative`}>
+              {/* Content Column (Always Left) */}
+              <div className={`${hasImages ? 'w-1/4' : 'w-full'} flex items-center justify-start pl-24 lg:pl-32 order-1 relative z-10`}>
+                <div className="w-full">
+                  {section.number && (
+                    <div className="mb-6 -mt-8">
+                      <p className={`text-xs lg:text-sm tracking-widest uppercase ${bgImage ? 'text-purple-300' : (isLightBg ? 'text-gray-500' : 'text-purple-400')}`}>{section.number}</p>
+                    </div>
+                  )}
+                  {section.subtitle && (
+                    <p className={`text-xs lg:text-sm tracking-widest uppercase mb-4 -mt-2`} style={{color: '#000'}}>{section.subtitle}</p>
+                  )}
+                  <h2 className={`text-5xl lg:text-6xl font-light mb-6 max-w-2xl`} style={{color: isWhiteTitle ? '#fff' : '#000'}}>{section.title}</h2>
+                  {section.description && (
+                    <div className={`text-base lg:text-lg leading-relaxed font-light space-y-4 max-w-lg`} style={{color: bgImage ? '#f3f4f6' : (isLightBg ? '#000' : '#fff')}}>
+                      {section.description.split('\n').filter((p: string) => p.trim()).map((line: string, lineIdx: number) => (
+                        <p key={lineIdx}>{line}</p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Images Column (Always Right) */}
+              {hasImages && (
+                <div className={`w-3/4 flex items-center justify-center px-12 order-2 relative z-10`}>
+                  {imageLayout === 'grid' ? (
+                    <div className="grid grid-cols-2 gap-8 w-full max-w-6xl">
+                      {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
+                        const imgUrl = typeof img === 'string' ? img : img.url
+                        return (
+                          <div key={imgIdx} className="overflow-hidden rounded-lg aspect-square">
+                            <img
+                              src={imgUrl}
+                              alt={`${sectionLabel} ${imgIdx + 1}`}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className="w-full max-w-6xl flex items-center justify-center">
+                      <div className="overflow-hidden rounded-lg w-full">
+                        <img
+                          src={typeof section.images[0] === 'string' ? section.images[0] : section.images[0].url}
+                          alt={sectionLabel}
+                          className="w-full h-auto object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+          )
+        }
+
+        // Standard section with 50/50 layout
+        const isIdeaSection = sectionKey === 'idea'
+        const isSystemSection = sectionKey === 'system'
+        const isShapeSection = sectionKey === 'shape'
+        const hasTwoImages = section.images && section.images.length === 2
+        const isFullWidthImage = isIdeaSection || isSystemSection || hasTwoImages
+        let isImageLeft = sectionIdx % 2 === 0
+        if (isSystemSection) {
+          isImageLeft = true // Image always on left in System section
+        }
         return (
-          <section key={sectionKey} className={`${sectionKey === 'idea' ? 'h-auto' : 'min-h-screen'} flex py-12 ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : 'min-h-screen'} flex ${isFullWidthImage ? 'py-0 -my-12' : isShapeSection ? 'py-0 -my-48' : 'py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
             {hasImages && (
-              <div className={`w-1/2 flex items-center justify-center overflow-hidden ${isImageLeft ? 'order-1' : 'order-2'}`}>
-                <div className="w-full h-full flex items-center justify-center">
-                  {section.images.map((img: any, idx: number) => {
-                    const imageId = `${sectionKey}-${idx}`
-                    return (
-                      <div key={idx} className="w-full h-full flex items-center justify-center">
-                        <div className="overflow-hidden rounded-lg w-full h-full transition-all duration-1000 opacity-100">
+              <div className={`${isFullWidthImage ? 'w-full' : 'w-1/2'} flex items-center justify-center overflow-hidden ${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
+                <div className={`w-full flex items-center justify-center ${isFullWidthImage ? 'p-0' : 'p-8'}`}>
+                  <div className={`${isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-2 gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-2 gap-2 w-full max-w-4xl' : 'grid grid-cols-4 gap-2 w-full max-w-4xl'}`}>
+                    {section.images.map((img: any, idx: number) => {
+                      const imageId = `${sectionKey}-${idx}`
+                      const imgUrl = typeof img === 'string' ? img : img.url
+                      return (
+                        <div key={idx} className={isFullWidthImage ? "w-full h-auto" : "aspect-square overflow-hidden rounded-lg"}>
                           <img
-                            src={img.url}
+                            src={imgUrl}
                             alt={`${sectionLabel} ${idx + 1}`}
-                            className="w-full h-full object-cover"
+                            className={`${isFullWidthImage ? 'w-full h-auto' : 'w-full h-full'} object-contain`}
                             loading="lazy"
                           />
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             )}
@@ -499,9 +603,11 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             {/* Content Column */}
             <div className={`${hasImages ? 'w-1/2' : 'w-full'} flex items-center justify-center px-8 lg:px-16 py-16 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
               <div className={sectionKey === 'motion' ? 'w-full' : 'max-w-md lg:max-w-lg'}>
-                <h2 className="text-5xl lg:text-6xl font-light mb-4 text-black">
-                  {sectionLabel}
-                </h2>
+                {sectionLabel && (
+                  <h2 className="text-5xl lg:text-6xl font-light mb-4 text-black">
+                    {sectionLabel}
+                  </h2>
+                )}
                 {section.title && (
                   <h3 className="text-2xl lg:text-3xl font-light text-gray-700 mb-8">{section.title}</h3>
                 )}
@@ -509,7 +615,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                 {section.description && (
                   <div className="text-xl lg:text-2xl text-gray-700 leading-relaxed font-light space-y-4 mb-8">
                     {section.description.split('\n').map((paragraph, idx) => (
-                      <p key={idx} className="text-justify">
+                      <p key={idx} className="text-left">
                         {paragraph}
                       </p>
                     ))}
