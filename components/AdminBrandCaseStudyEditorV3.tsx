@@ -76,15 +76,23 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
   const uploadBase64ToCloudinary = async (base64Url: string) => {
     if (!base64Url.startsWith('data:')) return base64Url
     try {
+      console.log('🔄 Uploading base64 to Cloudinary, size:', base64Url.length)
       const res = await fetch('/api/cloudinary-upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dataUrl: base64Url })
       })
-      if (!res.ok) return base64Url
+      console.log('📦 Cloudinary response:', res.status, res.ok)
+      if (!res.ok) {
+        const error = await res.text()
+        console.error('❌ Cloudinary error:', error)
+        return base64Url
+      }
       const data = await res.json()
+      console.log('✅ Base64 uploaded to Cloudinary:', data.url)
       return data.url || base64Url
     } catch (e) {
+      console.error('🔴 Error uploading base64:', e)
       return base64Url
     }
   }
