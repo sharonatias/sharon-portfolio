@@ -747,16 +747,9 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         </div>
                       )}
                     </div>
-
-                    {/* Remove old code below */}
-                                  ...formData,
-                                  [sectionKey]: { ...section, backgroundImage: undefined }
-                                })}
-                                className="text-red-400 hover:text-red-300"
-                              >
-                                ✕
-                              </button>
-                            </div>
+                    </div>
+                    )}
+                  </div>
                           )}
                         </div>
                         <select
