@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { BrandCaseStudy, BrandCaseStudyImage } from '@/lib/types'
 
 interface AdminBrandCaseStudyEditorProps {
@@ -26,6 +26,7 @@ const SECTION_LABELS: { [key: string]: string } = {
 }
 
 export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose }: AdminBrandCaseStudyEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [activeTab, setActiveTab] = useState<Tab>('basic')
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState<BrandCaseStudy>(() => {
@@ -121,10 +122,8 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
     }
   }
 
-  const handleImageUpload = async (callback: (url: string) => void) => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
+  const handleImageUpload = useCallback(async (callback: (url: string) => void) => {
+    if (!fileInputRef.current) return
 
     const handleChange = async (e: Event) => {
       const target = e.target as HTMLInputElement
@@ -166,9 +165,10 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       }
     }
 
+    const input = fileInputRef.current
     input.addEventListener('change', handleChange, { once: true })
     input.click()
-  }
+  }, [])
 
   const addColorToPalette = (color: string) => {
     setFormData({
@@ -277,6 +277,14 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
             {message.text}
           </div>
         )}
+
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+        />
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
