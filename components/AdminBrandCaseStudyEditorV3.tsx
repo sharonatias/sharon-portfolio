@@ -862,11 +862,11 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                                 <span className="text-gray-300">✓ Video Uploaded</span>
                                 <button
                                   onClick={() => setFormData({
-                                        ...formData,
-                                        videos: (formData.videos || []).filter((_, i) => i !== vidIdx)
-                                      })}
-                                      className="text-red-400 hover:text-red-300 text-xs"
-                                    >
+                                    ...formData,
+                                    [sectionKey]: { ...section, video: undefined }
+                                  })}
+                                  className="text-red-400 hover:text-red-300 text-xs"
+                                >
                                       ✕ Remove
                                     </button>
                                   </div>
