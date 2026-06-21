@@ -4,14 +4,30 @@ export async function POST(request: NextRequest) {
   try {
     console.log('📤 Cloudinary upload request received')
 
-    const formData = await request.formData()
-    const file = formData.get('file') as File
+    let file: File | null = null
+    let fileName = 'upload'
 
-    if (!file || !(file instanceof File)) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    const contentType = request.headers.get('content-type') || ''
+
+    if (contentType.includes('application/json')) {
+      // Handle data URL uploads
+      const body = await request.json()
+      const dataUrl = body.dataUrl
+      if (!dataUrl) {
+        return NextResponse.json({ error: 'No data URL provided' }, { status: 400 })
+      }
+      console.log('📦 Data URL received, size:', dataUrl.length)
+    } else {
+      // Handle file uploads
+      const formData = await request.formData()
+      file = formData.get('file') as File
+
+      if (!file || !(file instanceof File)) {
+        return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+      }
+      fileName = file.name
+      console.log('📦 File:', { name: file.name, size: file.size, type: file.type })
     }
-
-    console.log('📦 File:', { name: file.name, size: file.size, type: file.type })
 
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
@@ -25,7 +41,15 @@ export async function POST(request: NextRequest) {
 
     // Upload to Cloudinary
     const cloudinaryFormData = new FormData()
-    cloudinaryFormData.append('file', file)
+
+    if (file) {
+      cloudinaryFormData.append('file', file)
+    } else if (dataUrl) {
+      cloudinaryFormData.append('file', dataUrl)
+    } else {
+      return NextResponse.json({ error: 'No file or data URL provided' }, { status: 400 })
+    }
+
     cloudinaryFormData.append('upload_preset', uploadPreset)
 
     const cloudRes = await fetch(

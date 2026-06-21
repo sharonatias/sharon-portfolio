@@ -73,18 +73,53 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
     { id: 'cto', label: 'CTO', icon: '👤' }
   ]
 
+  const uploadBase64ToCloudinary = async (base64Url: string) => {
+    if (!base64Url.startsWith('data:')) return base64Url
+    try {
+      const res = await fetch('/api/cloudinary-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataUrl: base64Url })
+      })
+      if (!res.ok) return base64Url
+      const data = await res.json()
+      return data.url || base64Url
+    } catch (e) {
+      return base64Url
+    }
+  }
+
   const handleSave = async () => {
     setSaving(true)
     try {
-      // Separate custom/premium sections from standard sections
-      const standardSections = SECTION_NAMES
-      const customSections: any[] = []
-      const cleanedData = { ...formData } as any
+      let cleanedData = { ...formData } as any
 
-      // Ensure hero_image is included and is a string
-      if (cleanedData.hero_image && typeof cleanedData.hero_image !== 'string') {
-        cleanedData.hero_image = cleanedData.hero_image.url || ''
+      // Upload all base64 images to Cloudinary
+      console.log('🔄 Uploading base64 images to Cloudinary...')
+
+      if (cleanedData.hero_image?.startsWith('data:')) {
+        cleanedData.hero_image = await uploadBase64ToCloudinary(cleanedData.hero_image)
       }
+
+      // Process all sections
+      const standardSections = SECTION_NAMES
+      for (const key of Object.keys(cleanedData)) {
+        const section = cleanedData[key]
+        if (section?.images && Array.isArray(section.images)) {
+          section.images = await Promise.all(
+            section.images.map(async (img: string) => {
+              if (typeof img === 'string' && img.startsWith('data:')) {
+                return await uploadBase64ToCloudinary(img)
+              }
+              return img
+            })
+          )
+        }
+      }
+
+      console.log('✅ Base64 images uploaded to Cloudinary')
+
+      const customSections: any[] = []
 
       // Extract custom sections (premium_*, custom_*)
       Object.keys(cleanedData).forEach((key) => {
