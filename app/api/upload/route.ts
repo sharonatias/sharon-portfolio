@@ -5,15 +5,19 @@ import { existsSync } from 'fs'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('📤 Upload request received')
     const formData = await request.formData()
     const file = formData.get('file') as File
 
     if (!file) {
+      console.error('❌ No file in form data')
       return NextResponse.json(
         { error: 'לא נבחר קובץ' },
         { status: 400 }
       )
     }
+
+    console.log('📦 File received:', { name: file.name, size: file.size, type: file.type })
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
@@ -27,10 +31,12 @@ export async function POST(request: NextRequest) {
     const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
     const filepath = join(uploadsDir, filename)
 
+    console.log('💾 Writing file to:', filepath)
     await writeFile(filepath, buffer)
 
     const fileUrl = `/uploads/${filename}`
 
+    console.log('✅ Upload successful:', fileUrl)
     return NextResponse.json({
       success: true,
       url: fileUrl,
@@ -39,9 +45,10 @@ export async function POST(request: NextRequest) {
       type: file.type
     })
   } catch (error) {
-    console.error('Upload error:', error)
+    console.error('🔴 Upload error:', error)
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'שגיאה בהעלאת הקובץ' },
+      { error: `שגיאה בהעלאת הקובץ: ${errorMsg}` },
       { status: 500 }
     )
   }
