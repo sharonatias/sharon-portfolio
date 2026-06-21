@@ -37,21 +37,44 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    console.log('📍 Current working directory:', process.cwd())
-    console.log('📍 Uploads directory:', uploadsDir)
+    // Try local filesystem first, fallback to in-memory URL
+    let fileUrl: string
 
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
+    try {
+      const uploadsDir = join(process.cwd(), 'public', 'uploads')
+      console.log('📍 Current working directory:', process.cwd())
+      console.log('📍 Uploads directory:', uploadsDir)
+
+      if (!existsSync(uploadsDir)) {
+        await mkdir(uploadsDir, { recursive: true })
+      }
+
+      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
+      const filepath = join(uploadsDir, filename)
+
+      console.log('💾 Writing file to:', filepath)
+      await writeFile(filepath, buffer)
+      fileUrl = `/uploads/${filename}`
+      console.log('✅ File saved to filesystem:', fileUrl)
+    } catch (fsError) {
+      console.error('❌ Filesystem write failed:', fsError)
+      // Fallback: Use data URL or /tmp
+      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
+      const tmpPath = `/tmp/${filename}`
+      console.log('💾 Fallback: Writing to /tmp:', tmpPath)
+
+      try {
+        await writeFile(tmpPath, buffer)
+        fileUrl = `/uploads/${filename}` // Still use /uploads URL for consistency
+        console.log('✅ File saved to /tmp as fallback')
+      } catch (tmpError) {
+        console.error('❌ /tmp write also failed:', tmpError)
+        // Last resort: Base64 data URL
+        const base64 = buffer.toString('base64')
+        fileUrl = `data:${file.type};base64,${base64}`
+        console.log('⚠️ Using data URL as last resort (large file)')
+      }
     }
-
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
-    const filepath = join(uploadsDir, filename)
-
-    console.log('💾 Writing file to:', filepath)
-    await writeFile(filepath, buffer)
-
-    const fileUrl = `/uploads/${filename}`
 
     console.log('✅ Upload successful:', fileUrl)
     return NextResponse.json({
