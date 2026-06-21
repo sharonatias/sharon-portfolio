@@ -348,59 +348,14 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
 
               {/* Hero Video */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Upload Hero Video (Optional)</label>
-                <button
-                  onClick={() => {
-                    const input = document.createElement('input')
-                    input.type = 'file'
-                    input.accept = 'video/*'
-                    input.onchange = async (e) => {
-                      const file = (e.target as HTMLInputElement).files?.[0]
-                      if (file) {
-                        // Check video file size - max 10MB
-                        const MAX_VIDEO_SIZE = 10 * 1024 * 1024 // 10MB
-                        if (file.size > MAX_VIDEO_SIZE) {
-                          setMessage({ type: 'error', text: `❌ Video too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 10MB.` })
-                          setTimeout(() => setMessage(null), 5000)
-                          return
-                        }
-                        setUploading(true)
-                        const formDataUpload = new FormData()
-                        formDataUpload.append('file', file)
-                        try {
-                          const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
-                          const contentType = res.headers.get('content-type')
-                          let data
-                          if (contentType?.includes('application/json')) {
-                            data = await res.json()
-                          } else {
-                            setMessage({ type: 'error', text: '❌ Server error: Invalid response' })
-                            setTimeout(() => setMessage(null), 3000)
-                            return
-                          }
-                          if (res.ok && data.url) {
-                            setFormData({
-                              ...formData,
-                              hero_video: data.url
-                            })
-                            setMessage({ type: 'success', text: `✅ Hero video uploaded: ${file.name}` })
-                            setTimeout(() => setMessage(null), 3000)
-                          }
-                        } catch (error) {
-                          setMessage({ type: 'error', text: '❌ Upload failed' })
-                          setTimeout(() => setMessage(null), 3000)
-                        } finally {
-                          setUploading(false)
-                        }
-                      }
-                    }
-                    input.click()
-                  }}
-                  disabled={uploading}
-                  className="w-full px-4 py-3 bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/40 transition-all disabled:opacity-50"
-                >
-                  {uploading ? '⏳ Uploading...' : '🎥 Upload Hero Video'}
-                </button>
+                <label className="block text-sm text-gray-400 mb-2">Hero Video URL (Optional)</label>
+                <input
+                  type="url"
+                  placeholder="Paste video URL (MP4, WebM, etc.)"
+                  value={(formData as any).hero_video || ''}
+                  onChange={(e) => setFormData({ ...formData, hero_video: e.target.value })}
+                  className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
+                />
                 {(formData as any).hero_video && (
                   <div className="mt-3 p-2 bg-slate-950/30 rounded text-xs text-gray-400">
                     ✓ {((formData as any).hero_video as string).split('/').pop()}
