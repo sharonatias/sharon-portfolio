@@ -134,6 +134,14 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
         return
       }
 
+      // Check file size - max 2MB
+      const MAX_SIZE = 2 * 1024 * 1024 // 2MB
+      if (file.size > MAX_SIZE) {
+        setMessage({ type: 'error', text: `❌ Image too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 2MB.` })
+        setTimeout(() => setMessage(null), 5000)
+        return
+      }
+
       setUploading(true)
       const formDataUpload = new FormData()
       formDataUpload.append('file', file)
@@ -141,7 +149,20 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       try {
         console.log('🔄 Uploading file:', file.name, file.size)
         const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
-        const data = await res.json()
+
+        // Check if response is JSON
+        const contentType = res.headers.get('content-type')
+        let data
+        if (contentType?.includes('application/json')) {
+          data = await res.json()
+        } else {
+          const text = await res.text()
+          console.error('❌ Non-JSON response:', text.substring(0, 200))
+          setMessage({ type: 'error', text: `❌ Server error: Invalid response type` })
+          setTimeout(() => setMessage(null), 5000)
+          return
+        }
+
         console.log('📦 Upload response:', { ok: res.ok, status: res.status, data })
 
         if (res.ok && data.url) {
@@ -166,6 +187,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
     }
 
     const input = fileInputRef.current
+    input.value = '' // Reset input value
     input.addEventListener('change', handleChange, { once: true })
     input.click()
   }, [])
@@ -340,8 +362,16 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         formDataUpload.append('file', file)
                         try {
                           const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
-                          const data = await res.json()
-                          if (res.ok) {
+                          const contentType = res.headers.get('content-type')
+                          let data
+                          if (contentType?.includes('application/json')) {
+                            data = await res.json()
+                          } else {
+                            setMessage({ type: 'error', text: '❌ Server error: Invalid response' })
+                            setTimeout(() => setMessage(null), 3000)
+                            return
+                          }
+                          if (res.ok && data.url) {
                             setFormData({
                               ...formData,
                               hero_video: data.url
