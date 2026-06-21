@@ -301,7 +301,11 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Upload Hero Image</label>
                 <button
-                  onClick={() => handleImageUpload((url) => setFormData({ ...formData, hero_image: url }))}
+                  onClick={() => handleImageUpload((url) => {
+                    console.log('✅ Callback received URL:', url)
+                    setFormData({ ...formData, hero_image: url })
+                    console.log('✅ FormData updated with hero_image')
+                  })}
                   disabled={uploading}
                   className="w-full px-4 py-3 bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/40 transition-all disabled:opacity-50"
                 >
