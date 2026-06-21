@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
+import { CldUploadWidget } from 'next-cloudinary'
 import { BrandCaseStudy, BrandCaseStudyImage } from '@/lib/types'
 
 interface AdminBrandCaseStudyEditorProps {
@@ -382,39 +383,30 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
               <div className="space-y-3">
                 <label className="block text-sm text-gray-400 mb-2">Hero Video (Optional)</label>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      const input = document.createElement('input')
-                      input.type = 'file'
-                      input.accept = 'video/*'
-                      input.onchange = async (e) => {
-                        const file = (e.target as HTMLInputElement).files?.[0]
-                        if (file) {
-                          setUploading(true)
-                          const uploadData = new FormData()
-                          uploadData.append('file', file)
-                          try {
-                            const res = await fetch('/api/cloudinary-upload', { method: 'POST', body: uploadData })
-                            if (!res.ok) throw new Error('Upload failed')
-                            const data = await res.json()
-                            setFormData({ ...formData, hero_video: data.url })
-                            setMessage({ type: 'success', text: `✅ Video uploaded: ${file.name}` })
-                            setTimeout(() => setMessage(null), 3000)
-                          } catch (error) {
-                            setMessage({ type: 'error', text: '❌ Video upload failed' })
-                            setTimeout(() => setMessage(null), 5000)
-                          } finally {
-                            setUploading(false)
-                          }
-                        }
-                      }
-                      input.click()
+                  <CldUploadWidget
+                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads'}
+                    resourceType="video"
+                    onSuccess={(result: any) => {
+                      const url = result.info.secure_url
+                      setFormData({ ...formData, hero_video: url })
+                      setMessage({ type: 'success', text: `✅ Video uploaded` })
+                      setTimeout(() => setMessage(null), 3000)
                     }}
-                    disabled={uploading}
-                    className="px-4 py-2 bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all disabled:opacity-50"
+                    onError={() => {
+                      setMessage({ type: 'error', text: `❌ Video upload failed` })
+                      setTimeout(() => setMessage(null), 5000)
+                    }}
                   >
-                    {uploading ? '⏳ Uploading...' : '🎥 Upload Video'}
-                  </button>
+                    {({ open }) => (
+                      <button
+                        type="button"
+                        onClick={() => open()}
+                        className="px-4 py-2 bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all"
+                      >
+                        🎥 Upload Video
+                      </button>
+                    )}
+                  </CldUploadWidget>
                   <span className="text-xs text-gray-500 py-2">or paste URL →</span>
                 </div>
                 <input
@@ -765,8 +757,10 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                           📤 העלה תמונות
                           {(section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
                         </label>
-                        <button
-                          onClick={() => handleImageUpload((url) => {
+                        <CldUploadWidget
+                          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'sharon_uploads'}
+                          onSuccess={(result: any) => {
+                            const url = result.info.secure_url
                             const sectionData = formData[sectionKey as keyof BrandCaseStudy] as any
                             if (sectionData) {
                               setFormData({
@@ -776,13 +770,25 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                                   images: [...(sectionData.images || []), url]
                                 }
                               })
+                              setMessage({ type: 'success', text: `✅ Image uploaded` })
+                              setTimeout(() => setMessage(null), 3000)
                             }
-                          })}
-                          disabled={uploading}
-                          className="px-4 py-2 text-sm bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all disabled:opacity-50"
+                          }}
+                          onError={() => {
+                            setMessage({ type: 'error', text: `❌ Upload failed` })
+                            setTimeout(() => setMessage(null), 5000)
+                          }}
                         >
-                          {uploading ? '...מעלה' : '📤 בחר תמונה'}
-                        </button>
+                          {({ open }) => (
+                            <button
+                              type="button"
+                              onClick={() => open()}
+                              className="px-4 py-2 text-sm bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all"
+                            >
+                              📤 בחר תמונה
+                            </button>
+                          )}
+                        </CldUploadWidget>
                       </div>
 
                       {section.images && section.images.length > 0 && (
