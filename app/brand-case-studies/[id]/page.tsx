@@ -592,8 +592,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         const isIdeaSection = sectionKey === 'idea'
         const isSystemSection = sectionKey === 'system'
         const isShapeSection = sectionKey === 'shape'
+        const isApplicationsSection = sectionKey === 'applications'
         const hasTwoImages = section.images && section.images.length === 2
-        const isFullWidthImage = isIdeaSection || isSystemSection || hasTwoImages
+        const isFullWidthImage = isIdeaSection || isSystemSection || hasTwoImages || isApplicationsSection
         let isImageLeft = sectionIdx % 2 === 0
         if (isSystemSection) {
           isImageLeft = true // Image always on left in System section
