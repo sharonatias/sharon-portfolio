@@ -507,7 +507,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
           const isWhiteTitle = section.title?.includes('system that works everywhere')
           const pbClass = isWhiteTitle ? 'pb-8 lg:pb-12' : 'pb-24 lg:pb-32'
-          const ptClass = isCleanSection ? 'pt-[48rem] lg:pt-[64rem]' : (isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-[32rem] lg:pt-[48rem]')
+          const ptClass = isCleanSection ? 'pt-[24rem] lg:pt-[32rem]' : (isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-[32rem] lg:pt-[48rem]')
 
           return (
             <section key={sectionKey} style={sectionStyle} className={`flex items-center ${ptClass} ${pbClass} relative`}>
