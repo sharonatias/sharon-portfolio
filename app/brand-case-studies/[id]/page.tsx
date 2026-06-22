@@ -224,32 +224,32 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       </section>
 
       {/* Project Meta - Compact */}
-      <section className="py-8 px-8 lg:px-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-12">
+      <section className="py-10 sm:py-12 lg:py-16 px-4 sm:px-8 lg:px-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
           {caseStudy.year && (
             <div>
-              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Year</p>
-              <p className="text-base lg:text-lg text-black font-light">{caseStudy.year}</p>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-2 sm:mb-3">Year</p>
+              <p className="text-sm sm:text-base lg:text-lg text-black font-light">{caseStudy.year}</p>
             </div>
           )}
           {caseStudy.client && (
             <div>
-              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Client</p>
-              <p className="text-base lg:text-lg text-black font-light">{caseStudy.client}</p>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-2 sm:mb-3">Client</p>
+              <p className="text-sm sm:text-base lg:text-lg text-black font-light">{caseStudy.client}</p>
             </div>
           )}
           {caseStudy.role && (
             <div>
-              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Role</p>
-              <p className="text-base lg:text-lg text-black font-light">{caseStudy.role}</p>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-2 sm:mb-3">Role</p>
+              <p className="text-sm sm:text-base lg:text-lg text-black font-light">{caseStudy.role}</p>
             </div>
           )}
           {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
             <div>
-              <p className="text-xs tracking-widest text-gray-500 uppercase mb-1">Palette</p>
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-2 sm:mb-3">Palette</p>
               <div className="flex gap-2">
                 {caseStudy.color_palette.slice(0, 3).map((color, i) => (
-                  <div key={i} className="w-6 h-6 rounded-full border border-gray-300" style={{ backgroundColor: color }} />
+                  <div key={i} className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-gray-300" style={{ backgroundColor: color }} />
                 ))}
               </div>
             </div>
@@ -259,9 +259,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Central Description - Large */}
       {caseStudy.central_description && (
-        <section className="py-8 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 -ml-0 sm:-ml-16 lg:-ml-32 mb-12 sm:mb-48 lg:mb-64">
-          <div className="max-w-sm sm:max-w-md lg:max-w-2xl mx-auto">
-            <div className="text-xs sm:text-sm lg:text-2xl xl:text-3xl leading-relaxed sm:leading-relaxed text-black font-light">
+        <section className="py-12 sm:py-20 lg:py-24 px-4 sm:px-8 lg:px-20 -ml-0 sm:-ml-16 lg:-ml-32 mb-16 sm:mb-48 lg:mb-64">
+          <div className="max-w-md sm:max-w-lg lg:max-w-2xl mx-auto">
+            <div className="text-sm sm:text-base lg:text-2xl xl:text-3xl leading-relaxed lg:leading-relaxed text-black font-light">
               {caseStudy.central_description.split('\n').map((line, i) => {
                 const words = line.split(' ').filter(w => w.length > 0)
                 const wordsPerLine = isMobile ? 6 : 12
@@ -311,10 +311,10 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* CTO/Leader Section */}
       {caseStudy.cto && (
-        <section className="min-h-screen flex bg-white relative overflow-hidden -mt-24">
+        <section className="min-h-screen flex flex-col sm:flex-row bg-white relative overflow-hidden -mt-12 sm:-mt-24">
           {/* Image Column */}
           {caseStudy.cto.image && (
-            <div className="w-1/2 flex items-center justify-center overflow-visible order-2 relative">
+            <div className="w-full sm:w-1/2 h-64 sm:h-full flex items-center justify-center overflow-visible order-2 sm:order-2 relative">
               <div className="w-full h-full flex items-center justify-center">
                 <div className="w-3/4 h-3/4 flex items-center justify-center">
                   <img
@@ -329,14 +329,14 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           )}
 
           {/* Content Column */}
-          <div className={`${caseStudy.cto.image ? 'w-full sm:w-1/2' : 'w-full'} flex items-start justify-center sm:justify-end px-4 sm:px-8 lg:px-0 pt-8 sm:pt-32 lg:pt-40 pb-0 order-1 relative z-10 pr-0 sm:pr-8 lg:pr-16`}>
-            <div className="max-w-lg lg:max-w-xl">
-              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-4 text-black">
+          <div className={`${caseStudy.cto.image ? 'w-full sm:w-1/2' : 'w-full'} flex items-start justify-center sm:justify-end px-4 sm:px-8 lg:px-0 py-8 sm:pt-32 lg:pt-40 pb-0 order-1 relative z-10 pr-0 sm:pr-8 lg:pr-16`}>
+            <div className="max-w-sm sm:max-w-lg lg:max-w-xl">
+              <h2 className="text-2xl sm:text-3xl lg:text-6xl font-light mb-3 sm:mb-4 text-black leading-tight">
                 {caseStudy.cto.name}
               </h2>
-              <h3 className="text-2xl lg:text-3xl font-light text-gray-700 mb-8">{caseStudy.cto.title}</h3>
+              <h3 className="text-lg sm:text-xl lg:text-3xl font-light text-gray-700 mb-6 sm:mb-8">{caseStudy.cto.title}</h3>
 
-              <div className="text-2xl lg:text-3xl xl:text-4xl leading-relaxed font-light block">
+              <div className="text-sm sm:text-lg lg:text-3xl xl:text-4xl leading-relaxed lg:leading-relaxed font-light block">
                 {caseStudy.cto.description.split('\n').map((line, i) => {
                   const words = line.split(' ')
                   let wordCount = 0
@@ -527,7 +527,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                   {section.subtitle && (
                     <p className={`text-xs lg:text-sm tracking-widest uppercase mb-4 -mt-2`} style={{color: '#000'}}>{section.subtitle}</p>
                   )}
-                  <h2 className={`text-5xl lg:text-6xl font-light mb-6 max-w-2xl`} style={{color: isWhiteTitle ? '#fff' : '#000'}}>{section.title}</h2>
+                  <h2 className={`text-2xl sm:text-3xl lg:text-6xl font-light mb-4 sm:mb-6 max-w-2xl leading-tight`} style={{color: isWhiteTitle ? '#fff' : '#000'}}>{section.title}</h2>
                   {section.description && (
                     <div className={`text-base lg:text-lg leading-relaxed font-light space-y-4 max-w-lg`} style={{color: bgImage ? '#f3f4f6' : (isLightBg ? '#000' : '#fff')}}>
                       {section.description.split('\n').filter((p: string) => p.trim()).map((line: string, lineIdx: number) => (
@@ -605,7 +605,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           isImageLeft = true // Image always on left in System section
         }
         return (
-          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-80 sm:h-[584px]' : 'min-h-screen'} flex ${isFullWidthImage ? 'py-0 -my-12' : isShapeSection ? 'py-0 -my-2' : 'py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-80 sm:h-[584px]' : 'min-h-auto sm:min-h-screen'} flex flex-col sm:flex-row ${isFullWidthImage ? 'py-0 -my-0 sm:-my-12' : isShapeSection ? 'py-0 -my-2' : 'py-8 sm:py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
             {hasImages && (
               <div className={`${isFullWidthImage ? 'w-full' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden ${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
@@ -632,7 +632,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
             {/* Content Column */}
             {!isApplicationsSection && (
-            <div className={`${hasImages ? 'w-full sm:w-1/2' : 'w-full'} flex items-center justify-center px-4 sm:px-8 lg:px-16 py-8 sm:py-16 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
+            <div className={`${hasImages ? 'w-full sm:w-1/2' : 'w-full'} flex items-center justify-center px-4 sm:px-6 lg:px-16 py-6 sm:py-12 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
               <div className={sectionKey === 'motion' ? 'w-full' : 'max-w-md lg:max-w-lg'}>
                 {sectionLabel && (
                   <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-4 text-black">
@@ -644,7 +644,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                 )}
 
                 {section.description && (
-                  <div className="text-xl lg:text-2xl text-gray-700 leading-relaxed font-light space-y-4 mb-8">
+                  <div className="text-sm sm:text-lg lg:text-2xl text-gray-700 leading-relaxed lg:leading-relaxed font-light space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                     {section.description.split('\n').map((paragraph, idx) => (
                       <p key={idx} className="text-left">
                         {paragraph}
@@ -679,15 +679,15 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Next Project */}
       {nextProject && (
-        <section className="min-h-screen flex items-center px-8 lg:px-20 bg-gray-50">
+        <section className="min-h-auto sm:min-h-screen flex items-center px-4 sm:px-8 lg:px-20 py-12 sm:py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto w-full">
-            <h2 className="text-4xl lg:text-5xl font-light mb-12 text-black uppercase tracking-tight">Next Project</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-light mb-8 sm:mb-12 text-black uppercase tracking-tight">Next Project</h2>
             <Link href={`/brand-case-studies/${nextProject.id}`}>
               <div className="group cursor-pointer">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-12 items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-12 items-center">
                   {nextProject.hero_image && (
-                    <div className="lg:col-span-2">
-                      <div className="relative overflow-hidden rounded-lg bg-gray-300 h-96">
+                    <div className="lg:col-span-2 order-2 sm:order-1">
+                      <div className="relative overflow-hidden rounded-lg bg-gray-300 h-64 sm:h-80 lg:h-96">
                         <img
                           src={nextProject.hero_image}
                           alt={nextProject.title}
@@ -696,14 +696,14 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       </div>
                     </div>
                   )}
-                  <div>
-                    <h3 className="text-3xl lg:text-4xl font-light mb-3 text-black group-hover:text-gray-700 transition">
+                  <div className="order-1 sm:order-2">
+                    <h3 className="text-xl sm:text-2xl lg:text-4xl font-light mb-2 sm:mb-3 text-black group-hover:text-gray-700 transition leading-tight">
                       {nextProject.title}
                     </h3>
                     {nextProject.subtitle && (
-                      <p className="text-lg text-gray-700 mb-6 font-light">{nextProject.subtitle}</p>
+                      <p className="text-sm sm:text-base lg:text-lg text-gray-700 mb-4 sm:mb-6 font-light line-clamp-2">{nextProject.subtitle}</p>
                     )}
-                    <p className="text-sm text-gray-600 group-hover:text-black transition font-light">Explore →</p>
+                    <p className="text-xs sm:text-sm text-gray-600 group-hover:text-black transition font-light">Explore →</p>
                   </div>
                 </div>
               </div>
