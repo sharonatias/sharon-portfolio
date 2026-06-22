@@ -626,6 +626,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             )}
 
             {/* Content Column */}
+            {!isApplicationsSection && (
             <div className={`${hasImages ? 'w-1/2' : 'w-full'} flex items-center justify-center px-8 lg:px-16 py-16 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
               <div className={sectionKey === 'motion' ? 'w-full' : 'max-w-md lg:max-w-lg'}>
                 {sectionLabel && (
@@ -664,6 +665,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                 )}
               </div>
             </div>
+            )}
           </section>
         )
         })
