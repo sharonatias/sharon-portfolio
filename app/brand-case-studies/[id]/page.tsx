@@ -632,7 +632,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
             {/* Content Column */}
             {!isApplicationsSection && (
-            <div className={`${hasImages ? 'w-full sm:w-1/2' : 'w-full'} flex items-center justify-center px-4 sm:px-6 lg:px-16 py-6 sm:py-12 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
+            <div className={`${hasImages ? 'w-full sm:w-1/2' : 'w-full'} flex items-center justify-center px-4 sm:px-6 lg:px-16 py-6 sm:py-12 lg:py-24 order-1 sm:${isImageLeft ? 'order-2' : 'order-1'}`}>
               <div className={sectionKey === 'motion' ? 'w-full' : 'max-w-md lg:max-w-lg'}>
                 {sectionLabel && (
                   <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-4 text-black">
