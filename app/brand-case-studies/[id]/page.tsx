@@ -581,7 +581,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           isImageLeft = true // Image always on left in System section
         }
         return (
-          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : 'min-h-screen'} flex ${isFullWidthImage ? 'py-0 -my-12' : isShapeSection ? 'py-0 -my-2' : 'py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-96' : 'min-h-screen'} flex ${isFullWidthImage ? 'py-0 -my-12' : isShapeSection ? 'py-0 -my-2' : 'py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
             {hasImages && (
               <div className={`${isFullWidthImage ? 'w-full' : 'w-1/2'} flex items-center justify-center overflow-hidden ${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
