@@ -513,9 +513,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           const ptClass = isCleanSection ? 'pt-[24rem] lg:pt-[32rem]' : (isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-[32rem] lg:pt-[48rem]')
 
           return (
-            <section key={sectionKey} style={sectionStyle} className={`flex items-center ${ptClass} ${pbClass} relative`}>
+            <section key={sectionKey} style={sectionStyle} className={`flex flex-col sm:flex-row items-center ${ptClass} ${pbClass} relative`}>
               {/* Content Column (Always Left) */}
-              <div className={`${hasImages ? 'w-1/4' : 'w-full'} flex items-center justify-start pl-24 lg:pl-32 order-1 relative z-10`}>
+              <div className={`${hasImages ? 'w-full sm:w-1/4' : 'w-full'} flex items-center justify-start px-4 sm:pl-24 lg:pl-32 order-1 relative z-10`}>
                 <div className="w-full">
                   {section.number && (
                     <div className="mb-6 -mt-8">
@@ -538,7 +538,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
               {/* Images Column (Always Right) */}
               {hasImages && (
-                <div className={`${sectionKey === 'applications' ? 'w-full' : 'w-3/4'} flex items-center justify-center ${sectionKey === 'applications' ? 'px-0' : 'px-12'} order-2 relative z-10`}>
+                <div className={`${sectionKey === 'applications' ? 'w-full' : 'w-full sm:w-3/4'} flex items-center justify-center ${sectionKey === 'applications' ? 'px-0' : 'px-4 sm:px-12'} order-2 relative z-10`}>
                   {imageLayout === 'grid' ? (
                     <div className="grid grid-cols-2 gap-8 w-full max-w-6xl">
                       {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
