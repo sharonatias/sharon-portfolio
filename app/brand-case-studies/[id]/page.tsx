@@ -207,7 +207,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               )}
             </div>
 
-            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-light mb-6 leading-tight text-black">{caseStudy.title}</h1>
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-light mb-6 leading-tight text-black">{caseStudy.title}</h1>
             {caseStudy.subtitle && (
               <p className="text-lg lg:text-2xl text-gray-700 mb-6 font-light">{caseStudy.subtitle}</p>
             )}
@@ -254,9 +254,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Central Description - Large */}
       {caseStudy.central_description && (
-        <section className="py-16 lg:py-20 px-8 lg:px-20 -ml-16 lg:-ml-32 mb-48 lg:mb-64">
+        <section className="py-8 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 -ml-0 sm:-ml-16 lg:-ml-32 mb-12 sm:mb-48 lg:mb-64">
           <div className="max-w-sm mx-auto">
-            <div className="text-xl lg:text-2xl xl:text-3xl leading-relaxed text-black font-light">
+            <div className="text-base sm:text-lg lg:text-2xl xl:text-3xl leading-relaxed text-black font-light">
               {caseStudy.central_description.split('\n').map((line, i) => {
                 const words = line.split(' ').filter(w => w.length > 0)
                 const wordsPerLine = 16
@@ -324,9 +324,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           )}
 
           {/* Content Column */}
-          <div className={`${caseStudy.cto.image ? 'w-1/2' : 'w-full'} flex items-start justify-end px-8 lg:px-0 pt-32 lg:pt-40 pb-0 order-1 relative z-10 pr-8 lg:pr-16`}>
+          <div className={`${caseStudy.cto.image ? 'w-full sm:w-1/2' : 'w-full'} flex items-start justify-center sm:justify-end px-4 sm:px-8 lg:px-0 pt-8 sm:pt-32 lg:pt-40 pb-0 order-1 relative z-10 pr-0 sm:pr-8 lg:pr-16`}>
             <div className="max-w-lg lg:max-w-xl">
-              <h2 className="text-5xl lg:text-6xl font-light mb-4 text-black">
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-4 text-black">
                 {caseStudy.cto.name}
               </h2>
               <h3 className="text-2xl lg:text-3xl font-light text-gray-700 mb-8">{caseStudy.cto.title}</h3>
@@ -371,7 +371,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Color Palette - Enhanced Digital Fan */}
       {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
-        <section className="min-h-screen flex flex-col items-center px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-96 lg:-mt-[28rem] pt-80 lg:pt-96 -mb-96">
+        <section className="min-h-screen flex flex-col items-center px-4 sm:px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-12 sm:-mt-96 lg:-mt-[28rem] pt-12 sm:pt-80 lg:pt-96 -mb-12 sm:-mb-96">
           <div className="max-w-7xl mx-auto w-full">
             <h2 className="text-5xl lg:text-6xl font-light mb-16 text-black">Color Palette</h2>
             <div className="flex items-center justify-between gap-12">
@@ -600,12 +600,12 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           isImageLeft = true // Image always on left in System section
         }
         return (
-          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-[584px]' : 'min-h-screen'} flex ${isFullWidthImage ? 'py-0 -my-12' : isShapeSection ? 'py-0 -my-2' : 'py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-80 sm:h-[584px]' : 'min-h-screen'} flex ${isFullWidthImage ? 'py-0 -my-12' : isShapeSection ? 'py-0 -my-2' : 'py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
             {hasImages && (
-              <div className={`${isFullWidthImage ? 'w-full' : 'w-1/2'} flex items-center justify-center overflow-hidden ${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
+              <div className={`${isFullWidthImage ? 'w-full' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden ${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
                 <div className={`w-full flex items-center justify-center ${isFullWidthImage ? 'p-0' : 'p-8'}`}>
-                  <div className={`${isApplicationsSection ? 'grid gap-6 w-full grid-cols-3' : isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-2 gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-2 gap-2 w-full max-w-6xl' : 'grid grid-cols-4 gap-2 w-full max-w-4xl'}`}>
+                  <div className={`${isApplicationsSection ? 'grid gap-2 sm:gap-6 w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-6xl' : 'grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-4xl'}`}>
                     {section.images.map((img: any, idx: number) => {
                       const imageId = `${sectionKey}-${idx}`
                       const imgUrl = typeof img === 'string' ? img : img.url
@@ -627,10 +627,10 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
             {/* Content Column */}
             {!isApplicationsSection && (
-            <div className={`${hasImages ? 'w-1/2' : 'w-full'} flex items-center justify-center px-8 lg:px-16 py-16 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
+            <div className={`${hasImages ? 'w-full sm:w-1/2' : 'w-full'} flex items-center justify-center px-4 sm:px-8 lg:px-16 py-8 sm:py-16 lg:py-24 ${isImageLeft ? 'order-2' : 'order-1'}`}>
               <div className={sectionKey === 'motion' ? 'w-full' : 'max-w-md lg:max-w-lg'}>
                 {sectionLabel && (
-                  <h2 className="text-5xl lg:text-6xl font-light mb-4 text-black">
+                  <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-4 text-black">
                     {sectionLabel}
                   </h2>
                 )}
@@ -679,7 +679,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             <h2 className="text-4xl lg:text-5xl font-light mb-12 text-black uppercase tracking-tight">Next Project</h2>
             <Link href={`/brand-case-studies/${nextProject.id}`}>
               <div className="group cursor-pointer">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-12 items-center">
                   {nextProject.hero_image && (
                     <div className="lg:col-span-2">
                       <div className="relative overflow-hidden rounded-lg bg-gray-300 h-96">
