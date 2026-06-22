@@ -377,10 +377,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       {/* Color Palette - Enhanced Digital Fan */}
       {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
         <section className="min-h-screen flex flex-col items-center px-4 sm:px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-12 sm:-mt-96 lg:-mt-[28rem] pt-12 sm:pt-80 lg:pt-96 -mb-12 sm:-mb-96">
-          <div className="max-w-7xl mx-auto w-full">
-            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-8 sm:mb-16 text-black">Color Palette</h2>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-12">
-              <div className="relative w-full sm:w-1/2 h-64 sm:h-96 flex items-center justify-center">
+          <div className="max-w-7xl mx-auto w-full flex flex-col">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-8 sm:mb-16 text-black text-center sm:text-left">Color Palette</h2>
+            <div className="relative w-full h-64 sm:h-96 flex items-center justify-center mb-8 sm:mb-0">
               <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
                 {caseStudy.color_palette.map((_, idx) => {
                   const angle = (idx / caseStudy.color_palette!.length) * 360 - 90
@@ -446,12 +445,11 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                   </div>
                 )
               })}
-              </div>
-              <div className="w-full sm:w-1/2 flex items-center justify-center sm:justify-start text-center sm:text-left">
-                <p className="text-sm sm:text-base lg:text-xl font-light text-gray-800 leading-relaxed">
-                  A spectrum-driven<br />palette expressing energy<br />and optimism.
-                </p>
-              </div>
+            </div>
+            <div className="w-full flex items-center justify-center text-center">
+              <p className="text-sm sm:text-base lg:text-xl font-light text-gray-800 leading-relaxed max-w-md">
+                A spectrum-driven palette expressing energy and optimism.
+              </p>
             </div>
           </div>
         </section>
