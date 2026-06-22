@@ -495,12 +495,17 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           const textColorClass = bgImage ? 'text-white' : (isLightBg ? 'text-black' : 'text-white')
           const subtitleColorClass = bgImage ? 'text-gray-200' : (isLightBg ? 'text-gray-500' : 'text-gray-300')
 
+          const isCleanSection = section.title?.includes('Clean. Intuitive. Focused on what')
           const sectionStyle = bgImage
-            ? { backgroundImage: `url('${bgImage}')`, backgroundSize: 'cover', backgroundPosition: 'center' }
+            ? {
+                backgroundImage: `url('${bgImage}')`,
+                backgroundSize: isCleanSection ? 'contain' : 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }
             : { backgroundColor: bgColor }
 
           const isWhiteTitle = section.title?.includes('system that works everywhere')
-          const isCleanSection = section.title?.includes('Clean. Intuitive. Focused on what')
           const pbClass = isWhiteTitle ? 'pb-8 lg:pb-12' : 'pb-24 lg:pb-32'
           const ptClass = isCleanSection ? 'pt-[48rem] lg:pt-[64rem]' : (isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-[32rem] lg:pt-[48rem]')
 
