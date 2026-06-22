@@ -264,16 +264,19 @@ export default function Home() {
               {[
                 ...projects.slice(0, 3),
                 ...brandCaseStudies.filter(c => c.category === 'featured').slice(0, 3)
-              ].slice(0, 6).map((item) => (
+              ].slice(0, 6).map((item: any) => {
+                const isBrandCase = 'hero_image' in item
+                const imageUrl = isBrandCase ? item.hero_image : item.image_url
+                return (
                 <StaggerItem key={item.id}>
                   <RevealOnScroll direction="up">
-                    <Link href={item.hero_image ? `/projects/${item.id}` : `/brand-case-studies/${item.id}`}>
+                    <Link href={isBrandCase ? `/brand-case-studies/${item.id}` : `/projects/${item.id}`}>
                       <div className="group cursor-pointer">
                         <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
-                          {(item.image_url || item.hero_image) ? (
+                          {imageUrl ? (
                             <>
                               <img
-                                src={item.image_url || item.hero_image}
+                                src={imageUrl}
                                 alt={item.title}
                                 className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                               />
@@ -292,7 +295,9 @@ export default function Home() {
                     </Link>
                   </RevealOnScroll>
                 </StaggerItem>
-              ))}
+              )
+              })}
+
             </div>
           </StaggerContainer>
         </div>
