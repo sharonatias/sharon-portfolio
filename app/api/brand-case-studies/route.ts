@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
+export const revalidate = 0 // No caching - always fetch fresh data
+
 export async function GET() {
   try {
     const { data, error } = await supabase
@@ -13,7 +15,11 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data || [])
+    return NextResponse.json(data || [], {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0'
+      }
+    })
   } catch (error) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Failed to fetch brand case studies' }, { status: 500 })
