@@ -817,65 +817,6 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         </div>
                       )}
 
-                      {sectionKey === 'motion' && (
-                        <div className="space-y-3">
-                          <label className="block text-xs text-gray-400 mb-2">🎥 Upload Motion Video</label>
-                          <CldUploadWidget
-                            uploadPreset="sharon_portfolio"
-                            onSuccess={(result: any) => {
-                              const url = result.info.secure_url
-                              setFormData({
-                                ...formData,
-                                videos: [...(formData.videos || []), { url: url, title: result.info.original_filename || 'Video' }]
-                              })
-                              setMessage({ type: 'success', text: `✅ Video uploaded` })
-                              setTimeout(() => setMessage(null), 3000)
-                            }}
-                            onError={() => {
-                              setMessage({ type: 'error', text: `❌ Video upload failed` })
-                              setTimeout(() => setMessage(null), 5000)
-                            }}
-                          >
-                            {({ open }) => (
-                              <button
-                                type="button"
-                                onClick={() => open()}
-                                className="w-full px-4 py-2 text-xs bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all"
-                              >
-                                🎥 Upload Video
-                              </button>
-                            )}
-                          </CldUploadWidget>
-
-                          {formData.videos && formData.videos.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              <label className="block text-xs text-gray-400">Uploaded Videos:</label>
-                              {formData.videos.map((video, vidIdx) => (
-                                <div key={vidIdx} className="p-3 bg-slate-950/30 rounded space-y-2">
-                                  <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs text-gray-300">{video.title}</span>
-                                    <button
-                                      onClick={() => setFormData({
-                                        ...formData,
-                                        videos: (formData.videos || []).filter((_, i) => i !== vidIdx)
-                                      })}
-                                      className="text-red-400 hover:text-red-300 text-xs"
-                                    >
-                                      ✕ Remove
-                                    </button>
-                                  </div>
-                                  <video
-                                    className="w-full h-32 bg-gray-900 rounded object-cover"
-                                    controls
-                                  >
-                                    <source src={video.url} type="video/mp4" />
-                                  </video>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </div>
                     </div>
                     )}

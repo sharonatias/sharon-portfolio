@@ -623,17 +623,6 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                   </div>
                 )}
 
-                {sectionKey === 'motion' && caseStudy.videos && caseStudy.videos.length > 0 && (
-                  <div className="space-y-6">
-                    {caseStudy.videos.map((video, vidIdx) => (
-                      <div key={vidIdx} className="aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <video className="w-full h-full object-cover" autoPlay muted loop controls>
-                          <source src={video.url} type="video/mp4" />
-                        </video>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           </section>
