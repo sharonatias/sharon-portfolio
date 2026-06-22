@@ -259,7 +259,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             <div className="text-xl lg:text-2xl xl:text-3xl leading-relaxed text-black font-light">
               {caseStudy.central_description.split('\n').map((line, i) => {
                 const words = line.split(' ').filter(w => w.length > 0)
-                const wordsPerLine = 8
+                const wordsPerLine = 16
                 const lines = []
                 for (let i = 0; i < words.length; i += wordsPerLine) {
                   lines.push(words.slice(i, i + wordsPerLine))
