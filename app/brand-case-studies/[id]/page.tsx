@@ -499,10 +499,10 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           const subtitleColorClass = bgImage ? 'text-gray-200' : (isLightBg ? 'text-gray-500' : 'text-gray-300')
 
           const isCleanSection = section.title?.includes('Clean. Intuitive. Focused on what')
-          const sectionStyle = bgImage
+          const sectionStyle = bgImage && !isCleanSection
             ? {
                 backgroundImage: `url('${bgImage}')`,
-                backgroundSize: isCleanSection ? 'contain' : 'cover',
+                backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
               }
@@ -538,7 +538,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
               {/* Images Column (Always Right) */}
               {hasImages && (
-                <div className={`${sectionKey === 'applications' ? 'w-full' : 'w-full sm:w-3/4'} flex items-center justify-center ${sectionKey === 'applications' ? 'px-0' : 'px-4 sm:px-12'} order-2 relative z-10`}>
+                <div className={`${sectionKey === 'applications' ? 'w-full' : isCleanSection ? 'w-full' : 'w-full sm:w-3/4'} flex items-center justify-center ${sectionKey === 'applications' ? 'px-0' : 'px-4 sm:px-12'} order-2 relative z-10`}>
                   {imageLayout === 'grid' ? (
                     <div className="grid grid-cols-2 gap-8 w-full max-w-6xl">
                       {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
