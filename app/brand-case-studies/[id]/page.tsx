@@ -608,7 +608,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-80 sm:h-[584px]' : 'min-h-auto sm:min-h-screen'} flex flex-col sm:flex-row ${isFullWidthImage ? 'py-0 -my-0 sm:-my-12' : isShapeSection ? 'py-0 -my-2' : 'py-8 sm:py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
             {hasImages && (
-              <div className={`${isFullWidthImage ? 'w-full' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden ${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
+              <div className={`${isFullWidthImage ? 'w-full' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden order-2 sm:${isImageLeft && !isFullWidthImage ? 'order-1' : 'order-2'}`}>
                 <div className={`w-full flex items-center justify-center ${isFullWidthImage ? 'p-0' : 'p-8'}`}>
                   <div className={`${isApplicationsSection ? 'grid gap-2 sm:gap-6 w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-6xl' : 'grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-4xl'}`}>
                     {section.images.map((img: any, idx: number) => {
