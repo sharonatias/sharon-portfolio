@@ -501,8 +501,8 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           const isCleanSection = section.title?.includes('Clean. Intuitive. Focused on what')
           const sectionStyle = bgImage
             ? {
-                backgroundImage: isCleanSection ? 'none' : `url('${bgImage}')`,
-                backgroundSize: isCleanSection ? 'contain' : 'cover',
+                backgroundImage: `url('${bgImage}')`,
+                backgroundSize: 'contain',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
               }
