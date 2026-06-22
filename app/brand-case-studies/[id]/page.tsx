@@ -22,6 +22,11 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
   const [menuOpen, setMenuOpen] = useState(false)
   const [visibleImages, setVisibleImages] = useState<Set<string>>(new Set())
   const [hoveredColorIdx, setHoveredColorIdx] = useState<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(typeof window !== 'undefined' && window.innerWidth < 640)
+  }, [])
 
   useEffect(() => {
     params.then((p) => {
@@ -259,7 +264,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             <div className="text-xs sm:text-sm lg:text-2xl xl:text-3xl leading-relaxed sm:leading-relaxed text-black font-light">
               {caseStudy.central_description.split('\n').map((line, i) => {
                 const words = line.split(' ').filter(w => w.length > 0)
-                const wordsPerLine = window.innerWidth < 640 ? 8 : 12
+                const wordsPerLine = isMobile ? 6 : 12
                 const lines = []
                 for (let i = 0; i < words.length; i += wordsPerLine) {
                   lines.push(words.slice(i, i + wordsPerLine))
