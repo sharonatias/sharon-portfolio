@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Project, HeroVideo, CATEGORIES } from '@/lib/types'
+import { Project, HeroVideo, CATEGORIES, BrandCaseStudy } from '@/lib/types'
 import Link from 'next/link'
 import HeroSection from '@/components/HeroSection'
 import {
@@ -19,6 +19,7 @@ import {
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [brandCaseStudies, setBrandCaseStudies] = useState<BrandCaseStudy[]>([])
   const [heroVideos, setHeroVideos] = useState<HeroVideo[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -27,6 +28,7 @@ export default function Home() {
   useEffect(() => {
     fetchHeroVideos()
     fetchProjects()
+    fetchBrandCaseStudies()
   }, [])
 
   const fetchHeroVideos = async () => {
@@ -48,6 +50,16 @@ export default function Home() {
       setProjects(data)
     } catch (error) {
       console.error('Failed to fetch projects:', error)
+    }
+  }
+
+  const fetchBrandCaseStudies = async () => {
+    try {
+      const res = await fetch('/api/brand-case-studies')
+      const data = await res.json()
+      setBrandCaseStudies(data)
+    } catch (error) {
+      console.error('Failed to fetch brand case studies:', error)
     }
   }
 
@@ -249,23 +261,26 @@ export default function Home() {
 
           <StaggerContainer>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-              {projects.slice(0, 3).map((project) => (
-                <StaggerItem key={project.id}>
+              {[
+                ...projects.slice(0, 3),
+                ...brandCaseStudies.filter(c => c.category === 'featured').slice(0, 3)
+              ].slice(0, 6).map((item) => (
+                <StaggerItem key={item.id}>
                   <RevealOnScroll direction="up">
-                    <Link href={`/projects/${project.id}`}>
+                    <Link href={item.hero_image ? `/projects/${item.id}` : `/brand-case-studies/${item.id}`}>
                       <div className="group cursor-pointer">
                         <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
-                          {project.image_url ? (
+                          {(item.image_url || item.hero_image) ? (
                             <>
                               <img
-                                src={project.image_url}
-                                alt={project.title}
+                                src={item.image_url || item.hero_image}
+                                alt={item.title}
                                 className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                 <h4 className="text-lg lg:text-xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
-                                  {project.title}
+                                  {item.title}
                                 </h4>
                               </div>
                             </>
