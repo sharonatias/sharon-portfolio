@@ -18,6 +18,8 @@ export default function BrandCaseStudiesPage() {
     try {
       const res = await fetch('/api/brand-case-studies')
       const data = await res.json()
+      console.log('📊 Fetched case studies:', data.length, 'items')
+      console.log('Featured studies:', data.filter((cs: BrandCaseStudy) => cs.category === 'featured').map((cs: BrandCaseStudy) => cs.title))
       setCaseStudies(data || [])
     } catch (error) {
       console.error('Error fetching case studies:', error)
