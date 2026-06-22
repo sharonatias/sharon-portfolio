@@ -553,7 +553,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       })}
                     </div>
                   ) : section.images.length >= 3 ? (
-                    <div className="w-full max-w-6xl">
+                    <div className="w-full">
                       <div className={`grid gap-6 w-full ${section.images.length === 3 ? 'grid-cols-3' : 'grid-cols-4'}`}>
                         {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
                           const imgUrl = typeof img === 'string' ? img : img.url
