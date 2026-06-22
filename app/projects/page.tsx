@@ -130,9 +130,9 @@ export default function ProjectsPage() {
     ? videoCaseStudies.filter((c) => !selectedCategory || selectedCategory === 'all' || c.category === selectedCategory)
     : []
 
-  const filteredBrandCaseStudies = selectedCategory === 'all' || selectedCategory === 'brand_design'
-    ? brandCaseStudies.filter((c) => !selectedCategory || selectedCategory === 'all' || c.category === selectedCategory)
-    : []
+  const filteredBrandCaseStudies = selectedCategory === 'all'
+    ? brandCaseStudies
+    : brandCaseStudies.filter((c) => c.category === selectedCategory)
 
   // Combine all items
   const allItems = [
