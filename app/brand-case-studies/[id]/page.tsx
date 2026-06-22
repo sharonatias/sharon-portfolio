@@ -623,6 +623,21 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                   </div>
                 )}
 
+                {sectionKey === 'motion' && (section as any).video && (
+                  <div className="w-full">
+                    <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg">
+                      <video
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        controls
+                      >
+                        <source src={(section as any).video} type="video/mp4" />
+                      </video>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>

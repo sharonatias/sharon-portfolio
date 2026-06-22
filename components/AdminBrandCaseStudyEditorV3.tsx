@@ -817,6 +817,39 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         </div>
                       )}
 
+                      {sectionKey === 'motion' && (
+                        <div className="space-y-3 border-t border-orange-500/20 pt-3">
+                          <label className="block text-xs text-gray-400 mb-2">🎥 Motion Video URL</label>
+                          <input
+                            type="text"
+                            placeholder="https://example.com/video.mp4 or Cloudinary URL"
+                            value={(section as any).video || ''}
+                            onChange={(e) => setFormData({
+                              ...formData,
+                              [sectionKey]: { ...section, video: e.target.value }
+                            })}
+                            className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
+                          />
+                          {(section as any).video && (
+                            <div className="mt-3 p-2 bg-slate-950/30 rounded text-xs">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-gray-300">✓ Video URL Set</span>
+                                <button
+                                  onClick={() => setFormData({
+                                    ...formData,
+                                    [sectionKey]: { ...section, video: '' }
+                                  })}
+                                  className="text-red-400 hover:text-red-300 text-xs"
+                                >
+                                  ✕ Clear
+                                </button>
+                              </div>
+                              <p className="text-gray-500 text-xs truncate">{(section as any).video}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                     </div>
                     </div>
                     )}
