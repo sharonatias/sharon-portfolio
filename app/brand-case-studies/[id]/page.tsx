@@ -552,6 +552,24 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                         )
                       })}
                     </div>
+                  ) : section.images.length >= 3 ? (
+                    <div className="w-full max-w-6xl">
+                      <div className={`grid gap-6 w-full ${section.images.length === 3 ? 'grid-cols-3' : 'grid-cols-4'}`}>
+                        {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
+                          const imgUrl = typeof img === 'string' ? img : img.url
+                          return (
+                            <div key={imgIdx} className="overflow-hidden rounded-lg aspect-square">
+                              <img
+                                src={imgUrl}
+                                alt={`${sectionLabel} ${imgIdx + 1}`}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
                   ) : (
                     <div className={`w-full ${isCleanSection ? 'max-w-2xl' : 'max-w-6xl'} flex items-center justify-center`}>
                       <div className="overflow-hidden rounded-lg w-full">
