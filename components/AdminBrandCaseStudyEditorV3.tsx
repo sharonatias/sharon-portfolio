@@ -819,10 +819,49 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
 
                       {sectionKey === 'motion' && (
                         <div className="space-y-3 border-t border-orange-500/20 pt-3">
-                          <label className="block text-xs text-gray-400 mb-2">🎥 Motion Video URL</label>
+                          <label className="block text-xs text-gray-400 mb-2">🎥 Motion Video</label>
+
+                          {/* Upload Widget */}
+                          <CldUploadWidget
+                            uploadPreset="sharon_portfolio"
+                            onSuccess={(result: any) => {
+                              const url = result.info.secure_url
+                              setFormData({
+                                ...formData,
+                                [sectionKey]: { ...section, video: url }
+                              })
+                              setMessage({ type: 'success', text: `✅ Video uploaded` })
+                              setTimeout(() => setMessage(null), 3000)
+                            }}
+                            onError={() => {
+                              setMessage({ type: 'error', text: `❌ Video upload failed` })
+                              setTimeout(() => setMessage(null), 5000)
+                            }}
+                          >
+                            {({ open }) => (
+                              <button
+                                type="button"
+                                onClick={() => open()}
+                                className="w-full px-4 py-2 text-xs bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 transition-all"
+                              >
+                                🎥 Upload Video File
+                              </button>
+                            )}
+                          </CldUploadWidget>
+
+                          {/* Or paste URL */}
+                          <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                              <div className="w-full border-t border-orange-500/20"></div>
+                            </div>
+                            <div className="relative flex justify-center text-xs">
+                              <span className="px-2 bg-gray-900 text-gray-500">או</span>
+                            </div>
+                          </div>
+
                           <input
                             type="text"
-                            placeholder="https://example.com/video.mp4 or Cloudinary URL"
+                            placeholder="או הדבק URL של וידאו"
                             value={(section as any).video || ''}
                             onChange={(e) => setFormData({
                               ...formData,
@@ -830,10 +869,12 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             })}
                             className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-2 rounded text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none text-sm"
                           />
+
+                          {/* Preview */}
                           {(section as any).video && (
                             <div className="mt-3 p-2 bg-slate-950/30 rounded text-xs">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-gray-300">✓ Video URL Set</span>
+                                <span className="text-gray-300">✓ Video Ready</span>
                                 <button
                                   onClick={() => setFormData({
                                     ...formData,
@@ -841,7 +882,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                                   })}
                                   className="text-red-400 hover:text-red-300 text-xs"
                                 >
-                                  ✕ Clear
+                                  ✕ Remove
                                 </button>
                               </div>
                               <p className="text-gray-500 text-xs truncate">{(section as any).video}</p>
