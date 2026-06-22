@@ -320,7 +320,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                   <img
                     src={caseStudy.cto.image}
                     alt={caseStudy.cto.name}
-                    className="w-full h-full object-cover opacity-75 -translate-y-12 -rotate-2 transition-transform duration-500 hover:opacity-90"
+                    className="w-full h-full object-contain opacity-75 transition-transform duration-500 hover:opacity-90"
                     loading="lazy"
                   />
                 </div>
