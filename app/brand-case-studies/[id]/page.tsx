@@ -515,7 +515,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           return (
             <section key={sectionKey} style={sectionStyle} className={`flex flex-col sm:flex-row items-center ${ptClass} ${pbClass} relative`}>
               {/* Content Column (Always Left) */}
-              <div className={`${hasImages ? 'w-full sm:w-1/4' : 'w-full'} flex items-center justify-start px-4 sm:pl-24 lg:pl-32 order-1 relative z-10`}>
+              <div className={`${hasImages ? 'w-full sm:w-1/4' : 'w-full'} flex items-center justify-start px-4 sm:pl-24 lg:pl-32 ${isCleanSection ? 'pt-32 sm:pt-0' : ''} order-1 relative z-10`}>
                 <div className="w-full">
                   {section.number && (
                     <div className="mb-6 -mt-8">
