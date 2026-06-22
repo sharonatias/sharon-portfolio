@@ -548,7 +548,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       })}
                     </div>
                   ) : (
-                    <div className="w-full max-w-6xl flex items-center justify-center">
+                    <div className={`w-full ${isCleanSection ? 'max-w-2xl' : 'max-w-6xl'} flex items-center justify-center`}>
                       <div className="overflow-hidden rounded-lg w-full">
                         <img
                           src={typeof section.images[0] === 'string' ? section.images[0] : section.images[0].url}
