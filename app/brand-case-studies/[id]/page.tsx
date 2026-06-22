@@ -186,10 +186,10 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         )}
 
         {/* Hero Content */}
-        <div className="relative z-30 w-full px-8 lg:px-20 pb-20">
+        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-20 pb-8 sm:pb-20">
           <div className="max-w-4xl">
             {/* Categories */}
-            <div className="flex gap-4 mb-8 flex-wrap">
+            <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-8 flex-wrap">
               {caseStudy.category && (
                 <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
                   {caseStudy.category.replace(/_/g, ' ').toUpperCase()}
@@ -207,12 +207,12 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               )}
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-light mb-6 leading-tight text-black">{caseStudy.title}</h1>
+            <h1 className="text-3xl sm:text-4xl lg:text-7xl xl:text-8xl font-light mb-3 sm:mb-6 leading-tight text-black">{caseStudy.title}</h1>
             {caseStudy.subtitle && (
-              <p className="text-lg lg:text-2xl text-gray-700 mb-6 font-light">{caseStudy.subtitle}</p>
+              <p className="text-sm sm:text-lg lg:text-2xl text-gray-700 mb-3 sm:mb-6 font-light">{caseStudy.subtitle}</p>
             )}
             {caseStudy.hero_description && (
-              <p className="text-base lg:text-lg text-gray-600 leading-relaxed max-w-2xl font-light">{caseStudy.hero_description}</p>
+              <p className="text-xs sm:text-base lg:text-lg text-gray-600 leading-relaxed max-w-2xl font-light">{caseStudy.hero_description}</p>
             )}
           </div>
         </div>
@@ -254,9 +254,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Central Description - Large */}
       {caseStudy.central_description && (
-        <section className="py-8 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 -ml-0 sm:-ml-16 lg:-ml-32 mb-12 sm:mb-48 lg:mb-64">
-          <div className="max-w-sm mx-auto">
-            <div className="text-base sm:text-lg lg:text-2xl xl:text-3xl leading-relaxed text-black font-light">
+        <section className="py-6 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 -ml-0 sm:-ml-16 lg:-ml-32 mb-8 sm:mb-48 lg:mb-64">
+          <div className="max-w-lg sm:max-w-sm mx-auto">
+            <div className="text-sm sm:text-base lg:text-2xl xl:text-3xl leading-relaxed text-black font-light">
               {caseStudy.central_description.split('\n').map((line, i) => {
                 const words = line.split(' ').filter(w => w.length > 0)
                 const wordsPerLine = 16
@@ -373,9 +373,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
         <section className="min-h-screen flex flex-col items-center px-4 sm:px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-12 sm:-mt-96 lg:-mt-[28rem] pt-12 sm:pt-80 lg:pt-96 -mb-12 sm:-mb-96">
           <div className="max-w-7xl mx-auto w-full">
-            <h2 className="text-5xl lg:text-6xl font-light mb-16 text-black">Color Palette</h2>
-            <div className="flex items-center justify-between gap-12">
-              <div className="relative w-1/2 h-96 flex items-center justify-center">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-light mb-8 sm:mb-16 text-black">Color Palette</h2>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-12">
+              <div className="relative w-full sm:w-1/2 h-64 sm:h-96 flex items-center justify-center">
               <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
                 {caseStudy.color_palette.map((_, idx) => {
                   const angle = (idx / caseStudy.color_palette!.length) * 360 - 90
@@ -442,8 +442,8 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                 )
               })}
               </div>
-              <div className="w-1/2 flex items-center">
-                <p className="text-lg lg:text-xl font-light text-gray-800 leading-relaxed">
+              <div className="w-full sm:w-1/2 flex items-center justify-center sm:justify-start text-center sm:text-left">
+                <p className="text-sm sm:text-base lg:text-xl font-light text-gray-800 leading-relaxed">
                   A spectrum-driven<br />palette expressing energy<br />and optimism.
                 </p>
               </div>
