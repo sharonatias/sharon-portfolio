@@ -371,7 +371,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Color Palette - Enhanced Digital Fan */}
       {caseStudy.color_palette && caseStudy.color_palette.length > 0 && (
-        <section className="min-h-screen flex flex-col items-center px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-96 lg:-mt-[28rem] pt-80 lg:pt-96">
+        <section className="min-h-screen flex flex-col items-center px-8 lg:px-20 bg-gradient-to-b from-white to-gray-50 -mt-96 lg:-mt-[28rem] pt-80 lg:pt-96 -mb-96">
           <div className="max-w-7xl mx-auto w-full">
             <h2 className="text-5xl lg:text-6xl font-light mb-16 text-black">Color Palette</h2>
             <div className="flex items-center justify-between gap-12">
