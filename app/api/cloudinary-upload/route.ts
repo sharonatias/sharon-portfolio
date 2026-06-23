@@ -62,9 +62,13 @@ export async function POST(request: NextRequest) {
       const error = await cloudRes.text()
       console.error('❌ Cloudinary error status:', cloudRes.status)
       console.error('❌ Cloudinary error body:', error)
+      console.error('❌ Upload preset used:', uploadPreset)
+      console.error('❌ Cloud name used:', cloudName)
       return NextResponse.json({
         error: `Cloudinary upload failed: ${cloudRes.status}`,
-        details: error
+        details: error,
+        uploadPreset,
+        cloudName
       }, { status: 502 })
     }
 
