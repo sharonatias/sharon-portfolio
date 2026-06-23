@@ -800,7 +800,9 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             if (sectionData) {
                               const maxImages = sectionKey === 'applications' ? 4 : Infinity
                               const currentCount = (sectionData.images || []).length
+                              console.log(`🔍 Upload check: sectionKey=${sectionKey}, currentCount=${currentCount}, maxImages=${maxImages}`)
                               if (currentCount >= maxImages) {
+                                console.log(`❌ Max reached: ${currentCount} >= ${maxImages}`)
                                 setMessage({ type: 'error', text: `❌ Maximum ${maxImages} images allowed` })
                                 setTimeout(() => setMessage(null), 3000)
                                 return
