@@ -337,7 +337,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               <h3 className="text-lg sm:text-xl lg:text-3xl font-light text-gray-700 mb-6 sm:mb-8">{caseStudy.cto.title}</h3>
 
               <div className="text-sm sm:text-lg lg:text-3xl xl:text-4xl leading-relaxed lg:leading-relaxed font-light block">
-                {caseStudy.cto.description.split('\n').map((line, i) => {
+                {((caseStudy as any).main_text || caseStudy.cto.description).split('\n').map((line, i) => {
                   const words = line.split(' ')
                   let wordCount = 0
                   return (
