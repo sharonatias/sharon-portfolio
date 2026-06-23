@@ -621,7 +621,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           isImageLeft = false // Image always on right in Shape section
         }
         return (
-          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-auto' : 'min-h-auto sm:min-h-screen'} flex flex-col sm:flex-row ${isFullWidthImage ? 'py-0 -my-0 sm:-my-12' : isShapeSection ? 'py-0' : 'py-8 sm:py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-auto' : 'min-h-auto sm:min-h-screen'} flex flex-col sm:flex-row ${isFullWidthImage ? 'py-0 -my-0 sm:-my-12' : isShapeSection ? 'py-0 my-0 -mb-px' : 'py-8 sm:py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
             {hasImages && (
               <div className={`${isFullWidthImage ? 'w-full' : isShapeSection ? 'w-full h-full' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden order-2 ${isFullWidthImage && isImageLeft ? 'sm:order-1' : ''}`}>
