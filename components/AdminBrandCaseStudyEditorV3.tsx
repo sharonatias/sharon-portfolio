@@ -115,6 +115,9 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       const standardSections = SECTION_NAMES
       for (const key of Object.keys(cleanedData)) {
         const section = cleanedData[key]
+        if (key === 'applications') {
+          console.log(`📸 Applications section save check:`, { images: section?.images?.length || 0, imageLayout: section?.imageLayout })
+        }
         if (section?.images && Array.isArray(section.images)) {
           section.images = await Promise.all(
             section.images.map(async (img: string) => {
