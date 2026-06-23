@@ -631,11 +631,11 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       const imageId = `${sectionKey}-${idx}`
                       const imgUrl = typeof img === 'string' ? img : img.url
                       return (
-                        <div key={idx} className={isApplicationsSection ? "w-full h-auto overflow-hidden rounded-lg" : isFullWidthImage ? "w-full h-auto" : "aspect-square overflow-hidden rounded-lg"}>
+                        <div key={idx} className={isApplicationsSection ? "w-full h-auto overflow-hidden rounded-lg" : isFullWidthImage ? "w-full h-auto" : isShapeSection ? "overflow-auto" : "aspect-square overflow-hidden rounded-lg"}>
                           <img
                             src={imgUrl}
                             alt={`${sectionLabel} ${idx + 1}`}
-                            className={`${isApplicationsSection ? 'w-full h-auto object-contain' : isFullWidthImage ? 'w-full h-auto' : 'w-full h-full'} object-contain`}
+                            className={`${isApplicationsSection ? 'w-full h-auto object-contain' : isFullWidthImage ? 'w-full h-auto' : isShapeSection ? 'w-auto h-auto' : 'w-full h-full'} object-contain`}
                             loading="lazy"
                           />
                         </div>
