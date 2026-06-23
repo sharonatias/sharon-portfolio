@@ -143,7 +143,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         )}
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent" />
 
         {/* Header - Positioned on Hero */}
         <header className="absolute top-0 left-0 right-0 z-50 px-8 lg:px-20 pt-6">

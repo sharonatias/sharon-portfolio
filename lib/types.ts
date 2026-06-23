@@ -176,6 +176,7 @@ export interface BrandCaseStudy {
   hero_description: string
   hero_video?: string
   central_description: string // Main text describing the project
+  main_text?: string // Editable main text for CTO section
 
   // 7 Design System Sections
   idea?: BrandCaseStudySection

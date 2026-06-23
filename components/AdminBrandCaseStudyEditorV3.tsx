@@ -10,7 +10,7 @@ interface AdminBrandCaseStudyEditorProps {
   onClose: () => void
 }
 
-type Tab = 'basic' | 'hero' | 'description' | 'sections' | 'colors' | 'videos' | 'applications' | 'cto'
+type Tab = 'basic' | 'hero' | 'description' | 'main-text' | 'sections' | 'colors' | 'videos' | 'applications' | 'cto'
 
 const SECTION_NAMES: (keyof Omit<BrandCaseStudy, 'id' | 'title' | 'subtitle' | 'year' | 'client' | 'role' | 'hero_image' | 'hero_description' | 'central_description' | 'color_palette' | 'videos' | 'category' | 'display_order' | 'created_at' | 'updated_at'>)[] = [
   'idea', 'system', 'shape', 'motion', 'applications', 'color', 'type'
@@ -67,6 +67,7 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
     { id: 'basic', label: 'Basic', icon: '📋' },
     { id: 'hero', label: 'Hero', icon: '🎬' },
     { id: 'description', label: 'Description', icon: '📝' },
+    { id: 'main-text', label: 'Main Text', icon: '✍️' },
     { id: 'sections', label: 'Sections', icon: '🎨' },
     { id: 'colors', label: 'Colors', icon: '🎭' },
     { id: 'videos', label: 'Videos', icon: '🎥' },
@@ -457,6 +458,22 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                 rows={8}
                 className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none"
               />
+            </div>
+          )}
+
+          {activeTab === 'main-text' && (
+            <div className="space-y-4 max-w-4xl">
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Main Text (CTO Section)</label>
+                <textarea
+                  placeholder="טקסט ראשי של הפרוקייט - זה יופיע בחלק העליון של הדף..."
+                  value={(formData as any).main_text || ''}
+                  onChange={(e) => setFormData({ ...formData, main_text: e.target.value } as any)}
+                  rows={12}
+                  className="w-full bg-slate-950/50 border border-orange-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-orange-500 focus:outline-none font-mono text-sm"
+                />
+                <p className="text-xs text-gray-500 mt-2">💡 הטקסט הזה מוצג בחלק הראשי של עמוד הפרוקייט</p>
+              </div>
             </div>
           )}
 
