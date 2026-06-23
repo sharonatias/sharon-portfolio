@@ -92,7 +92,7 @@ export default function BrandCaseStudiesAdminV3() {
       system: { title: '', description: '', images: [] },
       shape: { title: '', description: '', images: [] },
       motion: { title: '', description: '', images: [] },
-      applications: { title: '', description: '', images: [] },
+      applications: { title: '', description: '', images: [], imageLayout: 'grid' },
       color: { title: '', description: '', images: [] },
       type: { title: '', description: '', images: [] },
       videos: [],
@@ -106,6 +106,20 @@ Through in depth research, brand positioning, and audience analysis, we crafted 
       },
       category: 'brand_design'
     })
+  }
+
+  const handleCreateFromTemplate = () => {
+    const brandCase2 = cases.find(c => c.title === 'Brand Case 2')
+    if (!brandCase2) {
+      alert('Brand Case 2 template not found')
+      return
+    }
+    const newCase = JSON.parse(JSON.stringify(brandCase2))
+    delete newCase.id
+    newCase.title = 'New Brand Case'
+    newCase.subtitle = 'Your Brand Story'
+    newCase.client = 'Your Client Name'
+    setEditingCase(newCase as BrandCaseStudy)
   }
 
   if (loading) return <div className="p-8 text-gray-400">Loading...</div>
@@ -123,12 +137,20 @@ Through in depth research, brand positioning, and audience analysis, we crafted 
       <div>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-light tracking-wider text-orange-400">Brand Case Studies ({cases.length})</h2>
-          <button
-            onClick={handleCreateNew}
-            className="px-4 py-2 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-lg text-sm hover:shadow-lg hover:shadow-orange-500/50 transition-all"
-          >
-            ➕ New Brand Case Study
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={handleCreateFromTemplate}
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg text-sm hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+            >
+              📋 Brand Case 2 Template
+            </button>
+            <button
+              onClick={handleCreateNew}
+              className="px-4 py-2 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-lg text-sm hover:shadow-lg hover:shadow-orange-500/50 transition-all"
+            >
+              ➕ New Brand Case Study
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
