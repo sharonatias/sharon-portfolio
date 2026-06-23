@@ -621,9 +621,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           isImageLeft = false // Image always on right in Shape section
         }
         return (
-          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-96 sm:h-[650px]' : 'min-h-auto sm:min-h-screen'} flex flex-col sm:flex-row ${isFullWidthImage ? 'py-0 -my-0 sm:-my-12' : isShapeSection ? 'py-0 -my-2' : 'py-8 sm:py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+          <section key={sectionKey} className={`${isFullWidthImage ? 'h-auto' : isShapeSection ? 'h-96 sm:h-[650px]' : 'min-h-auto sm:min-h-screen'} flex flex-col sm:flex-row ${isFullWidthImage ? 'py-0 -my-0 sm:-my-12' : isShapeSection ? 'py-0 -mt-12 sm:-mt-24' : 'py-8 sm:py-12'} ${isSystemSection ? 'pb-0' : ''} ${sectionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
             {/* Images Column */}
-            {hasImages && (
+            {hasImages && !isShapeSection && (
               <div className={`${isFullWidthImage ? 'w-full' : isShapeSection ? 'w-full sm:w-3/5 h-full bg-black' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden order-2 ${isFullWidthImage && isImageLeft ? 'sm:order-1' : ''}`}>
                 <div className={`w-full ${isShapeSection ? 'h-full' : ''} flex items-center justify-center ${isFullWidthImage ? 'p-0' : isShapeSection ? 'p-0' : 'p-8'}`}>
                   <div className={`${isApplicationsSection ? `grid ${applicationsGridClass} w-full gap-2 sm:gap-4` : isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 w-full' : 'grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-4xl'}`}>
