@@ -212,9 +212,9 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-7xl xl:text-8xl font-light mb-3 sm:mb-6 leading-tight text-black">{caseStudy.title}</h1>
+            <h1 className="text-3xl sm:text-4xl lg:text-7xl xl:text-8xl font-light mb-3 sm:mb-6 leading-tight text-white">{caseStudy.title}</h1>
             {caseStudy.subtitle && (
-              <p className="text-sm sm:text-lg lg:text-2xl text-gray-700 mb-3 sm:mb-6 font-light">{caseStudy.subtitle}</p>
+              <p className="text-sm sm:text-lg lg:text-2xl mb-3 sm:mb-6 font-light" style={{color: '#4ade80'}}>{caseStudy.subtitle}</p>
             )}
             {caseStudy.hero_description && (
               <p className="text-xs sm:text-base lg:text-lg text-gray-600 leading-relaxed max-w-2xl font-light">{caseStudy.hero_description}</p>
