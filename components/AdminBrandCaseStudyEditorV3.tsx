@@ -634,6 +634,19 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                       </button>
                       <button
                         onClick={() => {
+                          const newSectionKey = `${sectionKey}_${Date.now()}`
+                          setFormData({
+                            ...formData,
+                            [newSectionKey]: JSON.parse(JSON.stringify(section))
+                          })
+                          setSectionOrder([...sectionOrder, newSectionKey])
+                        }}
+                        className="px-3 py-1 text-xs bg-blue-600/20 text-blue-400 rounded hover:bg-blue-600/40 transition-all"
+                      >
+                        📋
+                      </button>
+                      <button
+                        onClick={() => {
                           const sectionLabel = SECTION_LABELS[sectionKey] || (section as any).label || sectionKey
                           if (confirm(`Delete ${sectionLabel} section?`)) {
                             setFormData({
