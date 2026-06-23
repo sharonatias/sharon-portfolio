@@ -62,14 +62,26 @@ export async function POST(request: NextRequest) {
 
     if (!cloudRes.ok) {
       console.error('❌ Cloudinary error status:', cloudRes.status)
-      console.error('❌ Cloudinary error body:', responseText)
+      console.error('❌ Cloudinary error body:', responseText.substring(0, 500))
       console.error('❌ Upload preset used:', uploadPreset)
       console.error('❌ Cloud name used:', cloudName)
+      console.error('❌ File name:', fileName)
+
+      // Try to parse as JSON if possible
+      let errorDetails = responseText
+      try {
+        const errorJson = JSON.parse(responseText)
+        errorDetails = errorJson.error || errorJson.message || JSON.stringify(errorJson)
+      } catch (e) {
+        // Keep as text
+      }
+
       return NextResponse.json({
         error: `Cloudinary upload failed: ${cloudRes.status}`,
-        details: responseText,
+        details: errorDetails.substring(0, 200),
         uploadPreset,
-        cloudName
+        cloudName,
+        fileName
       }, { status: 502 })
     }
 
