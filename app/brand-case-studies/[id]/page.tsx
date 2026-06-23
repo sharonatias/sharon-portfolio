@@ -310,7 +310,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       )}
 
       {/* CTO/Leader Section */}
-      {caseStudy.cto && (
+      {caseStudy.cto && ((caseStudy as any).main_text || caseStudy.color_palette?.length > 0) && (
         <section className="min-h-screen flex flex-col sm:flex-row bg-white relative overflow-hidden -mt-12 sm:-mt-24">
           {/* Image Column */}
           {caseStudy.cto.image && (
