@@ -360,17 +360,29 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
               />
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Upload Hero Image</label>
-                <button
-                  onClick={() => handleImageUpload((url) => {
-                    console.log('✅ Callback received URL:', url)
+                <CldUploadWidget
+                  uploadPreset="sharon_portfolio"
+                  onSuccess={(result: any) => {
+                    const url = result.info.secure_url
                     setFormData({ ...formData, hero_image: url })
-                    console.log('✅ FormData updated with hero_image')
-                  })}
-                  disabled={uploading}
-                  className="w-full px-4 py-3 bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/40 transition-all disabled:opacity-50"
+                    setMessage({ type: 'success', text: `✅ Hero image uploaded` })
+                    setTimeout(() => setMessage(null), 3000)
+                  }}
+                  onError={() => {
+                    setMessage({ type: 'error', text: `❌ Hero image upload failed` })
+                    setTimeout(() => setMessage(null), 5000)
+                  }}
                 >
-                  {uploading ? '⏳ Uploading...' : '📤 Upload Hero Image'}
-                </button>
+                  {({ open }) => (
+                    <button
+                      type="button"
+                      onClick={() => open()}
+                      className="w-full px-4 py-3 bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/40 transition-all"
+                    >
+                      📤 Upload Hero Image
+                    </button>
+                  )}
+                </CldUploadWidget>
                 {formData.hero_image && (
                   <div className="mt-3">
                     <img src={formData.hero_image} alt="Hero" className="w-full max-h-48 object-cover rounded-lg mb-2" />
