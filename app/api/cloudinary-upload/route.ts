@@ -54,33 +54,44 @@ export async function POST(request: NextRequest) {
     cloudinaryFormData.append('upload_preset', uploadPreset)
 
     const cloudRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       { method: 'POST', body: cloudinaryFormData }
     )
 
+    const responseText = await cloudRes.text()
+
     if (!cloudRes.ok) {
-      const error = await cloudRes.text()
       console.error('❌ Cloudinary error status:', cloudRes.status)
-      console.error('❌ Cloudinary error body:', error)
+      console.error('❌ Cloudinary error body:', responseText)
       console.error('❌ Upload preset used:', uploadPreset)
       console.error('❌ Cloud name used:', cloudName)
       return NextResponse.json({
         error: `Cloudinary upload failed: ${cloudRes.status}`,
-        details: error,
+        details: responseText,
         uploadPreset,
         cloudName
       }, { status: 502 })
     }
 
-    const cloudData = await cloudRes.json()
+    let cloudData
+    try {
+      cloudData = JSON.parse(responseText)
+    } catch (parseError) {
+      console.error('❌ Failed to parse Cloudinary response:', responseText)
+      return NextResponse.json({
+        error: 'Invalid response from Cloudinary',
+        details: responseText
+      }, { status: 502 })
+    }
+
     console.log('✅ Cloudinary upload successful:', cloudData.secure_url)
 
     return NextResponse.json({
       success: true,
       url: cloudData.secure_url,
-      filename: file.name,
-      size: file.size,
-      type: file.type
+      filename: file?.name || 'upload',
+      size: file?.size || 0,
+      type: file?.type || 'image'
     })
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error)
