@@ -110,7 +110,7 @@ Through in depth research, brand positioning, and audience analysis, we crafted 
 
   const handleCreateFromTemplate = () => {
     // Use Brand Case 2 template ID directly
-    const TEMPLATE_ID = '99ad1a5b-6250-4a1b-9520-8588d8b08440'
+    const TEMPLATE_ID = '25980b8c-32a3-4c98-a2b4-6b991b035e5d'
     const brandCase2 = cases.find(c => c.id === TEMPLATE_ID)
     if (!brandCase2) {
       alert('Brand Case 2 template not found')
