@@ -21,7 +21,7 @@ const SECTION_LABELS: { [key: string]: string } = {
   system: 'System',
   shape: 'Shape',
   motion: 'Motion',
-  applications: 'Applications',
+  applications: 'Photos Grid',
   color: 'Color',
   type: 'Type'
 }
@@ -772,23 +772,25 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             </div>
                           )}
                         </div>
-                        <select
-                          value={(section as any).imageLayout || 'single'}
-                          onChange={(e) => setFormData({
-                            ...formData,
-                            [sectionKey]: { ...section, imageLayout: e.target.value as 'single' | 'grid' }
-                          })}
-                          className="bg-slate-950/50 border border-orange-500/30 px-3 py-2 rounded text-white text-sm focus:border-orange-500 focus:outline-none"
-                        >
-                          <option value="single">תמונה גדולה</option>
-                          <option value="grid">Grid 4 תמונות</option>
-                        </select>
+                        {sectionKey !== 'applications' && (
+                          <select
+                            value={(section as any).imageLayout || 'single'}
+                            onChange={(e) => setFormData({
+                              ...formData,
+                              [sectionKey]: { ...section, imageLayout: e.target.value as 'single' | 'grid' }
+                            })}
+                            className="bg-slate-950/50 border border-orange-500/30 px-3 py-2 rounded text-white text-sm focus:border-orange-500 focus:outline-none"
+                          >
+                            <option value="single">תמונה גדולה</option>
+                            <option value="grid">Grid 4 תמונות</option>
+                          </select>
+                        )}
                       </div>
 
                       <div>
                         <label className="block text-xs text-gray-400 mb-2">
                           📤 העלה תמונות
-                          {(section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
+                          {sectionKey === 'applications' ? ' (עד 4 תמונות)' : (section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
                         </label>
                         <CldUploadWidget
                           uploadPreset="sharon_portfolio"
@@ -796,6 +798,13 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             const url = result.info.secure_url
                             const sectionData = formData[sectionKey as keyof BrandCaseStudy] as any
                             if (sectionData) {
+                              const maxImages = sectionKey === 'applications' ? 4 : Infinity
+                              const currentCount = (sectionData.images || []).length
+                              if (currentCount >= maxImages) {
+                                setMessage({ type: 'error', text: `❌ Maximum ${maxImages} images allowed` })
+                                setTimeout(() => setMessage(null), 3000)
+                                return
+                              }
                               setFormData({
                                 ...formData,
                                 [sectionKey]: {

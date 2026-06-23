@@ -597,7 +597,22 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         const isShapeSection = sectionKey === 'shape'
         const isApplicationsSection = sectionKey === 'applications'
         const hasTwoImages = section.images && section.images.length === 2
+        const imagesCount = section.images?.length || 0
         const isFullWidthImage = isIdeaSection || isSystemSection || hasTwoImages || isApplicationsSection
+
+        // Determine grid layout for applications (photos grid)
+        let applicationsGridClass = 'grid-cols-1'
+        if (isApplicationsSection && imagesCount > 0) {
+          if (imagesCount === 1) {
+            applicationsGridClass = 'grid-cols-1 max-w-2xl'
+          } else if (imagesCount === 2) {
+            applicationsGridClass = 'grid-cols-2'
+          } else if (imagesCount === 3) {
+            applicationsGridClass = 'grid-cols-3'
+          } else {
+            applicationsGridClass = 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-2'
+          }
+        }
         let isImageLeft = sectionIdx % 2 === 0
         if (isSystemSection) {
           isImageLeft = true // Image always on left in System section
@@ -608,16 +623,16 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             {hasImages && (
               <div className={`${isFullWidthImage ? 'w-full' : 'w-full sm:w-1/2'} flex items-center justify-center overflow-hidden order-2 ${isFullWidthImage && isImageLeft ? 'sm:order-1' : ''}`}>
                 <div className={`w-full flex items-center justify-center ${isFullWidthImage ? 'p-0' : 'p-8'}`}>
-                  <div className={`${isApplicationsSection ? 'grid gap-2 sm:gap-6 w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-6xl' : 'grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-4xl'}`}>
+                  <div className={`${isApplicationsSection ? `grid ${applicationsGridClass} w-full gap-2 sm:gap-4` : isFullWidthImage ? (hasTwoImages ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full' : 'grid grid-cols-1 gap-0 w-full') : isShapeSection ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-6xl' : 'grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-4xl'}`}>
                     {section.images.map((img: any, idx: number) => {
                       const imageId = `${sectionKey}-${idx}`
                       const imgUrl = typeof img === 'string' ? img : img.url
                       return (
-                        <div key={idx} className={isFullWidthImage ? "w-full h-auto" : "aspect-square overflow-hidden rounded-lg"}>
+                        <div key={idx} className={isApplicationsSection ? "w-full h-auto overflow-hidden rounded-lg" : isFullWidthImage ? "w-full h-auto" : "aspect-square overflow-hidden rounded-lg"}>
                           <img
                             src={imgUrl}
                             alt={`${sectionLabel} ${idx + 1}`}
-                            className={`${isFullWidthImage ? 'w-full h-auto' : 'w-full h-full'} object-contain`}
+                            className={`${isApplicationsSection ? 'w-full h-auto object-contain' : isFullWidthImage ? 'w-full h-auto' : 'w-full h-full'} object-contain`}
                             loading="lazy"
                           />
                         </div>
