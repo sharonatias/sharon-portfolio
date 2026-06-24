@@ -510,7 +510,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
           const isWhiteTitle = section.title?.includes('system that works everywhere')
           const isClientStories = sectionKey === 'custom_testimonials' || section.title?.includes('What Clients Say')
-          const pbClass = isWhiteTitle ? 'pb-8 lg:pb-12' : 'pb-24 lg:pb-32'
+          const pbClass = 'pb-6 lg:pb-8'
           const ptClass = isClientStories ? 'pt-12 lg:pt-16' : isCleanSection ? 'pt-32 sm:pt-[24rem] lg:pt-[32rem]' : (isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-[32rem] lg:pt-[48rem]')
 
           return (
@@ -545,7 +545,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
                         const imgUrl = typeof img === 'string' ? img : img.url
                         return (
-                          <div key={imgIdx} className="overflow-hidden rounded-lg h-80">
+                          <div key={imgIdx} className="overflow-hidden rounded-lg h-[420px]">
                             <img
                               src={imgUrl}
                               alt={`${sectionLabel} ${imgIdx + 1}`}
