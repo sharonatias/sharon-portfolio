@@ -815,12 +815,20 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             const url = result.info.secure_url
                             const sectionData = formData[sectionKey as keyof BrandCaseStudy] as any
                             if (sectionData) {
-                              const maxImages = sectionKey === 'applications' ? 4 : Infinity
+                              // Determine max images based on layout
+                              let maxImages = Infinity
+                              if (sectionKey === 'applications') {
+                                maxImages = 4
+                              } else if ((sectionData as any).imageLayout === 'grid') {
+                                maxImages = 4
+                              } else if ((sectionData as any).imageLayout === 'single') {
+                                maxImages = 1
+                              }
                               const currentCount = (sectionData.images || []).length
-                              console.log(`🔍 Upload check: sectionKey=${sectionKey}, currentCount=${currentCount}, maxImages=${maxImages}`)
+                              console.log(`🔍 Upload check: sectionKey=${sectionKey}, layout=${(sectionData as any).imageLayout}, currentCount=${currentCount}, maxImages=${maxImages}`)
                               if (currentCount >= maxImages) {
                                 console.log(`❌ Max reached: ${currentCount} >= ${maxImages}`)
-                                setMessage({ type: 'error', text: `❌ Maximum ${maxImages} images allowed` })
+                                setMessage({ type: 'error', text: `❌ Maximum ${maxImages} ${maxImages === 1 ? 'image' : 'images'} allowed` })
                                 setTimeout(() => setMessage(null), 3000)
                                 return
                               }
