@@ -510,8 +510,8 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
           const isWhiteTitle = section.title?.includes('system that works everywhere')
           const isClientStories = sectionKey === 'custom_testimonials' || section.title?.includes('What Clients Say')
-          const pbClass = 'pb-6 lg:pb-8'
-          const ptClass = isClientStories ? 'pt-12 lg:pt-16' : isCleanSection ? 'pt-32 sm:pt-[24rem] lg:pt-[32rem]' : (isWhiteTitle ? 'pt-24 lg:pt-32' : 'pt-[32rem] lg:pt-[48rem]')
+          const pbClass = 'pb-4 lg:pb-6'
+          const ptClass = isClientStories ? 'pt-8 lg:pt-10' : isCleanSection ? 'pt-32 sm:pt-[24rem] lg:pt-[32rem]' : (isWhiteTitle ? 'pt-16 lg:pt-20' : 'pt-12 lg:pt-16')
 
           return (
             <section key={sectionKey} style={sectionStyle} className={`flex flex-col sm:flex-row items-center ${ptClass} ${pbClass} relative`}>
@@ -575,12 +575,12 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       </div>
                     </div>
                   ) : (
-                    <div className={`w-full ${isCleanSection ? 'max-w-2xl' : 'max-w-6xl'} flex items-center justify-center`}>
-                      <div className="overflow-hidden rounded-lg w-full">
+                    <div className={`w-full flex items-center justify-center`}>
+                      <div className="overflow-hidden w-auto">
                         <img
                           src={typeof section.images[0] === 'string' ? section.images[0] : section.images[0].url}
                           alt={sectionLabel}
-                          className="w-full h-auto object-contain"
+                          className="h-auto object-contain"
                           loading="lazy"
                         />
                       </div>
