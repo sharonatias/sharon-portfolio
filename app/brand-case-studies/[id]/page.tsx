@@ -541,7 +541,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               {hasImages && (
                 <div className={`${sectionKey === 'applications' ? 'w-full' : isCleanSection ? 'w-full' : 'w-full sm:w-3/4'} flex items-center justify-center ${sectionKey === 'applications' ? 'px-0' : 'px-4 sm:px-12'} order-2 relative z-10`}>
                   {imageLayout === 'grid' ? (
-                    <div className="grid grid-cols-4 gap-8 w-full max-w-7xl">
+                    <div className="grid grid-cols-4 gap-2 w-full max-w-7xl">
                       {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
                         const imgUrl = typeof img === 'string' ? img : img.url
                         return (
