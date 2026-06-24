@@ -636,10 +636,9 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         onClick={() => {
                           const isStandardSection = SECTION_NAMES.includes(sectionKey as any)
                           const newSectionKey = isStandardSection ? `custom_${Date.now()}` : `${sectionKey}_${Date.now()}`
-                          setFormData({
-                            ...formData,
-                            [newSectionKey]: JSON.parse(JSON.stringify(section))
-                          })
+                          const newFormData = { ...formData }
+                          newFormData[newSectionKey as any] = JSON.parse(JSON.stringify(section))
+                          setFormData(newFormData)
                           setSectionOrder([...sectionOrder, newSectionKey])
                         }}
                         className="px-3 py-1 text-xs bg-blue-600/20 text-blue-400 rounded hover:bg-blue-600/40 transition-all"
