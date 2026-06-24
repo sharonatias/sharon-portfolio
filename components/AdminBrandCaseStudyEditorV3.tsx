@@ -1088,66 +1088,68 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
 
           {activeTab === 'applications' && (
             <div className="space-y-4 max-w-3xl">
-              <label className="block text-sm text-gray-400 mb-4">Brand Applications / Mockups</label>
-              <button
-                onClick={() => {
-                  const input = document.createElement('input')
-                  input.type = 'file'
-                  input.accept = 'image/*'
-                  input.onchange = async (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0]
-                    if (file) {
-                      setUploading(true)
-                      const formDataUpload = new FormData()
-                      formDataUpload.append('file', file)
-                      try {
-                        const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload })
-                        const data = await res.json()
-                        if (res.ok) {
-                          setFormData({
-                            ...formData,
-                            brand_applications: [...(formData.brand_applications || []), { id: Date.now().toString(), name: 'Application', images: [data.url], position: 'after', section: 'applications' }]
-                          })
-                          setMessage({ type: 'success', text: `✅ Image uploaded` })
-                          setTimeout(() => setMessage(null), 3000)
-                        }
-                      } catch (error) {
-                        setMessage({ type: 'error', text: '❌ Upload failed' })
-                        setTimeout(() => setMessage(null), 3000)
-                      } finally {
-                        setUploading(false)
-                      }
+              <label className="block text-sm text-gray-400 mb-4">Photos Grid (עד 4 תמונות)</label>
+              <CldUploadWidget
+                uploadPreset="sharon_portfolio"
+                onSuccess={(result: any) => {
+                  const url = result.info.secure_url
+                  const currentApplications = formData.applications as any
+                  if (currentApplications) {
+                    const currentCount = (currentApplications.images || []).length
+                    if (currentCount >= 4) {
+                      setMessage({ type: 'error', text: `❌ Maximum 4 images allowed` })
+                      setTimeout(() => setMessage(null), 3000)
+                      return
                     }
+                    setFormData({
+                      ...formData,
+                      applications: {
+                        ...currentApplications,
+                        images: [...(currentApplications.images || []), url]
+                      }
+                    })
+                    setMessage({ type: 'success', text: `✅ Image uploaded` })
+                    setTimeout(() => setMessage(null), 3000)
                   }
-                  input.click()
                 }}
-                disabled={uploading}
-                className="w-full px-4 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/40 transition-all disabled:opacity-50"
+                onError={() => {
+                  setMessage({ type: 'error', text: `❌ Upload failed` })
+                  setTimeout(() => setMessage(null), 5000)
+                }}
               >
-                {uploading ? '⏳ Uploading...' : '📱 Add Application Image'}
-              </button>
+                {({ open }) => (
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    className="w-full px-4 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/40 transition-all"
+                  >
+                    📱 בחר תמונה
+                  </button>
+                )}
+              </CldUploadWidget>
 
-              {formData.brand_applications && formData.brand_applications.length > 0 && (
+              {(formData.applications as any)?.images && (formData.applications as any).images.length > 0 && (
                 <div className="space-y-3 mt-4">
-                  {(formData.brand_applications as unknown as any[]).map((app, idx) => (
-                    <div key={app.id} className="p-3 bg-slate-950/30 rounded">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-300">{app.name}</span>
+                  <div className="text-xs text-gray-500 mb-2">תמונות שהועלו ({(formData.applications as any).images.length}/4):</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(formData.applications as any).images.map((img: any, imgIdx: number) => (
+                      <div key={imgIdx} className="relative group">
+                        <img src={typeof img === 'string' ? img : img.url} alt={`Photo ${imgIdx + 1}`} className="w-full h-24 object-cover rounded" />
                         <button
                           onClick={() => setFormData({
                             ...formData,
-                            brand_applications: (formData.brand_applications || []).filter((_, i) => i !== idx)
+                            applications: {
+                              ...formData.applications,
+                              images: (formData.applications as any).images.filter((_: any, i: number) => i !== imgIdx)
+                            }
                           })}
-                          className="text-red-400 hover:text-red-300 text-xs"
+                          className="absolute top-1 right-1 bg-red-600/80 hover:bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          ✕ Delete
+                          ✕
                         </button>
                       </div>
-                      {app.images && app.images.map((img, imgIdx) => (
-                        <img key={imgIdx} src={img} alt={`${app.name} ${imgIdx + 1}`} className="w-full h-24 object-cover rounded mb-2" />
-                      ))}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
