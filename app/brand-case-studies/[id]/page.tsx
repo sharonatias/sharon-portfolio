@@ -545,7 +545,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
                       {section.images.slice(0, 4).map((img: any, imgIdx: number) => {
                         const imgUrl = typeof img === 'string' ? img : img.url
                         return (
-                          <div key={imgIdx} className="overflow-hidden rounded-lg h-[420px]">
+                          <div key={imgIdx} className="overflow-hidden w-[420px] h-[420px]">
                             <img
                               src={imgUrl}
                               alt={`${sectionLabel} ${imgIdx + 1}`}
