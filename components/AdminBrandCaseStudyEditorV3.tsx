@@ -636,10 +636,16 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                         onClick={() => {
                           const isStandardSection = SECTION_NAMES.includes(sectionKey as any)
                           const newSectionKey = isStandardSection ? `custom_${Date.now()}` : `${sectionKey}_${Date.now()}`
+                          const duplicatedSection = JSON.parse(JSON.stringify(section))
+                          // Ensure all properties are copied
+                          if (!duplicatedSection.imageLayout && (section as any).imageLayout) {
+                            duplicatedSection.imageLayout = (section as any).imageLayout
+                          }
                           const newFormData = { ...formData }
-                          newFormData[newSectionKey as any] = JSON.parse(JSON.stringify(section))
+                          newFormData[newSectionKey as any] = duplicatedSection
                           setFormData(newFormData)
                           setSectionOrder([...sectionOrder, newSectionKey])
+                          console.log('✅ Section duplicated:', { original: sectionKey, duplicate: newSectionKey, order: [...sectionOrder, newSectionKey] })
                         }}
                         className="px-3 py-1 text-xs bg-blue-600/20 text-blue-400 rounded hover:bg-blue-600/40 transition-all"
                       >
