@@ -817,11 +817,108 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                       </div>
 
                       <div>
-                        <label className="block text-xs text-gray-400 mb-2">
-                          📤 העלה תמונות
-                          {sectionKey === 'applications' ? ' (עד 4 תמונות)' : (section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
-                        </label>
-                        <CldUploadWidget
+                        {(section as any).imageLayout === 'hover-grid' ? (
+                          // Hover Grid Upload Interface
+                          <div className="space-y-4">
+                            <label className="block text-xs text-gray-400 mb-2">📤 העלה זוגות תמונות (Main + Hover)</label>
+                            <div className="space-y-3">
+                              {((section as any).images || []).map((img: any, idx: number) => {
+                                const isObject = typeof img === 'object' && img.main
+                                const mainImg = isObject ? img.main : img
+                                const hoverImg = isObject ? img.hover : null
+                                return (
+                                  <div key={idx} className="bg-slate-950/30 p-3 rounded border border-orange-500/20">
+                                    <div className="flex justify-between items-center mb-2">
+                                      <span className="text-xs text-gray-400">Slot {idx + 1}</span>
+                                      <button
+                                        onClick={() => {
+                                          const newImages = ((section as any).images || []).filter((_: any, i: number) => i !== idx)
+                                          setFormData({
+                                            ...formData,
+                                            [sectionKey]: { ...section, images: newImages }
+                                          })
+                                        }}
+                                        className="text-red-400 hover:text-red-300 text-xs"
+                                      >
+                                        ✕ Delete
+                                      </button>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 mb-2">
+                                      {mainImg && <img src={mainImg} alt="Main" className="w-full h-16 object-cover rounded" />}
+                                      {hoverImg && <img src={hoverImg} alt="Hover" className="w-full h-16 object-cover rounded opacity-60" />}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-xs">
+                                      <CldUploadWidget
+                                        uploadPreset="sharon_portfolio"
+                                        onSuccess={(result: any) => {
+                                          const url = result.info.secure_url
+                                          const images = [...((section as any).images || [])]
+                                          images[idx] = typeof images[idx] === 'object' ? { ...images[idx], main: url } : { main: url, hover: undefined }
+                                          setFormData({
+                                            ...formData,
+                                            [sectionKey]: { ...section, images }
+                                          })
+                                        }}
+                                      >
+                                        {({ open }) => (
+                                          <button onClick={() => open()} className="px-2 py-1 bg-blue-600/20 text-blue-400 rounded hover:bg-blue-600/40 text-xs">
+                                            📸 Main
+                                          </button>
+                                        )}
+                                      </CldUploadWidget>
+                                      <CldUploadWidget
+                                        uploadPreset="sharon_portfolio"
+                                        onSuccess={(result: any) => {
+                                          const url = result.info.secure_url
+                                          const images = [...((section as any).images || [])]
+                                          images[idx] = { ...(typeof images[idx] === 'object' ? images[idx] : { main: images[idx] }), hover: url }
+                                          setFormData({
+                                            ...formData,
+                                            [sectionKey]: { ...section, images }
+                                          })
+                                        }}
+                                      >
+                                        {({ open }) => (
+                                          <button onClick={() => open()} className="px-2 py-1 bg-purple-600/20 text-purple-400 rounded hover:bg-purple-600/40 text-xs">
+                                            ✨ Hover
+                                          </button>
+                                        )}
+                                      </CldUploadWidget>
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                            {((section as any).images?.length || 0) < 99 && (
+                              <CldUploadWidget
+                                uploadPreset="sharon_portfolio"
+                                onSuccess={(result: any) => {
+                                  const url = result.info.secure_url
+                                  setFormData({
+                                    ...formData,
+                                    [sectionKey]: {
+                                      ...section,
+                                      images: [...((section as any).images || []), { main: url, hover: undefined }]
+                                    }
+                                  })
+                                }}
+                              >
+                                {({ open }) => (
+                                  <button onClick={() => open()} className="w-full px-3 py-2 bg-orange-600/20 text-orange-400 rounded hover:bg-orange-600/40 text-sm">
+                                    ➕ Add Image Pair
+                                  </button>
+                                )}
+                              </CldUploadWidget>
+                            )}
+                          </div>
+                        ) : (
+                          // Regular Upload Interface
+                          <>
+                            <label className="block text-xs text-gray-400 mb-2">
+                              📤 העלה תמונות
+                              {sectionKey === 'applications' ? ' (עד 4 תמונות)' : (section as any).imageLayout === 'grid' ? ' (עד 4 תמונות לגריד)' : ''}
+                            </label>
+                            <CldUploadWidget
                           uploadPreset="sharon_portfolio"
                           onSuccess={(result: any) => {
                             const url = result.info.secure_url
@@ -869,7 +966,9 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                               📤 בחר תמונה
                             </button>
                           )}
-                        </CldUploadWidget>
+                            </CldUploadWidget>
+                          </>
+                        )}
                       </div>
 
                       {section.images && section.images.length > 0 && (
