@@ -196,7 +196,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         )}
 
         {/* Hero Content */}
-        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-20 pb-8 sm:pb-20">
+        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-20 pb-[calc(2rem-75px)] sm:pb-[calc(5rem-75px)]">
           <div className="max-w-4xl">
             {/* Categories */}
             <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-8 flex-wrap">
@@ -222,7 +222,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               <p className="text-sm sm:text-lg lg:text-2xl mb-3 sm:mb-6 font-light" style={{color: '#4ade80'}}>{caseStudy.subtitle}</p>
             )}
             {caseStudy.hero_description && (
-              <p className="text-xs sm:text-base lg:text-lg text-gray-600 leading-relaxed max-w-2xl font-light">{caseStudy.hero_description}</p>
+              <p className="text-xs sm:text-base lg:text-lg text-gray-200 leading-relaxed max-w-3xl font-light text-center">{caseStudy.hero_description}</p>
             )}
           </div>
         </div>
