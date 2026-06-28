@@ -30,13 +30,16 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
 
   const handleSave = async () => {
     setSaving(true)
+    console.log('💾 handleSave called with formData:', formData)
     try {
       await onSave(formData)
       setMessage({ type: 'success', text: '✅ Saved successfully!' })
+      console.log('✅ Save completed')
       setTimeout(() => {
         setMessage(null)
       }, 2000)
     } catch (error) {
+      console.error('❌ Save error:', error)
       setMessage({ type: 'error', text: `❌ ${error instanceof Error ? error.message : 'Error saving'}` })
       setTimeout(() => setMessage(null), 3000)
     } finally {
