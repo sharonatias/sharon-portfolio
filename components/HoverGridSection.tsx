@@ -40,7 +40,7 @@ export default function HoverGridSection({ title, images, gap = 4 }: HoverGridSe
         </h2>
 
         {/* Grid */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${gapClass} w-full auto-rows-max`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 ${gapClass} w-full auto-rows-max`}>
           {hoverImages.map((img, idx) => (
             <div
               key={idx}
@@ -52,7 +52,7 @@ export default function HoverGridSection({ title, images, gap = 4 }: HoverGridSe
               <img
                 src={img.main}
                 alt={`Image ${idx + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${
                   hoveredIndex === idx ? 'opacity-0' : 'opacity-100'
                 }`}
                 loading="lazy"
@@ -63,7 +63,7 @@ export default function HoverGridSection({ title, images, gap = 4 }: HoverGridSe
                 <img
                   src={img.hover}
                   alt={`Image ${idx + 1} Hover`}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${
                     hoveredIndex === idx ? 'opacity-100' : 'opacity-0'
                   }`}
                   loading="lazy"
