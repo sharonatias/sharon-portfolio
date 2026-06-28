@@ -266,8 +266,8 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       {caseStudy.central_description && (
         <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-8 lg:px-20">
           <div className="max-w-2xl mx-auto">
-            <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed lg:leading-[1.8] text-gray-800 font-light text-center whitespace-pre-wrap break-words">
-              {caseStudy.central_description}
+            <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed lg:leading-[1.8] text-gray-800 font-light text-center">
+              {caseStudy.central_description.replace(/\s+/g, ' ')}
             </p>
           </div>
         </section>
