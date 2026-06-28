@@ -19,6 +19,7 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
   const fileInputRef = useRef<HTMLInputElement>(null)
   const galleryFileInputRef = useRef<HTMLInputElement>(null)
   const attachmentInputRef = useRef<HTMLInputElement>(null)
+  const videoInputRef = useRef<HTMLInputElement>(null)
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: 'basic', label: 'Basic', icon: '📋' },
@@ -71,6 +72,18 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
   const removeGalleryImage = (index: number) => {
     const images = formData.images?.filter((_, i) => i !== index) || []
     setFormData({ ...formData, images })
+  }
+
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string
+        setFormData({ ...formData, video_url: dataUrl })
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   const handleAttachmentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,12 +235,38 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
                 className="w-full bg-slate-950/50 border border-green-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-green-500 focus:outline-none"
               />
 
-              <input
-                placeholder="Video Link"
-                value={formData.video_url || ''}
-                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                className="w-full bg-slate-950/50 border border-green-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-green-500 focus:outline-none"
-              />
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Video</label>
+                <button
+                  onClick={() => videoInputRef.current?.click()}
+                  className="w-full mb-3 px-4 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/40 transition-all duration-300"
+                >
+                  🎥 Upload Video File
+                </button>
+                <input
+                  ref={videoInputRef}
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  className="hidden"
+                />
+                <input
+                  placeholder="Or paste video URL"
+                  value={formData.video_url || ''}
+                  onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                  className="w-full bg-slate-950/50 border border-green-500/30 px-4 py-3 rounded-lg text-white placeholder-gray-600 focus:border-green-500 focus:outline-none"
+                />
+                {formData.video_url && (
+                  <div className="mt-3">
+                    <button
+                      onClick={() => setFormData({ ...formData, video_url: '' })}
+                      className="px-3 py-1.5 bg-red-600/20 text-red-400 rounded text-sm hover:bg-red-600/40 transition-all"
+                    >
+                      🗑️ Remove Video
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Attachments (PDF, DOC, etc.)</label>
