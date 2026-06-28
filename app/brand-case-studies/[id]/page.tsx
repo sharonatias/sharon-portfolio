@@ -153,7 +153,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         {/* Header - Positioned on Hero */}
         <header className="absolute top-0 left-0 right-0 z-50 px-8 lg:px-20 pt-6">
           <Link href="/" className="hover:opacity-70 transition inline-block">
-            <h1 className="text-xl font-light tracking-widest text-black">SHARON MOSHE ATTIAS</h1>
+            <h1 className="text-xl font-light tracking-widest text-white">SHARON MOSHE ATTIAS</h1>
           </Link>
         </header>
 
