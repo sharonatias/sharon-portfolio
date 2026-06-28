@@ -7,10 +7,11 @@ import PageEditorV3 from './AdminPageEditorV3'
 import ProjectsAdminV3 from './AdminProjectsV3'
 import CaseStudiesAdminV3 from './AdminCaseStudiesV3'
 import BrandCaseStudiesAdminV3 from './AdminBrandCaseStudies'
+import BrandDesignsAdminV3 from './AdminBrandDesignsV3'
 import AdminAboutEditorV3 from './AdminAboutEditorV3'
 import SettingsAdminV3 from './AdminSettingsV3'
 
-type AdminPage = 'home' | 'cases' | 'brand_cases' | 'about' | 'projects' | 'settings'
+type AdminPage = 'home' | 'cases' | 'brand_cases' | 'brand_designs' | 'about' | 'projects' | 'settings'
 
 export default function AdminV3() {
   const router = useRouter()
@@ -54,6 +55,7 @@ export default function AdminV3() {
             {currentPage === 'home' && '🏠 Home'}
             {currentPage === 'cases' && '🎬 Film Case Studies'}
             {currentPage === 'brand_cases' && '🎨 Brand Case Studies'}
+            {currentPage === 'brand_designs' && '🎨 Brand Designs'}
             {currentPage === 'about' && '📖 About Page'}
             {currentPage === 'projects' && '📊 Projects'}
             {currentPage === 'settings' && '⚙️ Settings'}
@@ -65,6 +67,7 @@ export default function AdminV3() {
           {currentPage === 'home' && <PageEditorV3 />}
           {currentPage === 'cases' && <CaseStudiesAdminV3 />}
           {currentPage === 'brand_cases' && <BrandCaseStudiesAdminV3 />}
+          {currentPage === 'brand_designs' && <BrandDesignsAdminV3 />}
           {currentPage === 'about' && <AdminAboutEditorV3 />}
           {currentPage === 'projects' && <ProjectsAdminV3 />}
           {currentPage === 'settings' && <SettingsAdminV3 />}

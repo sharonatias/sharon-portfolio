@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-type AdminPage = 'home' | 'cases' | 'brand_cases' | 'about' | 'projects' | 'settings'
+type AdminPage = 'home' | 'cases' | 'brand_cases' | 'brand_designs' | 'about' | 'projects' | 'settings'
 
 interface AdminNavProps {
   currentPage: AdminPage
@@ -13,6 +13,7 @@ const menuItems = [
   { id: 'home' as AdminPage, label: 'Home', icon: '🏠', color: 'from-blue-500 to-cyan-500' },
   { id: 'cases' as AdminPage, label: 'Film Case Studies', icon: '🎬', color: 'from-purple-500 to-pink-500' },
   { id: 'brand_cases' as AdminPage, label: 'Brand Case Studies', icon: '🎨', color: 'from-orange-500 to-amber-500' },
+  { id: 'brand_designs' as AdminPage, label: 'Brand Designs', icon: '✨', color: 'from-pink-500 to-rose-500' },
   { id: 'about' as AdminPage, label: 'About Page', icon: '📖', color: 'from-indigo-500 to-purple-500' },
   { id: 'projects' as AdminPage, label: 'Projects', icon: '📊', color: 'from-green-500 to-emerald-500' },
   { id: 'settings' as AdminPage, label: 'Settings', icon: '⚙️', color: 'from-red-500 to-pink-500' },
