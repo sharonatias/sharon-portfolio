@@ -26,18 +26,31 @@ export default function ProjectsAdminV3() {
   }
 
   const handleSave = async (updatedProject: Project) => {
-    if (!editingProject?.id) return
-
     try {
-      const res = await fetch(`/api/projects/${editingProject.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProject)
-      })
+      if (editingProject?.id) {
+        // Update existing project
+        const res = await fetch(`/api/projects/${editingProject.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedProject)
+        })
 
-      if (res.ok) {
-        setEditingProject(null)
-        loadProjects()
+        if (res.ok) {
+          setEditingProject(null)
+          loadProjects()
+        }
+      } else {
+        // Create new project
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedProject)
+        })
+
+        if (res.ok) {
+          setEditingProject(null)
+          loadProjects()
+        }
       }
     } catch (error) {
       console.error('Error saving:', error)
