@@ -122,7 +122,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
   return (
     <div className="bg-white text-black overflow-x-hidden">
       {/* Hero Section - Full Height */}
-      <section className="relative w-screen h-screen overflow-hidden -mx-[calc((100vw-100%)/2)] flex items-end -mb-[300px]">
+      <section className="relative w-screen h-[calc(100vh-300px)] overflow-hidden -mx-[calc((100vw-100%)/2)] flex items-end">
         {/* Hero Video Background */}
         {(caseStudy as any).hero_video && (
           <>
