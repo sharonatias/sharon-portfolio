@@ -224,11 +224,11 @@ export interface BrandCaseStudy {
     title: string
     subtitle?: string
     description: string
-    images: string[]
+    images: string[] | Array<{ main: string; hover?: string }>
     number?: string
     backgroundColor?: string
     backgroundImage?: string
-    imageLayout?: 'single' | 'grid'
+    imageLayout?: 'single' | 'grid' | 'hover-grid'
   }>
 
   category?: Category

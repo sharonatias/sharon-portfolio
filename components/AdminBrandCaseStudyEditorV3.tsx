@@ -805,12 +805,13 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
                             value={(section as any).imageLayout || 'single'}
                             onChange={(e) => setFormData({
                               ...formData,
-                              [sectionKey]: { ...section, imageLayout: e.target.value as 'single' | 'grid' }
+                              [sectionKey]: { ...section, imageLayout: e.target.value as 'single' | 'grid' | 'hover-grid' }
                             })}
                             className="bg-slate-950/50 border border-orange-500/30 px-3 py-2 rounded text-white text-sm focus:border-orange-500 focus:outline-none"
                           >
                             <option value="single">תמונה גדולה</option>
                             <option value="grid">Grid 4 תמונות</option>
+                            <option value="hover-grid">Hover Grid (עד 3 תמונות בשורה)</option>
                           </select>
                         )}
                       </div>

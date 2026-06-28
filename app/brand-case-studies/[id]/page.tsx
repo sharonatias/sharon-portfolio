@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { BrandCaseStudy } from '@/lib/types'
+import HoverGridSection from '@/components/HoverGridSection'
 
 const SECTION_LABELS: { [key: string]: string } = {
   idea: 'Idea',
@@ -480,6 +481,18 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
         const isCustomSection = sectionKey.startsWith('custom_') || sectionKey.startsWith('premium_')
         const sectionLabel = (section as any).label || ''
 
+
+        // Check for hover-grid layout first
+        if (isCustomSection && (section as any).imageLayout === 'hover-grid') {
+          return (
+            <HoverGridSection
+              key={sectionKey}
+              title={section.title || ''}
+              images={section.images || []}
+              gap={4}
+            />
+          )
+        }
 
         // Custom section with 25/75 layout
         if (isCustomSection) {
