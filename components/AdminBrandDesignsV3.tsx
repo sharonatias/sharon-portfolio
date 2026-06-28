@@ -96,11 +96,27 @@ export default function BrandDesignsAdminV3() {
   return (
     <div className="p-8">
       {editingDesign && (
-        <BrandDesignForm
-          design={editingDesign}
-          onSave={handleSave}
-          onClose={() => setEditingDesign(null)}
-        />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-slate-950 p-6 border-b border-blue-500/20 flex justify-between items-center">
+              <h2 className="text-2xl font-light text-orange-400">Edit Brand Design</h2>
+              <button
+                onClick={() => setEditingDesign(null)}
+                className="text-gray-400 hover:text-white text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-6">
+              <BrandDesignForm
+                project={editingDesign}
+                onSave={async (updatedDesign) => {
+                  await handleSave(updatedDesign)
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
 
       <div>
