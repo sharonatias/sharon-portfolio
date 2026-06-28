@@ -260,8 +260,8 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Central Description - Large */}
       {caseStudy.central_description && (
-        <section className="py-0 px-4 sm:px-8 lg:px-20 -ml-0 sm:-ml-16 lg:-ml-32 mb-12 lg:mb-16">
-          <div className="max-w-md sm:max-w-lg lg:max-w-2xl mx-auto">
+        <section className="py-0 px-4 sm:px-8 lg:px-20 mb-12 lg:mb-16">
+          <div className="max-w-md sm:max-w-lg lg:max-w-2xl mx-auto text-center">
             <div className="text-sm sm:text-base lg:text-2xl xl:text-3xl leading-relaxed lg:leading-relaxed text-black font-light">
               {caseStudy.central_description.split('\n').map((line, i) => {
                 const words = line.split(' ').filter(w => w.length > 0)
