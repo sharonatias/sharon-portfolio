@@ -125,14 +125,18 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       <section className="relative w-screen h-screen overflow-hidden -mx-[calc((100vw-100%)/2)] flex items-end">
         {/* Hero Video Background */}
         {(caseStudy as any).hero_video && (
-          <video
-            className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-          >
-            <source src={(caseStudy as any).hero_video} type="video/mp4" />
-          </video>
+          <>
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+            >
+              <source src={(caseStudy as any).hero_video} type="video/mp4" />
+            </video>
+            {/* Dark Overlay - 60% black */}
+            <div className="absolute inset-0 bg-black opacity-60" />
+          </>
         )}
 
         {/* Hero Image Background */}
