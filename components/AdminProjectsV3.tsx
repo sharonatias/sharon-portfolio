@@ -127,8 +127,18 @@ export default function ProjectsAdminV3() {
                 />
               )}
 
+              {!project.image_url && project.video_url && (
+                <div className="w-full h-32 bg-black/50 rounded-lg mb-4 flex items-center justify-center group-hover:bg-black/70 transition-colors">
+                  <span className="text-2xl">🎥</span>
+                </div>
+              )}
+
               <h3 className="text-sm font-light text-white mb-2">{project.title}</h3>
               <p className="text-xs text-gray-500 mb-4">{project.category}</p>
+
+              {project.video_url && (
+                <p className="text-xs text-blue-400 mb-3 truncate">📹 {project.video_url.substring(0, 40)}...</p>
+              )}
 
               <div className="flex gap-2">
                 <button
