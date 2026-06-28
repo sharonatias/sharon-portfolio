@@ -141,10 +141,14 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
         {/* Hero Image Background */}
         {!((caseStudy as any).hero_video) && caseStudy.hero_image && (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${caseStudy.hero_image})` }}
-          />
+          <>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${caseStudy.hero_image})` }}
+            />
+            {/* Dark Overlay - 30% black */}
+            <div className="absolute inset-0 bg-black opacity-30" />
+          </>
         )}
 
         {/* Overlay */}
