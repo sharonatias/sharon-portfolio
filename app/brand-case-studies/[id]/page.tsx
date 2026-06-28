@@ -264,52 +264,11 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
       {/* Central Description - Large */}
       {caseStudy.central_description && (
-        <section className="py-0 px-4 sm:px-8 lg:px-20 mb-12 lg:mb-16">
-          <div className="max-w-md sm:max-w-lg lg:max-w-2xl mx-auto text-center">
-            <div className="text-sm sm:text-base lg:text-2xl xl:text-3xl leading-relaxed lg:leading-relaxed text-black font-light">
-              {caseStudy.central_description.split('\n').map((line, i) => {
-                const words = line.split(' ').filter(w => w.length > 0)
-                const wordsPerLine = isMobile ? 6 : 12
-                const lines = []
-                for (let i = 0; i < words.length; i += wordsPerLine) {
-                  lines.push(words.slice(i, i + wordsPerLine))
-                }
-                let globalWordCount = 0
-                return (
-                  <div key={i}>
-                    {lines.map((lineWords, lineIdx) => (
-                      <div key={lineIdx} className="mb-2">
-                        {lineWords.map((word, j) => {
-                          globalWordCount++
-                          const isHighlight = word.length > 5 && Math.random() > 0.7
-                          if (isHighlight && caseStudy.color_palette && caseStudy.color_palette.length > 0) {
-                            const colorIndex = (globalWordCount - 1) % caseStudy.color_palette.length
-                            const nextColorIndex = (colorIndex + 1) % caseStudy.color_palette.length
-                            return (
-                              <span
-                                key={j}
-                                className="inline-block"
-                                style={{
-                                  background: `linear-gradient(135deg, ${caseStudy.color_palette[colorIndex]}, ${caseStudy.color_palette[nextColorIndex]})`,
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent',
-                                  backgroundClip: 'text',
-                                  fontWeight: '600',
-                                  marginRight: '0.35rem'
-                                }}
-                              >
-                                {word}
-                              </span>
-                            )
-                          }
-                          return <span key={j} className="inline" style={{marginRight: '0.35rem'}}>{word}</span>
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                )
-              })}
-            </div>
+        <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-8 lg:px-20">
+          <div className="max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed lg:leading-[1.8] text-gray-800 font-light text-center whitespace-pre-wrap break-words">
+              {caseStudy.central_description}
+            </p>
           </div>
         </section>
       )}
