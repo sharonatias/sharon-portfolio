@@ -44,7 +44,7 @@ export default function HoverGridSection({ title, images, gap = 4 }: HoverGridSe
           {hoverImages.map((img, idx) => (
             <div
               key={idx}
-              className="relative overflow-hidden bg-gray-100 w-full h-[280px] cursor-pointer group"
+              className="relative overflow-hidden bg-gray-100 w-full aspect-video cursor-pointer group"
               onMouseEnter={() => img.hover && setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
