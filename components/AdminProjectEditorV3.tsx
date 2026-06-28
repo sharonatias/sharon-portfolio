@@ -145,10 +145,10 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
 
         {/* Message */}
         {message && (
-          <div className={`px-6 pt-4 pb-0 ${
+          <div className={`mx-6 mt-4 px-4 py-3 rounded-lg font-semibold text-center ${
             message.type === 'success'
-              ? 'text-green-400'
-              : 'text-red-400'
+              ? 'bg-green-600/20 text-green-300 border border-green-600/50'
+              : 'bg-red-600/20 text-red-300 border border-red-600/50'
           }`}>
             {message.text}
           </div>
