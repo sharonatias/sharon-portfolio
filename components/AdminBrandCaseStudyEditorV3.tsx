@@ -143,6 +143,11 @@ export default function AdminBrandCaseStudyEditorV3({ caseStudy, onSave, onClose
       Object.keys(cleanedData).forEach((key) => {
         if ((key.startsWith('premium_') || key.startsWith('custom_')) && !standardSections.includes(key as any)) {
           const section = cleanedData[key]
+          // Skip deleted sections
+          if (section.isDeleted === true) {
+            delete cleanedData[key]
+            return
+          }
           // Ensure images are stored as array of strings
           if (section.images && Array.isArray(section.images)) {
             section.images = section.images.map((img: any) => typeof img === 'string' ? img : img.url || img)
