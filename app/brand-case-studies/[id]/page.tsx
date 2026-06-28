@@ -134,8 +134,8 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             >
               <source src={(caseStudy as any).hero_video} type="video/mp4" />
             </video>
-            {/* Dark Overlay - 60% black */}
-            <div className="absolute inset-0 bg-black opacity-60" />
+            {/* Dark Overlay - 30% black */}
+            <div className="absolute inset-0 bg-black opacity-30" />
           </>
         )}
 
@@ -219,7 +219,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
 
             <h1 className="text-3xl sm:text-4xl lg:text-7xl xl:text-8xl font-light mb-3 sm:mb-6 leading-tight text-white">{caseStudy.title}</h1>
             {caseStudy.subtitle && (
-              <p className="text-sm sm:text-lg lg:text-2xl mb-3 sm:mb-6 font-light" style={{color: '#4ade80'}}>{caseStudy.subtitle}</p>
+              <p className="text-sm sm:text-lg lg:text-2xl mb-3 sm:mb-6 font-light text-white">{caseStudy.subtitle}</p>
             )}
             {caseStudy.hero_description && (
               <p className="text-xs sm:text-base lg:text-lg text-gray-200 leading-relaxed max-w-2xl mx-auto font-light">{caseStudy.hero_description}</p>
