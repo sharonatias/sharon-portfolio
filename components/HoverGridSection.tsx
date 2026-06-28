@@ -40,11 +40,11 @@ export default function HoverGridSection({ title, images, gap = 4 }: HoverGridSe
         </h2>
 
         {/* Grid */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${gapClass} w-full`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${gapClass} w-full auto-rows-max`}>
           {hoverImages.map((img, idx) => (
             <div
               key={idx}
-              className="relative overflow-hidden bg-gray-100 h-96 cursor-pointer group"
+              className="relative overflow-hidden bg-gray-100 w-full h-[280px] cursor-pointer group"
               onMouseEnter={() => img.hover && setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
