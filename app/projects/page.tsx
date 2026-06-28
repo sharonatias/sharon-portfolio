@@ -146,7 +146,26 @@ export default function ProjectsPage() {
   const isYouTubeUrl = (url?: string) => url?.includes('youtube') || url?.includes('youtu.be')
 
   const getYouTubeEmbedUrl = (url: string) => {
-    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/)?.[1]
+    let videoId = ''
+
+    // Handle different YouTube URL formats
+    if (url.includes('youtu.be/')) {
+      // youtu.be/VIDEO_ID
+      videoId = url.split('youtu.be/')[1]?.split('?')[0] || ''
+    } else if (url.includes('youtube.com/watch')) {
+      // youtube.com/watch?v=VIDEO_ID
+      videoId = new URL(url).searchParams.get('v') || ''
+    } else if (url.includes('youtube.com/embed/')) {
+      // youtube.com/embed/VIDEO_ID
+      videoId = url.split('youtube.com/embed/')[1]?.split('?')[0] || ''
+    } else if (url.includes('youtube.com/v/')) {
+      // youtube.com/v/VIDEO_ID
+      videoId = url.split('youtube.com/v/')[1]?.split('?')[0] || ''
+    } else if (url.includes('youtube.com/shorts/')) {
+      // youtube.com/shorts/VIDEO_ID
+      videoId = url.split('youtube.com/shorts/')[1]?.split('?')[0] || ''
+    }
+
     return videoId ? `https://www.youtube.com/embed/${videoId}` : ''
   }
 
