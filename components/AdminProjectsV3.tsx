@@ -29,31 +29,43 @@ export default function ProjectsAdminV3() {
     try {
       if (editingProject?.id) {
         // Update existing project
+        console.log('📝 Updating project:', editingProject.id)
         const res = await fetch(`/api/projects/${editingProject.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedProject)
         })
 
+        console.log('Update response:', res.status, res.ok)
         if (res.ok) {
           setEditingProject(null)
-          loadProjects()
+          await loadProjects()
+        } else {
+          const error = await res.text()
+          console.error('Update failed:', error)
         }
       } else {
         // Create new project
+        console.log('✨ Creating new project:', updatedProject.title)
         const res = await fetch('/api/projects', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedProject)
         })
 
+        console.log('Create response:', res.status, res.ok)
         if (res.ok) {
+          const newProject = await res.json()
+          console.log('✅ Project created:', newProject)
           setEditingProject(null)
-          loadProjects()
+          await loadProjects()
+        } else {
+          const error = await res.text()
+          console.error('Create failed:', error)
         }
       }
     } catch (error) {
-      console.error('Error saving:', error)
+      console.error('❌ Error saving:', error)
     }
   }
 
