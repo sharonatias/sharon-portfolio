@@ -323,7 +323,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               className="text-5xl lg:text-7xl mb-8 leading-tight"
               style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em', textWrap: 'balance' }}
             >
-              {renderTextWithChars('Creating documentaries,', 0)}
+              {renderTextWithChars('Creating documentaries, ', 0)}
               <br />
               {renderTextWithChars('brands and visual experiences.')}
             </h2>
