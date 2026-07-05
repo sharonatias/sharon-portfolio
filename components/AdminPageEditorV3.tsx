@@ -8,6 +8,7 @@ export default function PageEditorV3() {
   const [content, setContent] = useState({
     heroTitle: 'Creating documentaries, brands and visual experiences.',
     heroSubtitle: 'Blending design and AI-driven creation.',
+    heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
     heroVideoUrl: ''
   })
   const videoInputRef = useRef<HTMLInputElement>(null)
@@ -15,6 +16,16 @@ export default function PageEditorV3() {
   const handleSave = async () => {
     setSaving(true)
     try {
+      const res = await fetch('/api/page-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(content)
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to save')
+      }
+
       setMessage({ type: 'success', text: '✅ Saved successfully!' })
       setTimeout(() => setMessage(null), 2000)
     } catch (error) {
@@ -77,6 +88,16 @@ export default function PageEditorV3() {
                 type="text"
                 value={content.heroTitle}
                 onChange={(e) => setContent({ ...content, heroTitle: e.target.value })}
+                className="w-full bg-slate-950/50 border border-blue-500/30 px-4 py-3 text-white text-sm rounded-lg focus:border-blue-500 focus:bg-slate-950 focus:outline-none transition-all duration-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-400 mb-3 font-light">Role/Position</label>
+              <input
+                type="text"
+                value={content.heroRole}
+                onChange={(e) => setContent({ ...content, heroRole: e.target.value })}
                 className="w-full bg-slate-950/50 border border-blue-500/30 px-4 py-3 text-white text-sm rounded-lg focus:border-blue-500 focus:bg-slate-950 focus:outline-none transition-all duration-300"
               />
             </div>

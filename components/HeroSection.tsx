@@ -18,6 +18,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [isClient, setIsClient] = useState(true)
   const [isMouseNear, setIsMouseNear] = useState(false)
+  const [pageContent, setPageContent] = useState({ heroRole: 'FILMMAKER • CREATIVE DIRECTOR' })
   const titleRef = useRef<HTMLDivElement>(null)
   const velocityRef = useRef<{ [key: number]: { x: number; y: number } }>({})
   const directionRef = useRef<{ [key: number]: { x: number; y: number } }>({})
@@ -25,6 +26,17 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
   useEffect(() => {
     setIsClient(true)
+    // Fetch page content from API
+    const fetchPageContent = async () => {
+      try {
+        const res = await fetch('/api/page-content')
+        const data = await res.json()
+        setPageContent(data)
+      } catch (error) {
+        console.error('Error fetching page content:', error)
+      }
+    }
+    fetchPageContent()
   }, [])
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -317,7 +329,7 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
         {/* Bottom - Description Left Aligned */}
         <div className="flex flex-col gap-10">
           <div className="max-w-2xl">
-            <p className="text-sm lg:text-base tracking-widest mb-8 text-gray-300">FILMMAKER • CREATIVE DIRECTOR</p>
+            <p className="text-sm lg:text-base tracking-widest mb-8 text-gray-300">{pageContent.heroRole}</p>
             <h2
               ref={titleRef}
               className="text-5xl lg:text-7xl mb-8 leading-tight"
