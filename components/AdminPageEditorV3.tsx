@@ -15,12 +15,17 @@ export default function PageEditorV3() {
 
   const handleSave = async () => {
     setSaving(true)
+    console.log('💾 Saving page content:', content)
     try {
       const res = await fetch('/api/page-content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(content)
       })
+
+      console.log('Response status:', res.status)
+      const data = await res.json()
+      console.log('Response data:', data)
 
       if (!res.ok) {
         throw new Error('Failed to save')
@@ -29,6 +34,7 @@ export default function PageEditorV3() {
       setMessage({ type: 'success', text: '✅ Saved successfully!' })
       setTimeout(() => setMessage(null), 2000)
     } catch (error) {
+      console.error('❌ Save error:', error)
       setMessage({ type: 'error', text: '❌ Error saving' })
       setTimeout(() => setMessage(null), 3000)
     } finally {
