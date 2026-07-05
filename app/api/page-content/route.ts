@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile, writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { createClient } from '@supabase/supabase-js'
 
 const defaultContent = {
   heroTitle: 'Creating documentaries, brands and visual experiences.',
@@ -10,25 +8,27 @@ const defaultContent = {
   heroVideoUrl: ''
 }
 
-// Use /tmp for Vercel, or .next for local
-const DATA_DIR = process.env.VERCEL ? '/tmp' : join(process.cwd(), '.next', 'cache')
-const DATA_FILE = join(DATA_DIR, 'page-content.json')
-
-async function ensureDir() {
-  try {
-    if (!existsSync(DATA_DIR)) {
-      await mkdir(DATA_DIR, { recursive: true })
-    }
-  } catch (error) {
-    console.log('Dir exists or created')
-  }
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 async function readPageContent() {
   try {
-    await ensureDir()
-    const data = await readFile(DATA_FILE, 'utf-8')
-    return JSON.parse(data)
+    console.log('📖 Reading from Supabase...')
+    const { data, error } = await supabase
+      .from('page_content')
+      .select('*')
+      .eq('id', 1)
+      .single()
+
+    if (error) {
+      console.error('📖 Supabase error:', error.message)
+      return defaultContent
+    }
+
+    console.log('✅ Loaded from Supabase:', data)
+    return data
   } catch (error) {
     console.log('📖 Using default content')
     return defaultContent
@@ -37,16 +37,27 @@ async function readPageContent() {
 
 async function writePageContent(content: any) {
   try {
-    await ensureDir()
-    console.log('📝 Writing to:', DATA_FILE)
-    await writeFile(DATA_FILE, JSON.stringify(content, null, 2))
-    console.log('✅ File written successfully')
+    console.log('📝 Writing to Supabase:', content)
 
-    // Verify file was written
-    const verify = await readFile(DATA_FILE, 'utf-8')
-    console.log('✔️ Verified file contents:', JSON.parse(verify))
+    const { data, error } = await supabase
+      .from('page_content')
+      .upsert({
+        id: 1,
+        heroTitle: content.heroTitle,
+        heroRole: content.heroRole,
+        heroSubtitle: content.heroSubtitle,
+        heroVideoUrl: content.heroVideoUrl,
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) throw error
+
+    console.log('✅ Saved to Supabase:', data)
+    return data
   } catch (error) {
-    console.error('❌ Error writing file:', error)
+    console.error('❌ Error saving to Supabase:', error)
     throw error
   }
 }
