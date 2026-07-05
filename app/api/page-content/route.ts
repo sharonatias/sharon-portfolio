@@ -52,7 +52,15 @@ async function writePageContent(content: any) {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ Supabase error details:', {
+        code: error.code,
+        message: error.message,
+        hint: error.hint,
+        details: error.details
+      })
+      throw new Error(`Supabase error: ${error.message}`)
+    }
 
     console.log('✅ Saved to Supabase:', data)
     return data
