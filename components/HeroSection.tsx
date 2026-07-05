@@ -29,11 +29,13 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
     // Fetch page content from API
     const fetchPageContent = async () => {
       try {
-        const res = await fetch('/api/page-content')
+        // Add timestamp to bust cache
+        const res = await fetch(`/api/page-content?t=${Date.now()}`)
         const data = await res.json()
+        console.log('📖 Fetched page content:', data)
         setPageContent(data)
       } catch (error) {
-        console.error('Error fetching page content:', error)
+        console.error('❌ Error fetching page content:', error)
       }
     }
     fetchPageContent()

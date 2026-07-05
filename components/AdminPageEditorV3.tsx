@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function PageEditorV3() {
   const [saving, setSaving] = useState(false)
@@ -12,6 +12,21 @@ export default function PageEditorV3() {
     heroVideoUrl: ''
   })
   const videoInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    // Load page content from API
+    const loadContent = async () => {
+      try {
+        const res = await fetch(`/api/page-content?t=${Date.now()}`)
+        const data = await res.json()
+        console.log('📖 Loaded page content:', data)
+        setContent(data)
+      } catch (error) {
+        console.error('❌ Error loading page content:', error)
+      }
+    }
+    loadContent()
+  }, [])
 
   const handleSave = async () => {
     setSaving(true)
@@ -103,7 +118,10 @@ export default function PageEditorV3() {
               <input
                 type="text"
                 value={content.heroRole}
-                onChange={(e) => setContent({ ...content, heroRole: e.target.value })}
+                onChange={(e) => {
+                  console.log('Role input changed:', e.target.value);
+                  setContent({ ...content, heroRole: e.target.value });
+                }}
                 className="w-full bg-slate-950/50 border border-blue-500/30 px-4 py-3 text-white text-sm rounded-lg focus:border-blue-500 focus:bg-slate-950 focus:outline-none transition-all duration-300"
               />
             </div>

@@ -22,9 +22,16 @@ async function readPageContent() {
 
 async function writePageContent(content: any) {
   try {
+    console.log('📝 Writing to:', DATA_FILE)
     await writeFile(DATA_FILE, JSON.stringify(content, null, 2))
+    console.log('✅ File written successfully')
+
+    // Verify file was written
+    const verify = await readFile(DATA_FILE, 'utf-8')
+    console.log('✔️ Verified file contents:', JSON.parse(verify))
   } catch (error) {
-    console.error('Error writing to file:', error)
+    console.error('❌ Error writing to file:', error)
+    throw error
   }
 }
 
