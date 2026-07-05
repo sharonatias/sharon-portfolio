@@ -1,15 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { readFile, writeFile } from 'fs/promises'
+import { join } from 'path'
 
-// In-memory storage for page content (in production, this would be in a database)
-let pageContent = {
+const DATA_FILE = join(process.cwd(), 'public', 'data', 'page-content.json')
+
+const defaultContent = {
   heroTitle: 'Creating documentaries, brands and visual experiences.',
   heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
   heroSubtitle: 'Blending design and AI-driven creation.',
   heroVideoUrl: ''
 }
 
+async function readPageContent() {
+  try {
+    const data = await readFile(DATA_FILE, 'utf-8')
+    return JSON.parse(data)
+  } catch {
+    return defaultContent
+  }
+}
+
+async function writePageContent(content: any) {
+  try {
+    await writeFile(DATA_FILE, JSON.stringify(content, null, 2))
+  } catch (error) {
+    console.error('Error writing to file:', error)
+  }
+}
+
 export async function GET() {
-  return NextResponse.json(pageContent)
+  const content = await readPageContent()
+  return NextResponse.json(content)
 }
 
 export async function POST(request: NextRequest) {
@@ -17,16 +38,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log('📝 Received page content:', body)
 
+    const currentContent = await readPageContent()
+
     // Update page content - use the values from body directly
-    pageContent = {
-      heroTitle: body.heroTitle !== undefined ? body.heroTitle : pageContent.heroTitle,
-      heroRole: body.heroRole !== undefined ? body.heroRole : pageContent.heroRole,
-      heroSubtitle: body.heroSubtitle !== undefined ? body.heroSubtitle : pageContent.heroSubtitle,
-      heroVideoUrl: body.heroVideoUrl !== undefined ? body.heroVideoUrl : pageContent.heroVideoUrl
+    const updatedContent = {
+      heroTitle: body.heroTitle !== undefined ? body.heroTitle : currentContent.heroTitle,
+      heroRole: body.heroRole !== undefined ? body.heroRole : currentContent.heroRole,
+      heroSubtitle: body.heroSubtitle !== undefined ? body.heroSubtitle : currentContent.heroSubtitle,
+      heroVideoUrl: body.heroVideoUrl !== undefined ? body.heroVideoUrl : currentContent.heroVideoUrl
     }
 
-    console.log('✅ Updated page content:', pageContent)
-    return NextResponse.json({ success: true, data: pageContent })
+    // Write to file
+    await writePageContent(updatedContent)
+
+    console.log('✅ Updated page content:', updatedContent)
+    return NextResponse.json({ success: true, data: updatedContent })
   } catch (error) {
     console.error('❌ Error saving page content:', error)
     return NextResponse.json(
