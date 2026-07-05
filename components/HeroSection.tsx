@@ -18,7 +18,12 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [isClient, setIsClient] = useState(true)
   const [isMouseNear, setIsMouseNear] = useState(false)
-  const [pageContent, setPageContent] = useState({ heroRole: 'FILMMAKER • CREATIVE DIRECTOR' })
+  const [pageContent, setPageContent] = useState({
+    heroTitle: 'Creating documentaries, brands and visual experiences.',
+    heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
+    heroSubtitle: 'Blending design and AI-driven creation.',
+    heroVideoUrl: ''
+  })
   const titleRef = useRef<HTMLDivElement>(null)
   const velocityRef = useRef<{ [key: number]: { x: number; y: number } }>({})
   const directionRef = useRef<{ [key: number]: { x: number; y: number } }>({})
