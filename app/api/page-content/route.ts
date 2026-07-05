@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile, writeFile } from 'fs/promises'
-import { join } from 'path'
-
-const DATA_FILE = join(process.cwd(), 'public', 'data', 'page-content.json')
+import { createClient } from '@supabase/supabase-js'
 
 const defaultContent = {
   heroTitle: 'Creating documentaries, brands and visual experiences.',
@@ -11,26 +8,40 @@ const defaultContent = {
   heroVideoUrl: ''
 }
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
 async function readPageContent() {
   try {
-    const data = await readFile(DATA_FILE, 'utf-8')
-    return JSON.parse(data)
-  } catch {
+    const { data, error } = await supabase
+      .from('page_content')
+      .select('*')
+      .single()
+
+    if (error) throw error
+    return data || defaultContent
+  } catch (error) {
+    console.log('📖 Using default content')
     return defaultContent
   }
 }
 
 async function writePageContent(content: any) {
   try {
-    console.log('📝 Writing to:', DATA_FILE)
-    await writeFile(DATA_FILE, JSON.stringify(content, null, 2))
-    console.log('✅ File written successfully')
+    console.log('📝 Saving to Supabase:', content)
 
-    // Verify file was written
-    const verify = await readFile(DATA_FILE, 'utf-8')
-    console.log('✔️ Verified file contents:', JSON.parse(verify))
+    const { data, error } = await supabase
+      .from('page_content')
+      .upsert([{ id: 1, ...content, updated_at: new Date() }])
+      .select()
+      .single()
+
+    if (error) throw error
+    console.log('✅ Saved to Supabase:', data)
   } catch (error) {
-    console.error('❌ Error writing to file:', error)
+    console.error('❌ Error saving to Supabase:', error)
     throw error
   }
 }
@@ -47,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     const currentContent = await readPageContent()
 
-    // Update page content - use the values from body directly
+    // Update page content
     const updatedContent = {
       heroTitle: body.heroTitle !== undefined ? body.heroTitle : currentContent.heroTitle,
       heroRole: body.heroRole !== undefined ? body.heroRole : currentContent.heroRole,
@@ -55,7 +66,6 @@ export async function POST(request: NextRequest) {
       heroVideoUrl: body.heroVideoUrl !== undefined ? body.heroVideoUrl : currentContent.heroVideoUrl
     }
 
-    // Write to file
     await writePageContent(updatedContent)
 
     console.log('✅ Updated page content:', updatedContent)
