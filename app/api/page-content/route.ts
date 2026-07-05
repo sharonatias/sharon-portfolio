@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { readFile, writeFile, mkdir } from 'fs/promises'
+import { join } from 'path'
+import { existsSync } from 'fs'
 
 const defaultContent = {
   heroTitle: 'Creating documentaries, brands and visual experiences.',
@@ -8,20 +10,25 @@ const defaultContent = {
   heroVideoUrl: ''
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Use /tmp for Vercel, or .next for local
+const DATA_DIR = process.env.VERCEL ? '/tmp' : join(process.cwd(), '.next', 'cache')
+const DATA_FILE = join(DATA_DIR, 'page-content.json')
+
+async function ensureDir() {
+  try {
+    if (!existsSync(DATA_DIR)) {
+      await mkdir(DATA_DIR, { recursive: true })
+    }
+  } catch (error) {
+    console.log('Dir exists or created')
+  }
+}
 
 async function readPageContent() {
   try {
-    const { data, error } = await supabase
-      .from('page_content')
-      .select('*')
-      .single()
-
-    if (error) throw error
-    return data || defaultContent
+    await ensureDir()
+    const data = await readFile(DATA_FILE, 'utf-8')
+    return JSON.parse(data)
   } catch (error) {
     console.log('📖 Using default content')
     return defaultContent
@@ -30,18 +37,16 @@ async function readPageContent() {
 
 async function writePageContent(content: any) {
   try {
-    console.log('📝 Saving to Supabase:', content)
+    await ensureDir()
+    console.log('📝 Writing to:', DATA_FILE)
+    await writeFile(DATA_FILE, JSON.stringify(content, null, 2))
+    console.log('✅ File written successfully')
 
-    const { data, error } = await supabase
-      .from('page_content')
-      .upsert([{ id: 1, ...content, updated_at: new Date() }])
-      .select()
-      .single()
-
-    if (error) throw error
-    console.log('✅ Saved to Supabase:', data)
+    // Verify file was written
+    const verify = await readFile(DATA_FILE, 'utf-8')
+    console.log('✔️ Verified file contents:', JSON.parse(verify))
   } catch (error) {
-    console.error('❌ Error saving to Supabase:', error)
+    console.error('❌ Error writing file:', error)
     throw error
   }
 }
