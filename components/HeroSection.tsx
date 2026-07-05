@@ -337,12 +337,10 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               className="text-5xl lg:text-7xl mb-8 leading-tight"
               style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, letterSpacing: '-0.02em', textWrap: 'balance' }}
             >
-              {renderTextWithChars('Creating documentaries, ', 0)}
-              <br />
-              {renderTextWithChars('brands and visual experiences.')}
+              {renderTextWithChars(pageContent.heroTitle || "Creating documentaries, brands and visual experiences.", 0)}
             </h2>
             <p className="text-lg lg:text-xl text-gray-400 leading-relaxed">
-              Blending design and AI-driven creation.
+              {pageContent.heroSubtitle || 'Blending design and AI-driven creation.'}
             </p>
           </div>
 
