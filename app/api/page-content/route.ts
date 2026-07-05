@@ -28,7 +28,13 @@ async function readPageContent() {
     }
 
     console.log('✅ Loaded from Supabase:', data)
-    return data
+    // Normalize field names (Supabase uses lowercase)
+    return {
+      heroTitle: data.herotitle || data.heroTitle || defaultContent.heroTitle,
+      heroRole: data.herorole || data.heroRole || defaultContent.heroRole,
+      heroSubtitle: data.herosubtitle || data.heroSubtitle || defaultContent.heroSubtitle,
+      heroVideoUrl: data.herovideourl || data.heroVideoUrl || defaultContent.heroVideoUrl
+    }
   } catch (error) {
     console.log('📖 Using default content')
     return defaultContent
@@ -43,10 +49,10 @@ async function writePageContent(content: any) {
       .from('page_content')
       .upsert({
         id: 1,
-        heroTitle: content.heroTitle,
-        heroRole: content.heroRole,
-        heroSubtitle: content.heroSubtitle,
-        heroVideoUrl: content.heroVideoUrl,
+        herotitle: content.heroTitle,
+        herorole: content.heroRole,
+        herosubtitle: content.heroSubtitle,
+        herovideourl: content.heroVideoUrl,
         updated_at: new Date().toISOString()
       })
       .select()
