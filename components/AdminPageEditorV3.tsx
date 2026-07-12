@@ -5,16 +5,19 @@ import { useState, useRef, useEffect } from 'react'
 export default function PageEditorV3() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [projects, setProjects] = useState<any[]>([])
+  const [brandCaseStudies, setBrandCaseStudies] = useState<any[]>([])
   const [content, setContent] = useState({
     heroTitle: 'Creating documentaries, brands and visual experiences.',
     heroSubtitle: 'Blending design and AI-driven creation.',
     heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
-    heroVideoUrl: ''
+    heroVideoUrl: '',
+    featured_project_ids: ''
   })
   const videoInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // Load page content from API
+    // Load page content and projects
     const loadContent = async () => {
       try {
         const res = await fetch(`/api/page-content?t=${Date.now()}`)
@@ -25,7 +28,24 @@ export default function PageEditorV3() {
         console.error('❌ Error loading page content:', error)
       }
     }
+
+    const loadProjects = async () => {
+      try {
+        const [projectsRes, casesRes] = await Promise.all([
+          fetch('/api/projects'),
+          fetch('/api/brand-case-studies')
+        ])
+        const projectsData = await projectsRes.json()
+        const casesData = await casesRes.json()
+        setProjects(projectsData)
+        setBrandCaseStudies(casesData)
+      } catch (error) {
+        console.error('❌ Error loading projects:', error)
+      }
+    }
+
     loadContent()
+    loadProjects()
   }, [])
 
   const handleSave = async () => {
@@ -198,6 +218,68 @@ export default function PageEditorV3() {
             >
               {saving ? '💾 Saving...' : '💾 Save Changes'}
             </button>
+          </div>
+        </div>
+
+        {/* Featured Work Selection */}
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/20 rounded-xl p-8 backdrop-blur">
+          <h2 className="text-xl font-light tracking-wider text-purple-400 mb-6">Featured Work Selection</h2>
+          <p className="text-sm text-gray-400 mb-6">Select up to 4 items to display in FEATURED WORK section</p>
+
+          <div className="space-y-4 max-h-96 overflow-y-auto">
+            <div>
+              <h3 className="text-sm font-light text-gray-300 mb-3">📊 Projects</h3>
+              <div className="space-y-2">
+                {projects.map((project) => (
+                  <label key={project.id} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={content.featured_project_ids?.includes(project.id)}
+                      onChange={(e) => {
+                        const ids = content.featured_project_ids?.split(',').filter(Boolean) || []
+                        if (e.target.checked) {
+                          ids.push(project.id)
+                        } else {
+                          ids.splice(ids.indexOf(project.id), 1)
+                        }
+                        setContent({ ...content, featured_project_ids: ids.slice(0, 4).join(',') })
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-gray-300">{project.title}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-light text-gray-300 mb-3">🎨 Brand Case Studies</h3>
+              <div className="space-y-2">
+                {brandCaseStudies.map((cs) => (
+                  <label key={cs.id} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={content.featured_project_ids?.includes(cs.id)}
+                      onChange={(e) => {
+                        const ids = content.featured_project_ids?.split(',').filter(Boolean) || []
+                        if (e.target.checked) {
+                          ids.push(cs.id)
+                        } else {
+                          ids.splice(ids.indexOf(cs.id), 1)
+                        }
+                        setContent({ ...content, featured_project_ids: ids.slice(0, 4).join(',') })
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-gray-300">{cs.title}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 p-3 bg-slate-950/50 rounded text-sm text-gray-400">
+            <strong>Selected:</strong> {content.featured_project_ids?.split(',').filter(Boolean).length || 0}/4
           </div>
         </div>
       </div>

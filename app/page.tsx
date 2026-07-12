@@ -24,12 +24,24 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [heroLoaded, setHeroLoaded] = useState(false)
+  const [pageContent, setPageContent] = useState<any>(null)
 
   useEffect(() => {
     fetchHeroVideos()
     fetchProjects()
     fetchBrandCaseStudies()
+    fetchPageContent()
   }, [])
+
+  const fetchPageContent = async () => {
+    try {
+      const res = await fetch('/api/page-content?t=' + Date.now())
+      const data = await res.json()
+      setPageContent(data)
+    } catch (error) {
+      console.error('Failed to fetch page content:', error)
+    }
+  }
 
   const fetchHeroVideos = async () => {
     try {
@@ -261,10 +273,20 @@ export default function Home() {
 
           <StaggerContainer>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-              {[
-                ...projects.slice(0, 3),
-                ...brandCaseStudies.filter(c => c.category === 'featured').slice(0, 3)
-              ].slice(0, 6).map((item: any) => {
+              {(() => {
+                const featuredIds = pageContent?.featured_project_ids?.split(',').filter(Boolean) || []
+                const allItems = [...projects, ...brandCaseStudies]
+
+                if (featuredIds.length > 0) {
+                  return allItems.filter(item => featuredIds.includes(item.id))
+                }
+
+                // Fallback if no featured items selected
+                return [
+                  ...projects.slice(0, 3),
+                  ...brandCaseStudies.filter(c => c.category === 'featured').slice(0, 3)
+                ].slice(0, 6)
+              })().map((item: any) => {
                 const isBrandCase = 'hero_image' in item
                 const imageUrl = isBrandCase ? item.hero_image : item.image_url
                 return (
