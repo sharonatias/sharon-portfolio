@@ -12,7 +12,8 @@ export default function PageEditorV3() {
     heroSubtitle: 'Blending design and AI-driven creation.',
     heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
     heroVideoUrl: '',
-    featured_project_ids: ''
+    featured_project_ids: '',
+    exploring_ids: ''
   })
   const videoInputRef = useRef<HTMLInputElement>(null)
 
@@ -280,6 +281,43 @@ export default function PageEditorV3() {
 
           <div className="mt-4 p-3 bg-slate-950/50 rounded text-sm text-gray-400">
             <strong>Selected:</strong> {content.featured_project_ids?.split(',').filter(Boolean).length || 0}/4
+          </div>
+        </div>
+
+        {/* Currently Exploring Selection */}
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-orange-500/20 rounded-xl p-8 backdrop-blur">
+          <h2 className="text-xl font-light tracking-wider text-orange-400 mb-6">Currently Exploring Selection</h2>
+          <p className="text-sm text-gray-400 mb-6">Select items to display in CURRENTLY EXPLORING section</p>
+
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            <div>
+              <h3 className="text-sm font-light text-gray-300 mb-3">🎨 Brand Case Studies</h3>
+              <div className="space-y-2">
+                {brandCaseStudies.map((cs) => (
+                  <label key={cs.id} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={content.exploring_ids?.includes(cs.id)}
+                      onChange={(e) => {
+                        const ids = content.exploring_ids?.split(',').filter(Boolean) || []
+                        if (e.target.checked) {
+                          ids.push(cs.id)
+                        } else {
+                          ids.splice(ids.indexOf(cs.id), 1)
+                        }
+                        setContent({ ...content, exploring_ids: ids.join(',') })
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-gray-300">{cs.title}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 p-3 bg-slate-950/50 rounded text-sm text-gray-400">
+            <strong>Selected:</strong> {content.exploring_ids?.split(',').filter(Boolean).length || 0}
           </div>
         </div>
       </div>

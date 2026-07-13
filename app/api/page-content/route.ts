@@ -6,7 +6,8 @@ const defaultContent = {
   heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
   heroSubtitle: 'Blending design and AI-driven creation.',
   heroVideoUrl: '',
-  featured_project_ids: ''
+  featured_project_ids: '',
+  exploring_ids: ''
 }
 
 const supabase = createClient(
@@ -35,7 +36,8 @@ async function readPageContent() {
       heroRole: data.herorole || data.heroRole || defaultContent.heroRole,
       heroSubtitle: data.herosubtitle || data.heroSubtitle || defaultContent.heroSubtitle,
       heroVideoUrl: data.herovideourl || data.heroVideoUrl || defaultContent.heroVideoUrl,
-      featured_project_ids: data.featured_project_ids || defaultContent.featured_project_ids
+      featured_project_ids: data.featured_project_ids || defaultContent.featured_project_ids,
+      exploring_ids: data.exploring_ids || defaultContent.exploring_ids
     }
   } catch (error) {
     console.log('📖 Using default content')
@@ -56,6 +58,7 @@ async function writePageContent(content: any) {
         herosubtitle: content.heroSubtitle,
         herovideourl: content.heroVideoUrl,
         featured_project_ids: content.featured_project_ids || '',
+        exploring_ids: content.exploring_ids || '',
         updated_at: new Date().toISOString()
       })
       .select()
@@ -97,7 +100,8 @@ export async function POST(request: NextRequest) {
       heroRole: body.heroRole !== undefined ? body.heroRole : currentContent.heroRole,
       heroSubtitle: body.heroSubtitle !== undefined ? body.heroSubtitle : currentContent.heroSubtitle,
       heroVideoUrl: body.heroVideoUrl !== undefined ? body.heroVideoUrl : currentContent.heroVideoUrl,
-      featured_project_ids: body.featured_project_ids !== undefined ? body.featured_project_ids : currentContent.featured_project_ids
+      featured_project_ids: body.featured_project_ids !== undefined ? body.featured_project_ids : currentContent.featured_project_ids,
+      exploring_ids: body.exploring_ids !== undefined ? body.exploring_ids : currentContent.exploring_ids
     }
 
     await writePageContent(updatedContent)
