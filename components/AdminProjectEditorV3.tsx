@@ -77,15 +77,49 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
     setFormData({ ...formData, images })
   }
 
-  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string
-        setFormData({ ...formData, video_url: dataUrl })
+    console.log('🎥 Video file selected:', file?.name, 'Size:', file?.size, 'Type:', file?.type)
+    if (!file) {
+      console.log('⚠️ No file selected')
+      return
+    }
+
+    // Check file size
+    const MAX_SIZE = 2 * 1024 * 1024 // 2MB
+    if (file.size > MAX_SIZE) {
+      const msg = `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum 2MB allowed.`
+      console.error('❌ ' + msg)
+      setMessage({ type: 'error', text: `❌ ${msg}` })
+      setTimeout(() => setMessage(null), 3000)
+      return
+    }
+
+    try {
+      console.log('📤 Uploading video to /api/upload...')
+      const formDataUpload = new FormData()
+      formDataUpload.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload
+      })
+
+      const data = await response.json()
+      console.log('📡 Response:', response.status, data)
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Upload failed')
       }
-      reader.readAsDataURL(file)
+
+      console.log('✅ Upload successful, URL:', data.url)
+      setFormData({ ...formData, video_url: data.url })
+      setMessage({ type: 'success', text: `✅ Video "${file.name}" uploaded successfully!` })
+      setTimeout(() => setMessage(null), 2000)
+    } catch (error) {
+      console.error('❌ Error uploading video:', error)
+      setMessage({ type: 'error', text: `❌ ${error instanceof Error ? error.message : 'Upload error'}` })
+      setTimeout(() => setMessage(null), 3000)
     }
   }
 
@@ -240,13 +274,14 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
 
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Video</label>
-                <button
-                  onClick={() => videoInputRef.current?.click()}
-                  className="w-full mb-3 px-4 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/40 transition-all duration-300"
+                <label
+                  htmlFor="video-upload"
+                  className="w-full mb-3 px-4 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/40 transition-all duration-300 block text-center cursor-pointer"
                 >
                   🎥 Upload Video File
-                </button>
+                </label>
                 <input
+                  id="video-upload"
                   ref={videoInputRef}
                   type="file"
                   accept="video/*"

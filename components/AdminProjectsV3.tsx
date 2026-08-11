@@ -27,22 +27,36 @@ export default function ProjectsAdminV3() {
 
   const handleSave = async (updatedProject: Project) => {
     try {
+      console.log('💾 handleSave called with project')
+
+      // Filter out data: URLs from images to reduce payload size
+      const dataToSend = {
+        ...updatedProject,
+        images: (updatedProject.images || []).filter(img => !img.startsWith('data:'))
+      }
+
+      console.log('📦 Filtered data size:', JSON.stringify(dataToSend).length, 'bytes')
+
       if (editingProject?.id) {
         // Update existing project
         console.log('📝 Updating project:', editingProject.id)
+
         const res = await fetch(`/api/projects/${editingProject.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedProject)
+          body: JSON.stringify(dataToSend)
         })
 
-        console.log('Update response:', res.status, res.ok)
+        console.log('📡 Update response:', res.status, res.statusText)
+        const responseData = await res.json()
+        console.log('📋 Response data:', responseData)
+
         if (res.ok) {
+          console.log('✅ Update successful')
           setEditingProject(null)
           await loadProjects()
         } else {
-          const error = await res.text()
-          console.error('Update failed:', error)
+          console.error('❌ Update failed:', responseData)
         }
       } else {
         // Create new project
@@ -50,7 +64,7 @@ export default function ProjectsAdminV3() {
         const res = await fetch('/api/projects', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedProject)
+          body: JSON.stringify(dataToSend)
         })
 
         console.log('Create response:', res.status, res.ok)
