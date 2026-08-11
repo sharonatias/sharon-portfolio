@@ -88,9 +88,11 @@ export default function ProjectsAdminV3() {
       description: '',
       category: 'featured',
       image_url: '',
+      video_url: '',
       images: [],
+      files: [],
       display_order: 0
-    })
+    } as Project)
   }
 
   if (loading) return <div className="p-8 text-gray-400">Loading...</div>
