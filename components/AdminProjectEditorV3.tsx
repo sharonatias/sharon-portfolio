@@ -96,24 +96,36 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
     }
 
     try {
-      console.log('📤 Uploading video to /api/upload...')
-      const formDataUpload = new FormData()
-      formDataUpload.append('file', file)
+      console.log('📤 Uploading video directly to Supabase...')
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formDataUpload
-      })
+      // Import Supabase client
+      const { createClient } = await import('@supabase/supabase-js')
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
 
-      const data = await response.json()
-      console.log('📡 Response:', response.status, data)
+      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Upload failed')
+      const { data, error } = await supabase.storage
+        .from('videos')
+        .upload(filename, file, {
+          contentType: file.type,
+          upsert: false
+        })
+
+      if (error) {
+        console.error('❌ Supabase error:', error)
+        throw new Error(error.message)
       }
 
-      console.log('✅ Upload successful, URL:', data.url)
-      setFormData({ ...formData, video_url: data.url })
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('videos')
+        .getPublicUrl(filename)
+
+      console.log('✅ Upload successful, URL:', publicUrl)
+      setFormData({ ...formData, video_url: publicUrl })
       setMessage({ type: 'success', text: `✅ Video "${file.name}" uploaded successfully!` })
       setTimeout(() => setMessage(null), 2000)
     } catch (error) {
