@@ -202,7 +202,7 @@ export default function Home() {
       )}
 
       {/* Currently Exploring Section */}
-      {heroLoaded && (
+      {heroLoaded && pageContent?.exploring_visible !== false && (
       <section className="bg-black">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
@@ -266,7 +266,7 @@ export default function Home() {
       )}
 
       {/* Featured Work Section */}
-      {heroLoaded && (
+      {heroLoaded && pageContent?.featured_visible !== false && (
       <section className="bg-black border-b border-gray-800">
         <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
           <div className="flex justify-between items-center mb-12">
@@ -331,6 +331,62 @@ export default function Home() {
               )
               })}
 
+            </div>
+          </StaggerContainer>
+        </div>
+      </section>
+      )}
+
+      {/* AI Experiments Section */}
+      {heroLoaded && pageContent?.ai_experiments_visible !== false && (
+      <section className="bg-black border-b border-gray-800">
+        <div className="max-w-full mx-auto px-12 lg:px-24 pt-4 pb-24">
+          <div className="flex justify-between items-center mb-12">
+            <SlideInLeftText>
+              <h3 className="text-4xl lg:text-5xl font-light tracking-tight" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400, wordSpacing: '0.15em' }}>
+                AI EXPERIMENTS
+              </h3>
+            </SlideInLeftText>
+            <RevealOnScroll direction="right">
+              <Link href="/projects" className="text-xs tracking-widest hover:opacity-70 transition" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                VIEW ALL EXPERIMENTS →
+              </Link>
+            </RevealOnScroll>
+          </div>
+
+          <StaggerContainer>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+              {projects
+                .filter(item => item.category === 'ai_experiments')
+                .map((item: any) => (
+                  <StaggerItem key={item.id}>
+                    <RevealOnScroll direction="up">
+                      <Link href={`/projects/${item.id}`}>
+                        <div className="group cursor-pointer">
+                          <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
+                            {item.image_url ? (
+                              <>
+                                <img
+                                  src={item.image_url}
+                                  alt={item.title}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                  <h4 className="text-lg lg:text-xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
+                                    {item.title}
+                                  </h4>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-600 bg-black">No image</div>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    </RevealOnScroll>
+                  </StaggerItem>
+                ))}
             </div>
           </StaggerContainer>
         </div>
