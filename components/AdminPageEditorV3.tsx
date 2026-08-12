@@ -13,7 +13,9 @@ export default function PageEditorV3() {
     heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
     heroVideoUrl: '',
     featured_project_ids: '',
-    exploring_ids: ''
+    exploring_ids: '',
+    ai_experiments_ids: '',
+    ai_experiments_visible: true
   })
   const videoInputRef = useRef<HTMLInputElement>(null)
 
@@ -318,6 +320,79 @@ export default function PageEditorV3() {
 
           <div className="mt-4 p-3 bg-slate-950/50 rounded text-sm text-gray-400">
             <strong>Selected:</strong> {content.exploring_ids?.split(',').filter(Boolean).length || 0}
+          </div>
+        </div>
+
+        {/* AI Experiments Selection */}
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/20 rounded-xl p-8 backdrop-blur">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-light tracking-wider text-purple-400">AI Experiments Selection</h2>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={content.ai_experiments_visible}
+                onChange={(e) => setContent({ ...content, ai_experiments_visible: e.target.checked })}
+                className="w-4 h-4"
+              />
+              <span className="text-sm text-gray-400">Show Section</span>
+            </label>
+          </div>
+          <p className="text-sm text-gray-400 mb-6">Select items to display in AI EXPERIMENTS section</p>
+
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            <div>
+              <h3 className="text-sm font-light text-gray-300 mb-3">📊 Projects</h3>
+              <div className="space-y-2">
+                {projects.map((project) => (
+                  <label key={project.id} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={content.ai_experiments_ids?.includes(project.id)}
+                      onChange={(e) => {
+                        const ids = content.ai_experiments_ids?.split(',').filter(Boolean) || []
+                        if (e.target.checked) {
+                          ids.push(project.id)
+                        } else {
+                          ids.splice(ids.indexOf(project.id), 1)
+                        }
+                        setContent({ ...content, ai_experiments_ids: ids.join(',') })
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-gray-300">{project.title}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-light text-gray-300 mb-3">🎨 Brand Case Studies</h3>
+              <div className="space-y-2">
+                {brandCaseStudies.map((cs) => (
+                  <label key={cs.id} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={content.ai_experiments_ids?.includes(cs.id)}
+                      onChange={(e) => {
+                        const ids = content.ai_experiments_ids?.split(',').filter(Boolean) || []
+                        if (e.target.checked) {
+                          ids.push(cs.id)
+                        } else {
+                          ids.splice(ids.indexOf(cs.id), 1)
+                        }
+                        setContent({ ...content, ai_experiments_ids: ids.join(',') })
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-gray-300">{cs.title}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 p-3 bg-slate-950/50 rounded text-sm text-gray-400">
+            <strong>Selected:</strong> {content.ai_experiments_ids?.split(',').filter(Boolean).length || 0}
           </div>
         </div>
       </div>
