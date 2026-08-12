@@ -27,9 +27,9 @@ export async function POST(request: NextRequest) {
 
     console.log('📦 File:', { name: file.name, size: (file.size / 1024 / 1024).toFixed(2) + 'MB', type: file.type })
 
-    // Large file size limit (500MB for videos, 50MB for others)
+    // TEMPORARY: Massive file size limit for testing (1TB)
     const isVideo = file.type.startsWith('video/')
-    const MAX_SIZE = isVideo ? 500 * 1024 * 1024 : 50 * 1024 * 1024
+    const MAX_SIZE = 1000 * 1024 * 1024 * 1024 // 1TB temporary for debugging
 
     if (file.size > MAX_SIZE) {
       const maxMB = isVideo ? 500 : 50
