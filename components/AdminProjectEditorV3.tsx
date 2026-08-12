@@ -47,28 +47,72 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
     }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string
-        setFormData({ ...formData, image_url: dataUrl })
+    if (!file) return
+
+    try {
+      // Get presigned URL
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filename: file.name,
+          contentType: file.type
+        })
+      })
+
+      const { signedUrl, publicUrl } = await uploadRes.json()
+
+      // Upload to Supabase
+      const putRes = await fetch(signedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type }
+      })
+
+      if (putRes.ok) {
+        setFormData({ ...formData, image_url: publicUrl })
+        setMessage({ type: 'success', text: '✅ Image uploaded successfully!' })
       }
-      reader.readAsDataURL(file)
+    } catch (error) {
+      console.error('❌ Image upload error:', error)
+      setMessage({ type: 'error', text: '❌ Failed to upload image' })
     }
   }
 
-  const handleGalleryImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string
-        const images = [...(formData.images || []), dataUrl]
+    if (!file) return
+
+    try {
+      // Get presigned URL
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filename: file.name,
+          contentType: file.type
+        })
+      })
+
+      const { signedUrl, publicUrl } = await uploadRes.json()
+
+      // Upload to Supabase
+      const putRes = await fetch(signedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type }
+      })
+
+      if (putRes.ok) {
+        const images = [...(formData.images || []), publicUrl]
         setFormData({ ...formData, images })
+        setMessage({ type: 'success', text: '✅ Image added to gallery!' })
       }
-      reader.readAsDataURL(file)
+    } catch (error) {
+      console.error('❌ Gallery upload error:', error)
+      setMessage({ type: 'error', text: '❌ Failed to upload image' })
     }
   }
 
