@@ -96,26 +96,41 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
     }
 
     try {
-      console.log('📤 Uploading video directly to Supabase...')
+      console.log('🔑 Getting presigned URL from /api/upload...')
 
-      console.log('📤 Uploading video to /api/upload...')
-      const formDataUpload = new FormData()
-      formDataUpload.append('file', file)
-
-      const response = await fetch('/api/upload', {
+      // Step 1: Get presigned URL from backend
+      const urlResponse = await fetch('/api/upload', {
         method: 'POST',
-        body: formDataUpload
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filename: file.name,
+          contentType: file.type
+        })
       })
 
-      const data = await response.json()
-      console.log('📡 Response:', response.status, data)
+      const urlData = await urlResponse.json()
+      console.log('🔑 Presigned URL received')
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Upload failed')
+      if (!urlResponse.ok) {
+        throw new Error(urlData.error || 'Failed to get upload URL')
       }
 
-      console.log('✅ Upload successful, URL:', data.url)
-      setFormData({ ...formData, video_url: data.url })
+      // Step 2: Upload directly to Supabase using presigned URL
+      console.log('📤 Uploading directly to Supabase...')
+      const uploadResponse = await fetch(urlData.signedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type
+        }
+      })
+
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.status}`)
+      }
+
+      console.log('✅ Upload successful, URL:', urlData.publicUrl)
+      setFormData({ ...formData, video_url: urlData.publicUrl })
       setMessage({ type: 'success', text: `✅ Video "${file.name}" uploaded successfully!` })
       setTimeout(() => setMessage(null), 2000)
     } catch (error) {

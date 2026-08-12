@@ -6,94 +6,49 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+// Generate presigned URL for direct upload
 export async function POST(request: NextRequest) {
   try {
-    console.log('📤 Upload request received')
+    const body = await request.json()
+    const { filename, contentType } = body
 
-    let formData
-    try {
-      formData = await request.formData()
-    } catch (formError) {
-      console.error('❌ FormData parsing error:', formError)
-      return NextResponse.json({ error: 'Failed to parse form data' }, { status: 400 })
+    if (!filename || !contentType) {
+      return NextResponse.json({ error: 'filename and contentType required' }, { status: 400 })
     }
 
-    const file = formData.get('file') as File
+    console.log('🔑 Generating presigned URL for:', filename)
 
-    if (!file || !(file instanceof File)) {
-      console.error('❌ No file in FormData')
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
-    }
+    const bucket = contentType.startsWith('video/') ? 'videos' : 'files'
+    const uniqueFilename = `${Date.now()}-${filename.replace(/\s+/g, '-')}`
 
-    console.log('📦 File:', { name: file.name, size: (file.size / 1024 / 1024).toFixed(2) + 'MB', type: file.type })
-
-    // TEMPORARY: Massive file size limit for testing (1TB)
-    const isVideo = file.type.startsWith('video/')
-    const MAX_SIZE = 1000 * 1024 * 1024 * 1024 // 1TB temporary for debugging
-
-    if (file.size > MAX_SIZE) {
-      const maxMB = isVideo ? 500 : 50
-      console.warn(`⚠️ File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB`)
-      return NextResponse.json({
-        error: `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum ${maxMB}MB allowed.`
-      }, { status: 413 })
-    }
-
-    try {
-      // Upload to Supabase Storage
-      const bucket = isVideo ? 'videos' : 'files'
-      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
-
-      const bytes = await file.arrayBuffer()
-      const buffer = Buffer.from(bytes)
-
-      console.log(`📤 Uploading to Supabase ${bucket} bucket: ${filename}`)
-
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(filename, buffer, {
-          contentType: file.type,
-          upsert: false
-        })
-
-      if (error) {
-        console.error('❌ Supabase upload error:', error)
-        throw new Error(`Supabase upload failed: ${error.message}`)
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(filename)
-
-      console.log('✅ Uploaded to Supabase:', publicUrl)
-
-      return NextResponse.json({
-        success: true,
-        url: publicUrl,
-        filename: file.name,
-        size: file.size,
-        type: file.type
+    // Create signed URL valid for 1 hour
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .createSignedUploadUrl(uniqueFilename, {
+        upsert: false
       })
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error)
-      console.error('❌ Upload error:', msg)
-      return NextResponse.json({
-        error: msg,
-        details: String(error)
-      }, { status: 500 })
+
+    if (error) {
+      console.error('❌ Presigned URL error:', error)
+      throw new Error(error.message)
     }
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : String(error)
-    console.error('🔴 Upload error:', msg, error)
+
+    console.log('✅ Presigned URL created:', data.signedUrl.substring(0, 50) + '...')
+
     return NextResponse.json({
-      error: 'Upload failed: ' + msg,
-      details: String(error)
-    }, { status: 500 })
+      signedUrl: data.signedUrl,
+      publicUrl: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${uniqueFilename}`,
+      filename: uniqueFilename
+    })
+  } catch (error) {
+    console.error('❌ Error:', error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to generate upload URL' },
+      { status: 500 }
+    )
   }
 }
 
-// Handle other methods
 export async function GET() {
   return NextResponse.json({ error: 'GET not allowed, use POST' }, { status: 405 })
 }
