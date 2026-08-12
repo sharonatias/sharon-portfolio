@@ -85,10 +85,10 @@ export default function AdminProjectEditorV3({ project, onSave, onClose }: Admin
       return
     }
 
-    // Check file size
-    const MAX_SIZE = 2 * 1024 * 1024 // 2MB
+    // Check file size (500MB for videos)
+    const MAX_SIZE = 500 * 1024 * 1024 // 500MB
     if (file.size > MAX_SIZE) {
-      const msg = `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum 2MB allowed.`
+      const msg = `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum 500MB allowed.`
       console.error('❌ ' + msg)
       setMessage({ type: 'error', text: `❌ ${msg}` })
       setTimeout(() => setMessage(null), 3000)
