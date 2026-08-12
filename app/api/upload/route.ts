@@ -97,3 +97,5 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({ error: 'GET not allowed, use POST' }, { status: 405 })
 }
+
+// Force rebuild timestamp: $(date -u +%s)
