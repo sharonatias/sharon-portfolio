@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Project, HeroVideo, CATEGORIES, BrandCaseStudy } from '@/lib/types'
 import Link from 'next/link'
+import Image from 'next/image'
 import HeroSection from '@/components/HeroSection'
 import {
   FadeInText,
@@ -16,6 +17,17 @@ import {
   GradientText,
   ScrollProgressBar,
 } from '@/components/animations'
+
+function ProjectImage({ src, alt }: { src: string, alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+      loading="lazy"
+    />
+  )
+}
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -239,11 +251,7 @@ export default function Home() {
                     <Link href={item.id ? `/brand-case-studies/${item.id}` : '#'}>
                       <div className="group cursor-pointer">
                         <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
-                          <img
-                            src={item.hero_image || item.image}
-                            alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                          />
+                          <ProjectImage src={item.hero_image || item.image} alt={item.title} />
                           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                             <h4 className="text-lg lg:text-xl font-bold mb-1" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
@@ -303,16 +311,12 @@ export default function Home() {
                 return (
                 <StaggerItem key={item.id}>
                   <RevealOnScroll direction="up">
-                    <Link href={isBrandCase ? `/brand-case-studies/${item.id}` : `/projects/${item.id}`}>
+                    <Link href="/projects">
                       <div className="group cursor-pointer">
                         <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
                           {imageUrl ? (
                             <>
-                              <img
-                                src={imageUrl}
-                                alt={item.title}
-                                className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                              />
+                              <ProjectImage src={imageUrl} alt={item.title} />
                               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                 <h4 className="text-lg lg:text-xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>
@@ -361,16 +365,12 @@ export default function Home() {
                 .map((item: any) => (
                   <StaggerItem key={item.id}>
                     <RevealOnScroll direction="up">
-                      <Link href={`/projects/${item.id}`}>
+                      <Link href="/projects">
                         <div className="group cursor-pointer">
                           <div className="relative overflow-hidden rounded-lg bg-gray-900" style={{ aspectRatio: '4 / 3' }}>
                             {item.image_url ? (
                               <>
-                                <img
-                                  src={item.image_url}
-                                  alt={item.title}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                                />
+                                <ProjectImage src={item.image_url} alt={item.title} />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                   <h4 className="text-lg lg:text-xl font-bold" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>

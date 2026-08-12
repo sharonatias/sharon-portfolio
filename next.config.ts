@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/storage/:path*',
+          destination: 'https://whqqammiamoajavokauw.supabase.co/storage/:path*'
+        }
+      ]
+    }
+  }
 };
 
 export default nextConfig;
