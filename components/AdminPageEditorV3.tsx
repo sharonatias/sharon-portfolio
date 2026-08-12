@@ -13,7 +13,9 @@ export default function PageEditorV3() {
     heroRole: 'FILMMAKER • CREATIVE DIRECTOR',
     heroVideoUrl: '',
     featured_project_ids: '',
+    featured_visible: true,
     exploring_ids: '',
+    exploring_visible: true,
     ai_experiments_ids: '',
     ai_experiments_visible: true
   })
@@ -226,7 +228,18 @@ export default function PageEditorV3() {
 
         {/* Featured Work Selection */}
         <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/20 rounded-xl p-8 backdrop-blur">
-          <h2 className="text-xl font-light tracking-wider text-purple-400 mb-6">Featured Work Selection</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-light tracking-wider text-purple-400">Featured Work Selection</h2>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={content.featured_visible}
+                onChange={(e) => setContent({ ...content, featured_visible: e.target.checked })}
+                className="w-4 h-4"
+              />
+              <span className="text-sm text-gray-400">Show Section</span>
+            </label>
+          </div>
           <p className="text-sm text-gray-400 mb-6">Select up to 4 items to display in FEATURED WORK section</p>
 
           <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -288,7 +301,18 @@ export default function PageEditorV3() {
 
         {/* Currently Exploring Selection */}
         <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-orange-500/20 rounded-xl p-8 backdrop-blur">
-          <h2 className="text-xl font-light tracking-wider text-orange-400 mb-6">Currently Exploring Selection</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-light tracking-wider text-orange-400">Currently Exploring Selection</h2>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={content.exploring_visible}
+                onChange={(e) => setContent({ ...content, exploring_visible: e.target.checked })}
+                className="w-4 h-4"
+              />
+              <span className="text-sm text-gray-400">Show Section</span>
+            </label>
+          </div>
           <p className="text-sm text-gray-400 mb-6">Select items to display in CURRENTLY EXPLORING section</p>
 
           <div className="space-y-3 max-h-96 overflow-y-auto">

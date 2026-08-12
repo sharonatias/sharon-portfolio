@@ -7,7 +7,11 @@ const defaultContent = {
   heroSubtitle: 'Blending design and AI-driven creation.',
   heroVideoUrl: '',
   featured_project_ids: '',
-  exploring_ids: ''
+  featured_visible: true,
+  exploring_ids: '',
+  exploring_visible: true,
+  ai_experiments_ids: '',
+  ai_experiments_visible: true
 }
 
 const supabase = createClient(
@@ -37,7 +41,11 @@ async function readPageContent() {
       heroSubtitle: data.herosubtitle || data.heroSubtitle || defaultContent.heroSubtitle,
       heroVideoUrl: data.herovideourl || data.heroVideoUrl || defaultContent.heroVideoUrl,
       featured_project_ids: data.featured_project_ids || defaultContent.featured_project_ids,
-      exploring_ids: data.exploring_ids || defaultContent.exploring_ids
+      featured_visible: data.featured_visible !== undefined ? data.featured_visible : defaultContent.featured_visible,
+      exploring_ids: data.exploring_ids || defaultContent.exploring_ids,
+      exploring_visible: data.exploring_visible !== undefined ? data.exploring_visible : defaultContent.exploring_visible,
+      ai_experiments_ids: data.ai_experiments_ids || defaultContent.ai_experiments_ids,
+      ai_experiments_visible: data.ai_experiments_visible !== undefined ? data.ai_experiments_visible : defaultContent.ai_experiments_visible
     }
   } catch (error) {
     console.log('📖 Using default content')
@@ -58,7 +66,11 @@ async function writePageContent(content: any) {
         herosubtitle: content.heroSubtitle,
         herovideourl: content.heroVideoUrl,
         featured_project_ids: content.featured_project_ids || '',
+        featured_visible: content.featured_visible,
         exploring_ids: content.exploring_ids || '',
+        exploring_visible: content.exploring_visible,
+        ai_experiments_ids: content.ai_experiments_ids || '',
+        ai_experiments_visible: content.ai_experiments_visible,
         updated_at: new Date().toISOString()
       })
       .select()
@@ -101,7 +113,11 @@ export async function POST(request: NextRequest) {
       heroSubtitle: body.heroSubtitle !== undefined ? body.heroSubtitle : currentContent.heroSubtitle,
       heroVideoUrl: body.heroVideoUrl !== undefined ? body.heroVideoUrl : currentContent.heroVideoUrl,
       featured_project_ids: body.featured_project_ids !== undefined ? body.featured_project_ids : currentContent.featured_project_ids,
-      exploring_ids: body.exploring_ids !== undefined ? body.exploring_ids : currentContent.exploring_ids
+      featured_visible: body.featured_visible !== undefined ? body.featured_visible : currentContent.featured_visible,
+      exploring_ids: body.exploring_ids !== undefined ? body.exploring_ids : currentContent.exploring_ids,
+      exploring_visible: body.exploring_visible !== undefined ? body.exploring_visible : currentContent.exploring_visible,
+      ai_experiments_ids: body.ai_experiments_ids !== undefined ? body.ai_experiments_ids : currentContent.ai_experiments_ids,
+      ai_experiments_visible: body.ai_experiments_visible !== undefined ? body.ai_experiments_visible : currentContent.ai_experiments_visible
     }
 
     await writePageContent(updatedContent)
