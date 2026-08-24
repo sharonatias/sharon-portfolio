@@ -203,7 +203,21 @@ html[dir="rtl"] {
   text-align: right;
 }
 
+html.rtl,
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html.rtl *,
 html[dir="rtl"] * {
+  direction: rtl;
+}
+
+/* RTL Margin and Padding Flipping */
+html[dir="rtl"] [class*="ml-"],
+html[dir="rtl"] [class*="mr-"],
+html[dir="rtl"] [class*="pl-"],
+html[dir="rtl"] [class*="pr-"] {
   direction: rtl;
 }
 

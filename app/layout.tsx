@@ -24,13 +24,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="he" dir="rtl" className={spaceGrotesk.variable}>
+    <html lang="he" dir="rtl" className={`${spaceGrotesk.variable} rtl`}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="font-space-grotesk">
+      <body className="font-space-grotesk text-right">
         {children}
         <CookieBanner />
         <AccessibilityWidget />

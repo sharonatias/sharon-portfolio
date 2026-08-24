@@ -11,5 +11,16 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase, theme }) {
+      addBase({
+        '[dir="rtl"]': {
+          direction: 'rtl',
+        },
+      })
+    },
+  ],
+  corePlugins: {
+    direction: true,
+  },
 }
