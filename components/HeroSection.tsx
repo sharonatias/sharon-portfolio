@@ -290,8 +290,8 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
 
       {/* Header - Hidden until video loads */}
       {showHeader && videoLoaded && (
-        <header className={`fixed top-0 right-0 left-0 px-8 lg:px-20 pt-8 pb-16 transition-all duration-300 ${showHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} z-40 flex justify-end`} dir="rtl">
-          <Link href="/" className="max-w-7xl block hover:opacity-80 transition">
+        <header className={`fixed top-0 right-0 left-0 px-8 lg:px-20 pt-8 pb-16 transition-all duration-300 ${showHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} z-40`} dir="rtl" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Link href="/" className="max-w-7xl block hover:opacity-80 transition" style={{ marginLeft: 'auto' }}>
             <h1 className="text-2xl font-light tracking-widest text-white" style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}>SHARON MOSHE ATTIAS</h1>
           </Link>
         </header>
