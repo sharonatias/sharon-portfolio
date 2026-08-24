@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
+import { CookieBanner } from './components/CookieBanner'
+import { AccessibilityWidget } from './components/AccessibilityWidget'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -11,6 +13,9 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'Sharon Moshe Attias - Creative & Director',
   description: 'Portfolio of Sharon Moshe Attias',
+  other: {
+    'X-UA-Compatible': 'IE=edge',
+  },
 }
 
 export default function RootLayout({
@@ -19,8 +24,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={spaceGrotesk.variable}>
-      <body className="font-space-grotesk">{children}</body>
+    <html lang="he" dir="rtl" className={spaceGrotesk.variable}>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+      </head>
+      <body className="font-space-grotesk">
+        {children}
+        <CookieBanner />
+        <AccessibilityWidget />
+      </body>
     </html>
   )
 }
