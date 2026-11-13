@@ -146,13 +146,13 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${caseStudy.hero_image})` }}
             />
-            {/* Dark Overlay - 30% black */}
-            <div className="absolute inset-0 bg-black opacity-30" />
+            {/* Scrim: darkens the image enough for white hero text to stay readable */}
+            <div className="absolute inset-0 bg-black/55" />
           </>
         )}
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent" />
+        {/* Bottom-weighted gradient under the title block */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
         {/* Header - Positioned on Hero */}
         <header className="absolute top-0 left-0 right-0 z-50 px-8 lg:px-20 pt-6">
