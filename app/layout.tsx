@@ -3,6 +3,7 @@ import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import { CookieBanner } from './components/CookieBanner'
 import { AccessibilityWidget } from './components/AccessibilityWidget'
+import { MediaFallback } from '../components/MediaFallback'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -32,6 +33,7 @@ export default function RootLayout({
       </head>
       <body className="font-space-grotesk text-right">
         {children}
+        <MediaFallback />
         <CookieBanner />
         <AccessibilityWidget />
       </body>
