@@ -59,7 +59,7 @@ export function AccessibilityWidget() {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-6 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl p-6 z-40 w-80 high-contrast:border-2 high-contrast:border-black dark:high-contrast:border-white">
+        <div dir="rtl" className="fixed bottom-24 right-6 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl p-6 z-40 w-80 high-contrast:border-2 high-contrast:border-black dark:high-contrast:border-white">
           <h2 className="text-lg font-bold mb-4">הגדרות הנגשה</h2>
 
           <div className="space-y-4">

@@ -1,6 +1,6 @@
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main dir="rtl" className="min-h-screen bg-black text-white text-right">
       <div className="max-w-4xl mx-auto px-6 py-20">
         <h1 className="text-5xl font-bold mb-12">מדיניות פרטיות</h1>
 

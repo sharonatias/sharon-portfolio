@@ -26,7 +26,7 @@ export function CookieBanner() {
   if (!showBanner) return null
 
   return (
-    <div className="fixed bottom-0 right-0 left-0 bg-black text-white p-6 z-50 border-t border-white border-opacity-10 backdrop-blur-sm">
+    <div dir="rtl" className="fixed bottom-0 right-0 left-0 bg-black text-white p-6 z-50 border-t border-white border-opacity-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="flex-1 text-right">
           <p className="text-sm md:text-base leading-relaxed">

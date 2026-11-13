@@ -197,30 +197,6 @@ p, h1, h2, h3, h4, h5, h6 {
   animation: nextProjectScaleIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* RTL Support */
-html[dir="rtl"] {
-  direction: rtl;
-  text-align: right;
-}
-
-html.rtl,
-html[dir="rtl"] {
-  direction: rtl;
-}
-
-html.rtl *,
-html[dir="rtl"] * {
-  direction: rtl;
-}
-
-/* RTL Margin and Padding Flipping */
-html[dir="rtl"] [class*="ml-"],
-html[dir="rtl"] [class*="mr-"],
-html[dir="rtl"] [class*="pl-"],
-html[dir="rtl"] [class*="pr-"] {
-  direction: rtl;
-}
-
 /* High Contrast Mode */
 @media (prefers-contrast: more) {
   * {
