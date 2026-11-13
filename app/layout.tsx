@@ -4,6 +4,7 @@ import './globals.css'
 import { CookieBanner } from './components/CookieBanner'
 import { AccessibilityWidget } from './components/AccessibilityWidget'
 import { MediaFallback } from '../components/MediaFallback'
+import { TopShade } from '../components/TopShade'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="font-space-grotesk">
         {children}
         <MediaFallback />
+        <TopShade />
         <CookieBanner />
         <AccessibilityWidget />
       </body>
