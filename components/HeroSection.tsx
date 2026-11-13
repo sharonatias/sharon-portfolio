@@ -230,6 +230,18 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
     onVideoLoaded?.()
   }
 
+  // Never leave the page hidden behind the spinner: if the video errors or stalls,
+  // reveal the content anyway (black background) after a short timeout.
+  useEffect(() => {
+    if (videoLoaded) return
+    const fallback = setTimeout(() => {
+      console.warn('Hero video did not become ready in time; showing content anyway')
+      handleVideoReady()
+    }, 6000)
+    return () => clearTimeout(fallback)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoLoaded])
+
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
       {/* Loading Spinner - Always render, opacity controlled by videoLoaded */}
@@ -270,7 +282,14 @@ export default function HeroSection({ video, showHeader = true, onMenuToggle, me
               className="w-full h-full object-cover"
               onCanPlay={handleVideoReady}
             >
-              <source src={video.video_url} type="video/mp4" />
+              <source
+                src={video.video_url}
+                type="video/mp4"
+                onError={() => {
+                  console.warn('Hero video failed to load:', video.video_url)
+                  handleVideoReady()
+                }}
+              />
             </video>
           )}
           <div className="absolute inset-0 bg-black/30" />
