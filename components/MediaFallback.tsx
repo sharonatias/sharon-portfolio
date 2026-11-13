@@ -29,6 +29,13 @@ export function MediaFallback() {
       }
     }
 
+    // Images that already failed before this effect ran would not fire again.
+    document.querySelectorAll('img').forEach((img) => {
+      if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) {
+        img.style.display = 'none'
+      }
+    })
+
     // Resource errors do not bubble, so listen in the capture phase.
     window.addEventListener('error', onError, true)
     return () => window.removeEventListener('error', onError, true)
