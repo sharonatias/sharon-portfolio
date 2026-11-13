@@ -205,17 +205,17 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
             {/* Categories */}
             <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-8 flex-wrap">
               {caseStudy.category && (
-                <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
+                <span className="px-3 py-1.5 text-sm font-light border border-white/80 text-white bg-black/30 backdrop-blur-sm">
                   {caseStudy.category.replace(/_/g, ' ').toUpperCase()}
                 </span>
               )}
               {caseStudy.year && (
-                <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
+                <span className="px-3 py-1.5 text-sm font-light border border-white/80 text-white bg-black/30 backdrop-blur-sm">
                   {caseStudy.year}
                 </span>
               )}
               {caseStudy.client && (
-                <span className="px-3 py-1.5 text-sm font-light border border-black text-black">
+                <span className="px-3 py-1.5 text-sm font-light border border-white/80 text-white bg-black/30 backdrop-blur-sm">
                   {caseStudy.client}
                 </span>
               )}
