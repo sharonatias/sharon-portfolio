@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BrandDesign, AppCase } from '@/lib/types'
+import { SiteHeader } from '@/components/site/SiteHeader'
+import { SiteFooter } from '@/components/site/SiteFooter'
+import { ProjectPager } from '@/components/site/ProjectPager'
 
 export default function BrandDesignPage({ params }: { params: Promise<{ id: string }> }) {
   const [design, setDesign] = useState<BrandDesign | null>(null)
@@ -111,6 +114,8 @@ export default function BrandDesignPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
+    <>
+    <SiteHeader />
     <div className="bg-black text-white min-h-screen relative overflow-hidden">
       {/* Background with low opacity */}
       {design.background_url ? (
@@ -150,14 +155,7 @@ export default function BrandDesignPage({ params }: { params: Promise<{ id: stri
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Header - Back Button */}
-        <header className="border-b border-gray-800 p-8 sticky top-0 bg-black/80 backdrop-blur">
-          <div className="max-w-4xl mx-auto">
-            <a href="/projects" className="text-gray-400 hover:text-white transition text-sm">
-              ← Back
-            </a>
-          </div>
-        </header>
+
 
 
         {/* Skills Animation at Top */}
@@ -590,13 +588,12 @@ export default function BrandDesignPage({ params }: { params: Promise<{ id: stri
           </div>
         )}
 
-        {/* Footer */}
-        <footer className="border-t border-gray-800 py-16 px-8 mt-24">
-          <div className="max-w-4xl mx-auto text-center text-gray-500 text-sm">
-            <p>© 2026 Sharon Moshe Attias | OpenMindStudio</p>
-          </div>
-        </footer>
+        <div className="tone-dark">
+          <ProjectPager type="brand" id={design.id!} />
+        </div>
       </div>
     </div>
+    <div className="relative z-10"><SiteFooter /></div>
+    </>
   )
 }

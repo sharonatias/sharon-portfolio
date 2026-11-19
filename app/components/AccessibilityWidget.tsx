@@ -51,7 +51,7 @@ export function AccessibilityWidget() {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition focus:outline-2 focus:outline-offset-2 focus:outline-blue-400"
+        className="fixed bottom-4 right-4 z-40 bg-[#1b1b1b] hover:bg-[#2a2a2a] text-white border border-white/20 rounded-full w-11 h-11 flex items-center justify-center text-lg transition"
         aria-label="הגדרות הנגשה"
         aria-expanded={isOpen}
       >
