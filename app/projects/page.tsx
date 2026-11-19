@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { WorkImage } from '@/components/site/Media'
@@ -9,6 +9,7 @@ import { CreditsRoll } from '@/components/site/CreditsRoll'
 import { WorkPlayer } from '@/components/site/WorkPlayer'
 import { useAllWork, useSiteContent } from '@/lib/useSiteContent'
 import { CATEGORY_LABELS, CATEGORY_ORDER, WorkItem } from '@/lib/work'
+import { isVideoFile } from '@/lib/media'
 
 type View = 'grid' | 'index'
 
@@ -149,10 +150,35 @@ export default function WorkPage() {
 }
 
 function Card({ item, onPlay, eager }: { item: WorkItem; onPlay: () => void; eager?: boolean }) {
+  // On desktop, a project with a video file plays a silent preview while hovered
+  const [hover, setHover] = useState(false)
+  const canPreview = useRef(false)
+  useEffect(() => {
+    canPreview.current =
+      isVideoFile(item.video) &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }, [item.video])
+  const hoverProps = {
+    onMouseEnter: () => canPreview.current && setHover(true),
+    onMouseLeave: () => setHover(false),
+  }
   const body = (
     <>
       <span className="block aspect-[16/10] overflow-hidden bg-[#111] relative">
-        <WorkImage src={item.image} video={item.video} alt={item.title} eager={eager} />
+        <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={eager} />
+        {hover && (
+          <video
+            src={item.video}
+            autoPlay
+            muted
+            loop
+            playsInline
+            data-managed=""
+            className="cover absolute inset-0 fade-in"
+            onError={() => setHover(false)}
+          />
+        )}
         {!item.href && item.video && (
           <span className="absolute left-3 bottom-3 text-[0.8125rem] text-white bg-black/60 backdrop-blur px-2.5 py-1 rounded-full">
             Play
@@ -167,11 +193,11 @@ function Card({ item, onPlay, eager }: { item: WorkItem; onPlay: () => void; eag
     </>
   )
   return item.href ? (
-    <Link href={item.href} className="lift block">
+    <Link href={item.href} className="lift block" {...hoverProps}>
       {body}
     </Link>
   ) : (
-    <button type="button" onClick={onPlay} className="lift block w-full text-left">
+    <button type="button" onClick={onPlay} className="lift block w-full text-left" {...hoverProps}>
       {body}
     </button>
   )

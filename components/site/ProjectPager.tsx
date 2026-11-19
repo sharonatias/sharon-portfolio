@@ -17,7 +17,7 @@ export function ProjectPager({ type, id }: { type: WorkType | WorkType[]; id: st
     <Link href={hrefOf(item)} className={`group lift block ${dir === 'Next' ? 'md:text-right' : ''}`}>
       <p className="t-meta mb-3">{dir} project</p>
       <div className="scope overflow-hidden bg-[#111]">
-        <WorkImage src={item.image} video={item.video} alt={item.title} />
+        <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} />
       </div>
       <h3 className="t-title mt-4 text-[clamp(1.5rem,2.6vw,2.25rem)]">{item.title}</h3>
       <p className="t-meta mt-1">{[item.role, item.year].filter(Boolean).join(', ')}</p>

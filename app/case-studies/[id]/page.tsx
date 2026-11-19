@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import { AppCase } from '@/lib/types'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { SiteFooter } from '@/components/site/SiteFooter'
-import { PlayableVideo } from '@/components/site/Media'
+import { PlayableVideo, WorkImage } from '@/components/site/Media'
 import { ProjectPager } from '@/components/site/ProjectPager'
-import { categoryLabel } from '@/lib/work'
+import { categoryLabel, collect, listImages, SECTION_KEYS, sectionImages } from '@/lib/work'
 
 const DEFAULT_LABELS: Record<string, string> = {
   problem: 'The brief',
@@ -53,6 +53,10 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       }
     })()
   }, [id])
+
+  useEffect(() => {
+    if (cs?.title) document.title = `${cs?.title} — Sharon Moshe Attias`
+  }, [cs?.title])
 
   if (loading) {
     return (
@@ -108,7 +112,15 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
             </div>
           ) : (
             <>
-              {cs.hero_image && <img src={cs.hero_image} alt="" className="cover absolute inset-0" />}
+              <div className="absolute inset-0">
+                <WorkImage
+                  src={cs.hero_image}
+                  srcs={collect(cs.gallery_images, sectionImages(cs, SECTION_KEYS), listImages(cs.process_blocks), listImages(cs.custom_sections))}
+                  video={cs.video_file || cs.watch_film_link}
+                  alt={cs.title}
+                  eager
+                />
+              </div>
               {film && (
                 <button
                   type="button"
@@ -169,10 +181,15 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
 
         {cs.gallery_images && cs.gallery_images.length > 0 && (
           <section className="wrap py-14 md:py-20" aria-label="Gallery">
-            <div className="grid gap-3 md:gap-4 md:grid-cols-2">
+            <div className="grid gap-3 md:gap-4 md:grid-cols-2 items-start">
               {cs.gallery_images.map((src: string, i: number) => (
-                <figure key={i} className={i === 0 ? 'md:col-span-2 scope overflow-hidden bg-[#111]' : 'aspect-[3/2] overflow-hidden bg-[#111]'}>
-                  <img src={src} alt={`${cs.title}, still ${i + 1}`} className="cover" loading="lazy" />
+                <figure key={i} className={`overflow-hidden bg-[#111] ${i === 0 ? 'md:col-span-2' : ''}`}>
+                  <img
+                    src={src}
+                    alt={`${cs.title}, still ${i + 1}`}
+                    className={`block w-full ${i === 0 ? 'max-h-[80vh] object-cover' : 'h-auto'}`}
+                    loading="lazy"
+                  />
                 </figure>
               ))}
             </div>
@@ -209,13 +226,20 @@ function Chapter({ label, title, text, images }: { label: string; title?: string
           {text && <p className="mt-4 text-[1rem] leading-[1.65] text-[#cfcec8] max-w-[52ch] whitespace-pre-line">{text}</p>}
         </div>
         {n > 0 && (
-          <div className={`lg:col-span-8 grid gap-3 md:gap-4 ${n === 1 ? '' : n === 2 ? 'sm:grid-cols-2' : n === 4 ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'}`}>
+          <div
+            className={`lg:col-span-8 grid gap-3 md:gap-4 items-start ${
+              n === 1 ? '' : n === 2 || n === 4 ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'
+            }`}
+          >
             {imgs.map((src, i) => (
-              <figure
-                key={i}
-                className={`overflow-hidden bg-[#111] ${n === 1 ? 'aspect-[16/9]' : n === 2 ? 'aspect-[4/5] sm:aspect-[3/4]' : 'aspect-[4/5]'}`}
-              >
-                <img src={src} alt={`${title || label} ${i + 1}`} className="cover" loading="lazy" />
+              <figure key={i} className="overflow-hidden">
+                {/* Frames keep their own aspect ratio: a film still is never cropped to fit a box */}
+                <img
+                  src={src}
+                  alt={`${title || label} ${i + 1}`}
+                  className={`block w-full h-auto bg-[#111] ${n === 1 ? 'max-h-[80vh] object-contain object-left' : ''}`}
+                  loading="lazy"
+                />
               </figure>
             ))}
           </div>

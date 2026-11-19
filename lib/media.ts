@@ -58,3 +58,21 @@ export function videoThumb(url?: string) {
   const yt = youTubeId(url)
   return yt ? `https://i.ytimg.com/vi/${yt}/hqdefault.jpg` : undefined
 }
+
+/** True for an uploaded video file (not a YouTube/Vimeo page). */
+export function isVideoFile(url?: string) {
+  return !!url && !youTubeId(url) && !vimeoId(url)
+}
+
+/**
+ * A still frame for an uploaded video, where the host can make one:
+ * Cloudinary renders a frame at a given second; Bunny Stream keeps a thumbnail next to each video.
+ */
+export function videoFrameUrl(url?: string, second = 2) {
+  if (!url) return undefined
+  const cld = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/video\/upload\/)(.+?)\.(mp4|mov|webm|m4v)(\?.*)?$/i)
+  if (cld) return `${cld[1]}so_${second},f_jpg,q_auto,w_1600/${cld[2]}.jpg`
+  const bunny = url.match(/^(https:\/\/vz-[a-z0-9-]+\.b-cdn\.net\/[0-9a-f-]{36})\//i)
+  if (bunny) return `${bunny[1]}/thumbnail.jpg`
+  return undefined
+}

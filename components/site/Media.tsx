@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { embedUrl, videoSource, videoThumb } from '@/lib/media'
+import { embedUrl, isVideoFile, videoFrameUrl, videoSource, videoThumb } from '@/lib/media'
 
 /**
  * Silent, looping video that fills its frame (file, YouTube or Vimeo).
@@ -96,27 +96,72 @@ export function PlayableVideo({ url, title, autoPlay = true }: { url: string; ti
   )
 }
 
-/** Image for a card; falls back to the video's thumbnail, then to a quiet frame with the title. */
+/**
+ * Still for a card or frame. Tries, in order: the given image, every other image found on the
+ * project, a frame rendered by the video host, a YouTube thumbnail, then a frame taken from the
+ * video file itself. Only if all of that fails does it show the title on a quiet frame.
+ */
 export function WorkImage({
   src,
+  srcs,
   video,
   alt,
   className = '',
   eager = false,
 }: {
   src?: string
+  srcs?: string[]
   video?: string
   alt: string
   className?: string
   eager?: boolean
 }) {
-  const s = src || videoThumb(video)
-  if (!s) {
+  const candidates = Array.from(
+    new Set([src, ...(srcs || []), videoFrameUrl(video), videoThumb(video)].filter((x): x is string => !!x))
+  )
+  const signature = candidates.join('|')
+  const [failed, setFailed] = useState(0)
+  const [videoFailed, setVideoFailed] = useState(false)
+  useEffect(() => {
+    setFailed(0)
+    setVideoFailed(false)
+  }, [signature])
+
+  if (failed < candidates.length) {
+    const current = candidates[failed]
     return (
-      <div className={`flex items-end p-4 bg-[#141414] text-[var(--dim)] ${className}`}>
-        <span className="t-title text-lg">{alt}</span>
-      </div>
+      <img
+        key={current}
+        src={current}
+        alt={alt}
+        data-managed=""
+        className={`cover ${className}`}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        onError={() => setFailed((n) => n + 1)}
+      />
     )
   }
-  return <img src={s} alt={alt} className={`cover ${className}`} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+
+  if (isVideoFile(video) && !videoFailed) {
+    // Let the browser decode a frame a couple of seconds in: a real frame from the film
+    return (
+      <video
+        src={`${video}#t=2`}
+        muted
+        playsInline
+        preload="metadata"
+        data-managed=""
+        aria-label={alt}
+        className={`cover ${className}`}
+        onError={() => setVideoFailed(true)}
+      />
+    )
+  }
+
+  return (
+    <div className={`w-full h-full flex items-end p-4 bg-[#141414] text-[var(--dim)] ${className}`}>
+      <span className="t-title text-lg">{alt}</span>
+    </div>
+  )
 }

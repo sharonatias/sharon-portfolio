@@ -63,6 +63,7 @@ export default function Home() {
         role: content.heroRole,
         video: heroVideo,
         image: heroPoster,
+        images: heroPoster ? [heroPoster] : [],
         tone: 'dark',
         order: 0,
         raw: null,
@@ -203,7 +204,7 @@ function Strip({
           const body = (
             <>
               <span className="block scope overflow-hidden bg-[#111]">
-                <WorkImage src={it.image} video={it.video} alt={it.title} />
+                <WorkImage src={it.image} srcs={it.images} video={it.video} alt={it.title} />
               </span>
               <span className="t-title block mt-4 text-[1.375rem]">{it.title}</span>
               <span className="t-meta block mt-1">{it.subtitle || [it.role, it.year].filter(Boolean).join(', ')}</span>

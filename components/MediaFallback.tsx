@@ -13,6 +13,8 @@ import { usePathname } from 'next/navigation'
 const FALLBACK_BG = 'linear-gradient(135deg, #1c1c1e 0%, #000000 100%)'
 
 function hideMedia(el: HTMLElement) {
+  // Components that handle their own fallbacks mark their media with data-managed
+  if (el.hasAttribute('data-managed')) return
   el.style.display = 'none'
   const parent = el.parentElement
   if (parent && !parent.style.background) {

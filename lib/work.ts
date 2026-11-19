@@ -16,6 +16,7 @@ export interface WorkItem {
   category?: string
   categoryLabel: string
   image?: string
+  images: string[] // every still found on the item, best first; used when the main image is missing or broken
   video?: string // a file or YouTube/Vimeo link that can be played in place
   href?: string // a case-study page; projects without one open in the player
   tone: 'dark' | 'light'
@@ -52,6 +53,29 @@ export const categoryLabel = (c?: string) =>
 const str = (v: any) => (typeof v === 'string' && v.trim() ? v.trim() : undefined)
 const orderOf = (v: any) => (typeof v === 'number' ? v : 999)
 
+/** Pull every usable image URL out of strings, {url}, {main} objects and nested arrays. */
+export function collect(...sources: any[]): string[] {
+  const out: string[] = []
+  const add = (v: any) => {
+    if (!v) return
+    if (typeof v === 'string') {
+      const t = v.trim()
+      if (t && !out.includes(t) && !/\.(mp4|mov|webm|m3u8)(\?|$)/i.test(t)) out.push(t)
+    } else if (Array.isArray(v)) v.forEach(add)
+    else if (typeof v === 'object') {
+      add(v.url)
+      add(v.main)
+    }
+  }
+  sources.forEach(add)
+  return out
+}
+
+export const SECTION_KEYS = ['problem', 'insight', 'approach', 'flow', 'interaction', 'outcome']
+export const BRAND_KEYS = ['idea', 'system', 'shape', 'motion', 'applications', 'color', 'type']
+export const sectionImages = (obj: any, keys: string[]) => keys.map((k) => obj?.[k]?.images)
+export const listImages = (list: any) => (Array.isArray(list) ? list.map((x: any) => x?.images) : [])
+
 async function getJson(url: string): Promise<any[]> {
   try {
     const res = await fetch(url, { cache: 'no-store' })
@@ -83,7 +107,8 @@ export function normalizeWork(lists: {
       categoryLabel: categoryLabel(p.category),
       role: categoryLabel(p.category),
       year: str(p.year),
-      image: str(p.image_url) || (Array.isArray(p.images) ? p.images[0] : undefined),
+      images: collect(p.image_url, p.images),
+      image: collect(p.image_url, p.images)[0],
       video: str(p.video_url),
       tone: 'dark',
       order: orderOf(p.display_order),
@@ -104,6 +129,7 @@ export function normalizeWork(lists: {
       categoryLabel: str(c.format) || categoryLabel(c.category),
       role: str(c.role) || str(c.format) || categoryLabel(c.category),
       year: str(String(c.year ?? '')),
+      images: collect(c.hero_image, c.gallery_images, sectionImages(c, SECTION_KEYS), listImages(c.process_blocks), listImages(c.custom_sections)),
       image: str(c.hero_image),
       video: str(c.video_file) || str(c.watch_film_link),
       href: `/case-studies/${c.id}`,
@@ -126,7 +152,9 @@ export function normalizeWork(lists: {
       categoryLabel: categoryLabel(c.category || 'brand_design'),
       role: str(c.role) || 'Product design',
       year: str(String(c.year ?? '')),
+      images: collect(c.hero_image, c.gallery_images, sectionImages(c, SECTION_KEYS), listImages(c.process_blocks), listImages(c.custom_sections)),
       image: str(c.hero_image),
+      video: str(c.video_file) || str(c.watch_film_link),
       href: `/case-studies/${c.id}`,
       tone: 'dark',
       order: orderOf(c.display_order),
@@ -147,7 +175,9 @@ export function normalizeWork(lists: {
       categoryLabel: categoryLabel(c.category || 'brand_design'),
       role: str(c.role) || 'Brand identity',
       year: str(String(c.year ?? '')),
+      images: collect(c.hero_image, sectionImages(c, BRAND_KEYS), listImages(c.custom_sections), listImages(c.brand_applications)),
       image: str(c.hero_image),
+      video: str(c.hero_video) || str(c.motion?.video) || (Array.isArray(c.videos) ? str(c.videos[0]?.url) : undefined),
       href: `/brand-case-studies/${c.id}`,
       tone: 'light',
       order: orderOf(c.display_order),
@@ -166,11 +196,9 @@ export function normalizeWork(lists: {
       category: b.category || 'brand_design',
       categoryLabel: categoryLabel(b.category || 'brand_design'),
       role: 'Brand design',
-      image:
-        str(b.cover_image_url) ||
-        (Array.isArray(b.mockups) ? b.mockups[0] : undefined) ||
-        (Array.isArray(b.images) ? b.images[0] : undefined) ||
-        str(b.logo_url),
+      images: collect(b.cover_image_url, b.mockups, b.images, b.process_images, b.logo_url),
+      image: collect(b.cover_image_url, b.mockups, b.images, b.process_images, b.logo_url)[0],
+      video: str(b.video_url) || str(b.background_url),
       href: `/brand/${b.id}`,
       tone: 'dark',
       order: orderOf(b.display_order),

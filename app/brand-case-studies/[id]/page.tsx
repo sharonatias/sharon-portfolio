@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import HoverGridSection from '@/components/HoverGridSection'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { SiteFooter } from '@/components/site/SiteFooter'
-import { BackgroundVideo } from '@/components/site/Media'
+import { BackgroundVideo, WorkImage } from '@/components/site/Media'
 import { ProjectPager } from '@/components/site/ProjectPager'
-import { categoryLabel } from '@/lib/work'
+import { BRAND_KEYS, categoryLabel, collect, listImages, sectionImages } from '@/lib/work'
 
 // Brand work sits on the light "screen" tone so identities read in their true colours.
 
@@ -54,6 +54,10 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       .catch(() => setCs(null))
       .finally(() => setLoading(false))
   }, [id])
+
+  useEffect(() => {
+    if (cs?.title) document.title = `${cs?.title} — Sharon Moshe Attias`
+  }, [cs?.title])
 
   if (loading) {
     return (
@@ -163,7 +167,15 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
           {cs.hero_video ? (
             <BackgroundVideo url={cs.hero_video} poster={cs.hero_image} className="absolute inset-0" />
           ) : (
-            cs.hero_image && <img src={cs.hero_image} alt="" className="cover absolute inset-0" />
+            <div className="absolute inset-0">
+              <WorkImage
+                src={cs.hero_image}
+                srcs={collect(sectionImages(cs, BRAND_KEYS), listImages(cs.custom_sections), listImages(cs.brand_applications))}
+                video={cs.motion?.video}
+                alt={cs.title}
+                eager
+              />
+            </div>
           )}
         </section>
 

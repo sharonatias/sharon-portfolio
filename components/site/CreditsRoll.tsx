@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { isVideoFile } from '@/lib/media'
 import { WorkItem } from '@/lib/work'
 import { WorkImage } from './Media'
 
@@ -11,6 +12,13 @@ import { WorkImage } from './Media'
  */
 export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (item: WorkItem) => void }) {
   const [active, setActive] = useState(0)
+  const [motionOk, setMotionOk] = useState(false)
+  useEffect(() => {
+    setMotionOk(
+      window.matchMedia('(min-width: 1024px) and (hover: hover)').matches &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+  }, [])
   const current = items[active] || items[0]
   if (!items.length) return null
 
@@ -27,7 +35,20 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
                 style={{ opacity: i === active ? 1 : 0, transition: 'opacity .45s ease' }}
                 aria-hidden={i !== active}
               >
-                <WorkImage src={it.image} video={it.video} alt={it.title} eager={i < 3} />
+                <WorkImage src={it.image} srcs={it.images} video={it.video} alt={it.title} eager={i < 3} />
+                {/* The row being read plays its footage, when it has a video file */}
+                {motionOk && i === active && isVideoFile(it.video) && (
+                  <video
+                    key={it.key}
+                    src={it.video}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    data-managed=""
+                    className="cover absolute inset-0 fade-in"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -67,7 +88,7 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
           // Mobile shows a small still instead of the role column
           const mobileThumb = (
             <span className="sm:hidden block w-[72px] aspect-[4/3] overflow-hidden bg-[#111] row-span-2">
-              <WorkImage src={it.image} video={it.video} alt="" />
+              <WorkImage src={it.image} srcs={it.images} video={it.video} alt="" />
             </span>
           )
           return (

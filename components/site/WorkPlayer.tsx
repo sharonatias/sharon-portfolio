@@ -85,7 +85,7 @@ export function WorkPlayer({
           {item.video ? (
             <PlayableVideo key={item.key} url={item.video} title={item.title} />
           ) : (
-            <WorkImage src={item.image} alt={item.title} className="!object-contain" eager />
+            <WorkImage src={item.image} srcs={item.images} alt={item.title} className="!object-contain" eager />
           )}
         </div>
       </div>
