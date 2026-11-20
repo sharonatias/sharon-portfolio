@@ -1,5 +1,10 @@
+import { SiteHeader } from '@/components/site/SiteHeader'
+import { SiteFooter } from '@/components/site/SiteFooter'
+
 export default function PrivacyPage() {
   return (
+    <>
+    <SiteHeader />
     <main dir="rtl" className="min-h-screen bg-black text-white text-right">
       <div className="max-w-4xl mx-auto px-6 py-20">
         <h1 className="text-5xl font-bold mb-12">מדיניות פרטיות</h1>
@@ -99,5 +104,7 @@ export default function PrivacyPage() {
         </div>
       </div>
     </main>
+    <SiteFooter />
+    </>
   )
 }
