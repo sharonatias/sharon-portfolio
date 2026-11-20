@@ -163,7 +163,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
     <>
       <SiteHeader tone="light" />
       <main className="tone-light">
-        <section className="relative w-full aspect-[16/10] md:aspect-[2.39/1] md:max-h-[calc(100svh-var(--header-h)-80px)] bg-[#e7e7e3] overflow-hidden">
+        <section className="relative w-full aspect-[4/5] sm:aspect-[16/10] lg:aspect-auto lg:h-[calc(100svh-var(--header-h))] lg:min-h-[560px] lg:max-h-[1200px] bg-[#e7e7e3] overflow-hidden">
           {cs.hero_video ? (
             <BackgroundVideo url={cs.hero_video} poster={cs.hero_image} className="absolute inset-0" />
           ) : (

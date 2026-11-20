@@ -130,9 +130,10 @@ export default function WorkPage() {
           ) : view === 'index' ? (
             <CreditsRoll key={filter} items={shown} onPlay={open} />
           ) : (
-            <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-6">
               {shown.map((it, i) => (
-                <li key={it.key}>
+                // Rhythm: each group of eight opens with a large pair, then rows of three
+                <li key={it.key} className={i % 8 < 2 ? 'lg:col-span-3' : 'lg:col-span-2'}>
                   <Card item={it} eager={i < 6} onPlay={() => open(it)} />
                 </li>
               ))}
@@ -186,7 +187,7 @@ function Card({ item, onPlay, eager }: { item: WorkItem; onPlay: () => void; eag
         )}
       </span>
       <span className="flex items-baseline justify-between gap-4 mt-4">
-        <span className="t-title text-[1.375rem] md:text-[1.5rem] min-w-0">{item.title}</span>
+        <span className="t-title text-[clamp(1.375rem,1.7vw,2rem)] min-w-0">{item.title}</span>
         {item.year && <span className="t-meta t-num shrink-0">{item.year}</span>}
       </span>
       <span className="t-meta block mt-1">{item.subtitle || item.role || item.categoryLabel}</span>

@@ -320,3 +320,106 @@ video {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
+
+/* ---------- Home: the opening frame ---------- */
+.hero-screen {
+  height: calc(100svh - var(--header-h));
+  min-height: 560px;
+  max-height: 1200px;
+}
+
+/* Bars close in to a 2.39:1 frame as --p goes 0 → 1 (set on scroll) */
+.hero-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background: #000;
+  height: max(0px, calc((100% - 100vw / 2.39) / 2));
+  transform: scaleY(var(--p, 0));
+  will-change: transform;
+}
+.hero-bar--top {
+  top: 0;
+  transform-origin: top;
+}
+.hero-bar--bottom {
+  bottom: 0;
+  transform-origin: bottom;
+}
+.hero-copy {
+  z-index: 3;
+}
+.hero-ratio {
+  z-index: 3;
+  opacity: var(--p, 0);
+}
+
+/* Tactile press on primary buttons */
+.press {
+  transition-property: transform, background-color, color;
+  transition-duration: 160ms;
+  transition-timing-function: ease;
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Subtle edge on media so frames hold their shape on black */
+.edge {
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+}
+
+/* ---------- Contact sheet (film pages) ---------- */
+.sheet {
+  background: #111;
+  padding: 28px clamp(12px, 2vw, 24px);
+}
+.sheet-strip {
+  position: relative;
+  padding: 22px 0;
+}
+.sheet-strip::before,
+.sheet-strip::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 9px;
+  background: repeating-linear-gradient(90deg, transparent 0 12px, rgba(242, 241, 236, 0.16) 12px 22px, transparent 22px 34px);
+}
+.sheet-strip::before {
+  top: 4px;
+}
+.sheet-strip::after {
+  bottom: 4px;
+}
+.frame-no {
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: #d9a441;
+  font-variant-numeric: tabular-nums;
+}
+/* Grease-pencil mark: drawn around the chosen frame, like a director picking a take */
+.pencil path {
+  fill: none;
+  stroke: var(--tally);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  transition: stroke-dashoffset 0.7s var(--ease), opacity 0.15s ease;
+}
+.is-picked .pencil path,
+.sheet-cell:focus-visible .pencil path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .sheet-cell:hover .pencil path {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}

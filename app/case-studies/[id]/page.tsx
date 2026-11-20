@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react'
 import { AppCase } from '@/lib/types'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { SiteFooter } from '@/components/site/SiteFooter'
-import { PlayableVideo, WorkImage } from '@/components/site/Media'
+import { HeroScreen } from '@/components/site/HeroScreen'
+import { WorkPlayer } from '@/components/site/WorkPlayer'
+import { isVideoFile, videoFrameUrl, videoThumb } from '@/lib/media'
 import { ProjectPager } from '@/components/site/ProjectPager'
+import { FrameSheet } from '@/components/site/FrameSheet'
 import { categoryLabel, collect, listImages, SECTION_KEYS, sectionImages } from '@/lib/work'
 
 const DEFAULT_LABELS: Record<string, string> = {
@@ -104,51 +107,23 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
     <>
       <SiteHeader />
       <main className="tone-dark">
-        {/* The screen: still, or the film itself once played */}
-        <section className="relative w-full aspect-[16/10] md:aspect-[2.39/1] md:max-h-[calc(100svh-var(--header-h)-80px)] bg-black overflow-hidden">
-          {playing && film ? (
-            <div className="absolute inset-0">
-              <PlayableVideo url={film} title={cs.title} />
-            </div>
-          ) : (
-            <>
-              <div className="absolute inset-0">
-                <WorkImage
-                  src={cs.hero_image}
-                  srcs={collect(cs.gallery_images, sectionImages(cs, SECTION_KEYS), listImages(cs.process_blocks), listImages(cs.custom_sections))}
-                  video={cs.video_file || cs.watch_film_link}
-                  alt={cs.title}
-                  eager
-                />
-              </div>
-              {film && (
-                <button
-                  type="button"
-                  onClick={() => setPlaying(true)}
-                  className="absolute inset-0 flex items-end justify-end p-[var(--gutter)] group"
-                  aria-label={`Play ${cs.title}`}
-                >
-                  <span className="flex items-center gap-2.5 text-[0.9375rem] text-white bg-black/55 backdrop-blur px-4 py-2.5 rounded-full group-hover:bg-black/80 transition-colors">
-                    <span aria-hidden className="w-2 h-2 rounded-full bg-[var(--tally)]" />
-                    Watch the film
-                  </span>
-                </button>
-              )}
-            </>
-          )}
-        </section>
+        {/* The screen: the opening still (or a silent loop of the film file), title on the picture */}
+        <HeroScreen
+          video={cs.video_file && isVideoFile(cs.video_file) ? cs.video_file : undefined}
+          poster={cs.hero_image || collect(cs.gallery_images, sectionImages(cs, SECTION_KEYS))[0] || videoFrameUrl(film) || videoThumb(film)}
+          kicker={cs.format || categoryLabel(cs.category)}
+          title={cs.title}
+          subtitle={cs.subtitle}
+          onWatch={film ? () => setPlaying(true) : undefined}
+          watchLabel="Watch the film"
+        />
 
-        {/* Title */}
-        <section className="wrap pt-10 md:pt-14 pb-14 md:pb-20 grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-8">
-            <p className="t-meta mb-4">{cs.format || categoryLabel(cs.category)}</p>
-            <h1 className="open-1 t-display text-[clamp(2.75rem,6.6vw,7rem)]">{cs.title}</h1>
-            {cs.subtitle && <p className="open-2 t-title mt-4 text-[clamp(1.25rem,2vw,1.75rem)] text-[#d6d5cf]">{cs.subtitle}</p>}
-          </div>
-          {cs.hero_description && (
-            <p className="open-3 lg:col-span-4 t-lead text-[#d6d5cf] max-w-[44ch] lg:pb-2">{cs.hero_description}</p>
-          )}
-        </section>
+        {cs.hero_description && (
+          <section className="wrap py-16 md:py-28 grid gap-8 lg:grid-cols-12">
+            <p className="t-meta lg:col-span-3 pt-2">The film</p>
+            <p className="lg:col-span-9 t-title text-[clamp(1.625rem,3vw,3rem)] leading-[1.12] max-w-[30ch]">{cs.hero_description}</p>
+          </section>
+        )}
 
         {meta.length > 0 && (
           <section className="wrap">
@@ -179,22 +154,17 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           <Chapter key={c.id} label={sentence(c.label) || 'Notes'} title={c.title} text={c.description} images={c.images} />
         ))}
 
-        {cs.gallery_images && cs.gallery_images.length > 0 && (
-          <section className="wrap py-14 md:py-20" aria-label="Gallery">
-            <div className="grid gap-3 md:gap-4 md:grid-cols-2 items-start">
-              {cs.gallery_images.map((src: string, i: number) => (
-                <figure key={i} className={`overflow-hidden bg-[#111] ${i === 0 ? 'md:col-span-2' : ''}`}>
-                  <img
-                    src={src}
-                    alt={`${cs.title}, still ${i + 1}`}
-                    className={`block w-full ${i === 0 ? 'max-h-[80vh] object-cover' : 'h-auto'}`}
-                    loading="lazy"
-                  />
-                </figure>
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Stills as a contact sheet; falls back to every frame used in the story */}
+        <FrameSheet
+          title={cs.title}
+          frames={
+            cs.gallery_images?.length
+              ? cs.gallery_images.filter(Boolean)
+              : collect(sectionImages(cs, SECTION_KEYS), listImages(cs.process_blocks)).length >= 4
+                ? collect(sectionImages(cs, SECTION_KEYS), listImages(cs.process_blocks))
+                : []
+          }
+        />
 
         {cs.my_role_title && (
           <section className="wrap py-14 md:py-20 grid gap-6 lg:grid-cols-12 rule-top">
@@ -209,6 +179,15 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
         <ProjectPager type={source} id={cs.id!} />
       </main>
       <SiteFooter />
+
+      {playing && film && (
+        <WorkPlayer
+          items={[{ key: 'film', id: 'film', type: 'project', title: cs.title, categoryLabel: cs.format || 'Film', role: cs.role, year: cs.year, video: film, image: cs.hero_image, images: [], tone: 'dark', order: 0, raw: null }]}
+          index={0}
+          onChange={() => {}}
+          onClose={() => setPlaying(false)}
+        />
+      )}
     </>
   )
 }
@@ -218,12 +197,12 @@ function Chapter({ label, title, text, images }: { label: string; title?: string
   const imgs = (images || []).filter(Boolean)
   const n = imgs.length
   return (
-    <section className="wrap py-14 md:py-20 rule-top">
+    <section className="wrap py-16 md:py-28 rule-top">
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-x-8">
         <div className="lg:col-span-4">
           <h2 className="t-meta">{label}</h2>
-          {title && <p className="t-title mt-3 text-[clamp(1.5rem,2.4vw,2.125rem)]">{title}</p>}
-          {text && <p className="mt-4 text-[1rem] leading-[1.65] text-[#cfcec8] max-w-[52ch] whitespace-pre-line">{text}</p>}
+          {title && <p className="t-title mt-3 text-[clamp(1.75rem,2.8vw,3rem)] leading-[1.05]">{title}</p>}
+          {text && <p className="mt-5 text-[1.0625rem] leading-[1.7] text-[#cfcec8] max-w-[52ch] whitespace-pre-line">{text}</p>}
         </div>
         {n > 0 && (
           <div

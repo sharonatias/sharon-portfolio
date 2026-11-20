@@ -4,11 +4,15 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { SiteFooter } from '@/components/site/SiteFooter'
-import { BackgroundVideo, WorkImage } from '@/components/site/Media'
+import { WorkImage } from '@/components/site/Media'
 import { CreditsRoll } from '@/components/site/CreditsRoll'
 import { WorkPlayer } from '@/components/site/WorkPlayer'
+import { HeroScreen } from '@/components/site/HeroScreen'
+import { SectionHead } from '@/components/site/SectionHead'
+import { Spotlight } from '@/components/site/Spotlight'
 import { useAllWork, useSiteContent } from '@/lib/useSiteContent'
 import { CATEGORY_LABELS, CATEGORY_ORDER, pickByIds, WorkItem } from '@/lib/work'
+import { tidyRole } from '@/lib/site'
 
 export default function Home() {
   const { content, texts } = useSiteContent()
@@ -29,6 +33,10 @@ export default function Home() {
     const base = picked.length ? picked : items.filter((i) => i.category !== 'currently_exploring')
     return base.slice(0, 10)
   }, [items, content.featured_project_ids])
+
+  // The first three are shown big; the rest roll as credits
+  const spotlight = featured.slice(0, 3)
+  const credits = featured.length > 4 ? featured.slice(3) : []
 
   const exploring = useMemo(() => {
     const picked = pickByIds(items, content.exploring_ids)
@@ -74,36 +82,27 @@ export default function Home() {
     <>
       <SiteHeader />
       <main className="tone-dark">
-        {/* The screen */}
-        <section aria-label="Showreel" className="relative">
-          <BackgroundVideo
-            url={heroVideo}
-            poster={heroPoster}
-            className="w-full aspect-[16/10] md:aspect-[2.39/1] md:max-h-[calc(100svh-var(--header-h)-120px)] md:min-h-[360px]"
-          />
-          {showreel && (
-            <button
-              type="button"
-              onClick={() => setPlayer({ list: [showreel], index: 0 })}
-              className="absolute right-[var(--gutter)] bottom-4 md:bottom-5 flex items-center gap-2.5 text-[0.875rem] text-white bg-black/55 backdrop-blur px-3.5 py-2 rounded-full hover:bg-black/75 transition-colors"
-            >
-              <span aria-hidden className="w-2 h-2 rounded-full bg-[var(--tally)]" />
-              Watch with sound
-            </button>
-          )}
-        </section>
+        <HeroScreen
+          video={heroVideo}
+          poster={heroPoster}
+          title={content.heroTitle}
+          subtitle={content.heroSubtitle}
+          onWatch={showreel ? () => setPlayer({ list: [showreel], index: 0 }) : undefined}
+        />
 
-        {/* Who */}
-        <section className="wrap pt-10 md:pt-14 pb-20 md:pb-28 grid gap-8 lg:grid-cols-12 lg:items-end">
-          <h1 className="open-1 t-display lg:col-span-8 text-[clamp(3rem,7.2vw,7.5rem)] max-w-[15ch]">
-            {content.heroTitle}
-          </h1>
-          <div className="open-2 lg:col-span-4 lg:pb-2">
-            <p className="t-lead text-[#d6d5cf] max-w-[42ch]">{content.heroSubtitle}</p>
-            {texts.currently && <p className="t-meta mt-4 max-w-[42ch]">{texts.currently}</p>}
-            <p className="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-[0.9375rem]">
+        {/* Who, in one breath */}
+        <section className="wrap py-20 md:py-32 grid gap-8 lg:grid-cols-12">
+          <p className="t-meta lg:col-span-3 pt-2">{tidyRole(content.heroRole)}</p>
+          <div className="lg:col-span-9">
+            <p className="t-title text-[clamp(1.75rem,3.4vw,3.5rem)] leading-[1.08] max-w-[26ch]">
+              {texts.currently || content.heroSubtitle}
+            </p>
+            <p className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-[1rem]">
               <Link href="/projects" className="link-draw">
                 See all work{ready && items.length ? ` (${items.length})` : ''}
+              </Link>
+              <Link href="/about" className="link-draw">
+                About me
               </Link>
               <Link href="/contact" className="link-draw">
                 Get in touch
@@ -112,38 +111,35 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Selected work, as credits */}
-        {content.featured_visible !== false && featured.length > 0 && (
-          <section aria-labelledby="selected" className="wrap pb-24 md:pb-32">
-            <div className="flex items-baseline justify-between gap-4 pb-5 rule-bottom">
-              <h2 id="selected" className="t-title text-[1.25rem] md:text-[1.5rem]">
-                {texts.workHeading}
-              </h2>
-              <Link href="/projects" className="link-draw text-[0.9375rem]">
-                All work
-              </Link>
-            </div>
-            <CreditsRoll items={featured} onPlay={(it) => play(featured, it)} />
+        {content.featured_visible !== false && spotlight.length > 0 && (
+          <section aria-labelledby="selected">
+            <SectionHead id="selected" title={texts.workHeading} count={featured.length} href="/projects" linkLabel="All work" />
+            <Spotlight items={spotlight} onPlay={(it) => play(featured, it)} />
+            {credits.length > 0 && (
+              <div className="wrap pt-20 md:pt-28 pb-8">
+                <CreditsRoll items={credits} onPlay={(it) => play(featured, it)} />
+              </div>
+            )}
           </section>
         )}
 
         {/* Disciplines: a fast way into a large body of work */}
         {disciplines.length > 1 && (
-          <section aria-labelledby="disc" className="wrap pb-24 md:pb-32">
-            <h2 id="disc" className="t-meta pb-5 rule-bottom">
-              Browse by discipline
-            </h2>
-            <ul className="flex flex-wrap gap-x-10 gap-y-3 pt-8">
+          <section aria-labelledby="disc" className="pt-24 md:pt-36">
+            <SectionHead id="disc" title="Browse by discipline" />
+            <ul className="wrap pt-6">
               {disciplines.map((d) => (
-                <li key={d.key}>
+                <li key={d.key} className="rule-bottom">
                   <Link
                     href={`/projects?c=${d.key}`}
-                    className="t-display text-[clamp(2.25rem,5.2vw,4.75rem)] hover:text-white text-[#cfcec8] transition-colors inline-flex items-start gap-2"
+                    className="group flex items-baseline justify-between gap-6 py-4 md:py-5 text-[#cfcec8] hover:text-white transition-colors"
                   >
-                    {d.label}
-                    <sup className="t-num text-[0.875rem] font-normal tracking-normal text-[var(--dim)] mt-2" style={{ fontVariationSettings: "'wdth' 100" }}>
-                      {d.count}
-                    </sup>
+                    <span className="t-display text-[clamp(2.25rem,5.6vw,5.5rem)] transition-transform duration-500 group-hover:translate-x-3" style={{ transitionTimingFunction: 'var(--ease)' }}>
+                      {d.label}
+                    </span>
+                    <span className="t-meta t-num text-[1rem]">
+                      {d.count} {d.count === 1 ? 'project' : 'projects'}
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -163,6 +159,8 @@ export default function Home() {
             moreHref="/projects?c=ai_experiments"
           />
         )}
+
+        <div className="h-24 md:h-36" />
       </main>
       <SiteFooter />
 
@@ -178,6 +176,7 @@ export default function Home() {
   )
 }
 
+/** A row of work. Fewer items get bigger frames, so a short list never looks empty. */
 function Strip({
   title,
   items,
@@ -189,24 +188,26 @@ function Strip({
   onPlay: (it: WorkItem) => void
   moreHref?: string
 }) {
+  const n = items.length
+  if (n === 1) {
+    return (
+      <section aria-label={title} className="pt-24 md:pt-36">
+        <SectionHead title={title} href={moreHref} linkLabel="See more" />
+        <Spotlight items={items} onPlay={onPlay} />
+      </section>
+    )
+  }
   return (
-    <section aria-label={title} className="wrap pb-24 md:pb-32">
-      <div className="flex items-baseline justify-between gap-4 pb-5 rule-bottom mb-8">
-        <h2 className="t-title text-[1.25rem] md:text-[1.5rem]">{title}</h2>
-        {moreHref && (
-          <Link href={moreHref} className="link-draw text-[0.9375rem]">
-            See more
-          </Link>
-        )}
-      </div>
-      <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+    <section aria-label={title} className="pt-24 md:pt-36">
+      <SectionHead title={title} count={n} href={moreHref} linkLabel="See more" />
+      <ul className={`wrap pt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 ${n >= 3 ? 'lg:grid-cols-3' : ''}`}>
         {items.map((it) => {
           const body = (
             <>
-              <span className="block scope overflow-hidden bg-[#111]">
+              <span className={`block overflow-hidden bg-[#111] edge ${n === 2 ? 'aspect-[16/10]' : 'aspect-[4/3]'}`}>
                 <WorkImage src={it.image} srcs={it.images} video={it.video} alt={it.title} />
               </span>
-              <span className="t-title block mt-4 text-[1.375rem]">{it.title}</span>
+              <span className="t-title block mt-5 text-[clamp(1.375rem,1.8vw,1.875rem)]">{it.title}</span>
               <span className="t-meta block mt-1">{it.subtitle || [it.role, it.year].filter(Boolean).join(', ')}</span>
             </>
           )

@@ -25,9 +25,9 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
   return (
     <div className="grid lg:grid-cols-12 gap-x-8">
       {/* Preview, desktop only */}
-      <div className="hidden lg:block lg:col-span-5">
+      <div className="hidden lg:block lg:col-span-7">
         <div className="sticky" style={{ top: 'calc(var(--header-h) + 32px)' }}>
-          <div className="scope overflow-hidden bg-[#0d0d0d] relative">
+          <div className="aspect-[16/10] max-h-[calc(100svh-var(--header-h)-120px)] w-full overflow-hidden bg-[#0d0d0d] relative edge">
             {items.map((it, i) => (
               <div
                 key={it.key}
@@ -58,15 +58,15 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
         </div>
       </div>
 
-      <ol className="lg:col-span-7" role="list">
+      <ol className="lg:col-span-5" role="list">
         {items.map((it, i) => {
           const isActive = i === active
           const inner = (
             <>
-              <span className="t-meta lg:text-right pt-[0.35em] order-2 sm:order-none">{it.role || it.categoryLabel}</span>
+              <span className="t-meta pt-[0.45em] order-2 sm:order-none">{it.role || it.categoryLabel}</span>
               <span className="min-w-0">
                 <span
-                  className="t-title block text-[clamp(1.5rem,2.6vw,2.375rem)] transition-colors duration-300"
+                  className="t-title block text-[clamp(1.5rem,2.2vw,2.75rem)] transition-colors duration-300"
                   style={{ color: isActive ? 'var(--fg)' : undefined }}
                 >
                   {it.title}
@@ -80,7 +80,7 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
             </>
           )
           const cls =
-            'group grid grid-cols-[72px_1fr] sm:grid-cols-[minmax(140px,0.7fr)_1.6fr] gap-x-5 lg:gap-x-8 items-start py-4 md:py-5 rule-bottom w-full text-left'
+            'group grid grid-cols-[72px_1fr] sm:grid-cols-[minmax(120px,0.55fr)_1.6fr] gap-x-5 lg:gap-x-6 items-start py-5 md:py-6 rule-bottom w-full text-left'
           const handlers = {
             onMouseEnter: () => setActive(i),
             onFocus: () => setActive(i),

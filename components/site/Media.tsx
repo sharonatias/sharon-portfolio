@@ -35,7 +35,7 @@ export function BackgroundVideo({
   const stillSrc = poster || videoThumb(url)
 
   return (
-    <div className={`relative overflow-hidden bg-black cq ${className}`} aria-label={label} role={label ? 'img' : undefined}>
+    <div className={`${/\b(absolute|fixed)\b/.test(className) ? '' : 'relative'} overflow-hidden bg-black cq ${className}`} aria-label={label} role={label ? 'img' : undefined}>
       {stillSrc && (
         <img
           src={stillSrc}
