@@ -166,7 +166,7 @@ function Card({ item, onPlay, eager }: { item: WorkItem; onPlay: () => void; eag
   }
   const body = (
     <>
-      <span className="block aspect-[16/10] overflow-hidden bg-[#111] relative">
+      <span className="block grade aspect-[16/10] overflow-hidden bg-[#111]">
         <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={eager} />
         {hover && (
           <video
@@ -181,7 +181,7 @@ function Card({ item, onPlay, eager }: { item: WorkItem; onPlay: () => void; eag
           />
         )}
         {!item.href && item.video && (
-          <span className="absolute left-3 bottom-3 text-[0.8125rem] text-white bg-black/60 backdrop-blur px-2.5 py-1 rounded-full">
+          <span className="absolute z-[2] left-3 bottom-3 text-[0.8125rem] text-white bg-black/60 backdrop-blur px-2.5 py-1 rounded-full">
             Play
           </span>
         )}

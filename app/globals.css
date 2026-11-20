@@ -388,3 +388,16 @@ video {
     opacity: 1;
   }
 }
+
+/* Bottom grade: black at the foot of a frame, fading to clear by two-thirds up */
+.grade {
+  position: relative;
+}
+.grade::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.35) 35%, rgba(0, 0, 0, 0) 65%);
+}

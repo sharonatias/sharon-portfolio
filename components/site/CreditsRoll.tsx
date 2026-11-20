@@ -27,7 +27,7 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
       {/* Preview, desktop only */}
       <div className="hidden lg:block lg:col-span-7">
         <div className="sticky" style={{ top: 'calc(var(--header-h) + 32px)' }}>
-          <div className="aspect-[16/10] max-h-[calc(100svh-var(--header-h)-120px)] w-full overflow-hidden bg-[#0d0d0d] relative edge">
+          <div className="aspect-[16/10] max-h-[calc(100svh-var(--header-h)-120px)] w-full overflow-hidden bg-[#0d0d0d] grade edge">
             {items.map((it, i) => (
               <div
                 key={it.key}

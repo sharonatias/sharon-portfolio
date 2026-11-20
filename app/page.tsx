@@ -189,7 +189,7 @@ function Strip({
         {items.map((it) => {
           const body = (
             <>
-              <span className={`block overflow-hidden bg-[#111] edge ${n === 2 ? 'aspect-[16/10]' : 'aspect-[4/3]'}`}>
+              <span className={`block grade overflow-hidden bg-[#111] edge ${n === 2 ? 'aspect-[16/10]' : 'aspect-[4/3]'}`}>
                 <WorkImage src={it.image} srcs={it.images} video={it.video} alt={it.title} />
               </span>
               <span className="t-title block mt-5 text-[clamp(1.375rem,1.8vw,1.875rem)]">{it.title}</span>

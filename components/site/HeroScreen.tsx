@@ -25,13 +25,13 @@ export function HeroScreen({
 }) {
   return (
     <section aria-label={title} className="wrap pt-6 md:pt-10">
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[2.39/1] lg:max-h-[64svh] overflow-hidden bg-[#0b0b0b] edge fade-in">
+      <div className="grade w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[2.39/1] lg:max-h-[64svh] overflow-hidden bg-[#0b0b0b] edge fade-in">
         <BackgroundVideo url={video} poster={poster} className="absolute inset-0" />
         {onWatch && (
           <button
             type="button"
             onClick={onWatch}
-            className="press absolute right-4 bottom-4 md:right-5 md:bottom-5 flex items-center gap-2.5 text-[0.875rem] text-white bg-black/45 backdrop-blur-md px-3.5 py-2 rounded-full hover:bg-black/70 transition-colors"
+            className="press absolute z-[2] right-4 bottom-4 md:right-5 md:bottom-5 flex items-center gap-2.5 text-[0.875rem] text-white bg-black/45 backdrop-blur-md px-3.5 py-2 rounded-full hover:bg-black/70 transition-colors"
           >
             <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[var(--tally)]" />
             {watchLabel}

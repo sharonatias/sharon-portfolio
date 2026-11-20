@@ -63,7 +63,7 @@ function Piece({
   }
 
   const frame = (
-    <span className="block relative aspect-[4/3] overflow-hidden bg-[#0d0d0d] edge">
+    <span className="block grade aspect-[4/3] overflow-hidden bg-[#0d0d0d] edge">
       <span className="absolute inset-0 transition-[transform,opacity] duration-700 group-hover:scale-[1.02]" style={{ transitionTimingFunction: 'var(--ease)' }}>
         <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={eager} />
         {preview && hover && (
