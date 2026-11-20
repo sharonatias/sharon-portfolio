@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { WorkImage } from '@/components/site/Media'
-import { CreditsRoll } from '@/components/site/CreditsRoll'
 import { WorkPlayer } from '@/components/site/WorkPlayer'
 import { HeroScreen } from '@/components/site/HeroScreen'
 import { SectionHead } from '@/components/site/SectionHead'
@@ -33,9 +32,8 @@ export default function Home() {
     return base.slice(0, 10)
   }, [items, content.featured_project_ids])
 
-  // The first three are shown big; the rest roll as credits
-  const spotlight = featured.slice(0, 3)
-  const credits = featured.length > 4 ? featured.slice(3) : []
+  // Two quiet rows of three; the full list lives on the Work page
+  const spotlight = featured.slice(0, 6)
 
   const exploring = useMemo(() => {
     const picked = pickByIds(items, content.exploring_ids)
@@ -104,14 +102,9 @@ export default function Home() {
 
         {content.featured_visible !== false && spotlight.length > 0 && (
           <section aria-labelledby="selected">
-            <SectionHead id="selected" title={texts.workHeading} count={featured.length} href="/projects" linkLabel="All work" />
+            <SectionHead id="selected" title={texts.workHeading} href="/projects" linkLabel="All work" />
             <div className="h-6 md:h-10" />
             <Spotlight items={spotlight} onPlay={(it) => play(featured, it)} />
-            {credits.length > 0 && (
-              <div className="wrap pt-24 md:pt-36 pb-8">
-                <CreditsRoll items={credits} onPlay={(it) => play(featured, it)} />
-              </div>
-            )}
           </section>
         )}
 
@@ -126,7 +119,7 @@ export default function Home() {
                     href={`/projects?c=${d.key}`}
                     className="group flex items-baseline justify-between gap-6 py-4 md:py-5 text-[#bdbcb6] hover:text-white transition-colors"
                   >
-                    <span className="t-display text-[clamp(1.75rem,2.6vw,2.75rem)] transition-transform duration-500 group-hover:translate-x-2" style={{ transitionTimingFunction: 'var(--ease)' }}>
+                    <span className="t-display text-[clamp(1.5rem,2vw,2.25rem)] transition-transform duration-500 group-hover:translate-x-2" style={{ transitionTimingFunction: 'var(--ease)' }}>
                       {d.label}
                     </span>
                     <span className="t-meta t-num text-[1rem]">

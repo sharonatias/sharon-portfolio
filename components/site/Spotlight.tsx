@@ -7,8 +7,9 @@ import { isVideoFile } from '@/lib/media'
 import { WorkImage } from './Media'
 
 /**
- * The headline work as a quiet catalogue: a framed picture and a short caption
- * beside it, alternating sides down the page. Hovering plays the footage.
+ * Selected work hung like a wall in a gallery: three columns of modest frames,
+ * the middle column set slightly lower, small captions underneath.
+ * A single item gets a quiet picture-and-caption pair instead.
  */
 export function Spotlight({ items, onPlay }: { items: WorkItem[]; onPlay: (item: WorkItem) => void }) {
   const [canPreview, setCanPreview] = useState(false)
@@ -19,29 +20,38 @@ export function Spotlight({ items, onPlay }: { items: WorkItem[]; onPlay: (item:
     )
   }, [])
 
+  if (items.length === 1) {
+    const it = items[0]
+    return (
+      <div className="wrap">
+        <Piece item={it} canPreview={canPreview} onPlay={onPlay} single />
+      </div>
+    )
+  }
+
   return (
-    <ul className="wrap flex flex-col gap-20 md:gap-32">
+    <ul className="wrap grid gap-x-8 gap-y-16 md:gap-y-20 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((it, i) => (
-        <li key={it.key}>
-          <Feature item={it} flip={i % 2 === 1} canPreview={canPreview} onPlay={onPlay} eager={i === 0} />
+        <li key={it.key} className={i % 3 === 1 ? 'lg:mt-24' : ''}>
+          <Piece item={it} canPreview={canPreview} onPlay={onPlay} eager={i < 3} />
         </li>
       ))}
     </ul>
   )
 }
 
-function Feature({
+function Piece({
   item,
-  flip,
   canPreview,
   onPlay,
   eager,
+  single,
 }: {
   item: WorkItem
-  flip: boolean
   canPreview: boolean
   onPlay: (item: WorkItem) => void
   eager?: boolean
+  single?: boolean
 }) {
   const [hover, setHover] = useState(false)
   const preview = canPreview && isVideoFile(item.video)
@@ -52,32 +62,40 @@ function Feature({
     onBlur: () => setHover(false),
   }
 
-  const body = (
-    <span className="grid gap-6 lg:grid-cols-12 lg:gap-x-8 lg:items-end text-left">
-      <span className={`block lg:col-span-8 ${flip ? 'lg:col-start-5 lg:row-start-1' : ''}`}>
-        <span className="block relative aspect-[16/10] overflow-hidden bg-[#0d0d0d] edge">
-          <span className="absolute inset-0 transition-transform duration-[1.2s] group-hover:scale-[1.015]" style={{ transitionTimingFunction: 'var(--ease)' }}>
-            <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={eager} />
-            {preview && hover && (
-              <video src={item.video} autoPlay muted loop playsInline data-managed="" className="cover absolute inset-0 fade-in" />
-            )}
-          </span>
-        </span>
-      </span>
-      <span className={`block lg:col-span-4 ${flip ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
-        <span className="t-meta block">{[item.categoryLabel, item.year].filter(Boolean).join(', ')}</span>
-        <span className="t-display block mt-3 text-[clamp(1.75rem,2.4vw,2.5rem)]">{item.title}</span>
-        {item.role && <span className="t-meta block mt-2">{item.role}</span>}
-        {item.description && (
-          <span className="block mt-5 text-[0.9875rem] leading-[1.65] text-[#c9c8c2] max-w-[42ch] line-clamp-4">{item.description}</span>
+  const frame = (
+    <span className="block relative aspect-[4/3] overflow-hidden bg-[#0d0d0d] edge">
+      <span className="absolute inset-0 transition-[transform,opacity] duration-700 group-hover:scale-[1.02]" style={{ transitionTimingFunction: 'var(--ease)' }}>
+        <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={eager} />
+        {preview && hover && (
+          <video src={item.video} autoPlay muted loop playsInline data-managed="" className="cover absolute inset-0 fade-in" />
         )}
-        <span className="inline-block mt-6 text-[0.9375rem]">
-          <span className="link-draw" style={{ backgroundSize: hover ? '100% 1px' : undefined }}>
-            {item.href ? 'View project' : item.video ? 'Play' : 'View'}
-          </span>
-        </span>
       </span>
     </span>
+  )
+
+  const caption = (
+    <span className={`block ${single ? '' : 'mt-4'}`}>
+      <span className="flex items-baseline justify-between gap-4">
+        <span className="t-title text-[1.125rem] md:text-[1.1875rem]">{item.title}</span>
+        {item.year && <span className="t-meta t-num shrink-0">{item.year}</span>}
+      </span>
+      <span className="t-meta block mt-1">{item.role || item.categoryLabel}</span>
+      {single && item.description && (
+        <span className="block mt-4 text-[0.9375rem] leading-[1.65] text-[#c9c8c2] max-w-[44ch] line-clamp-4">{item.description}</span>
+      )}
+    </span>
+  )
+
+  const body = single ? (
+    <span className="grid gap-6 lg:grid-cols-12 lg:gap-x-8 lg:items-end text-left">
+      <span className="block lg:col-span-6">{frame}</span>
+      <span className="block lg:col-span-4 lg:col-start-8">{caption}</span>
+    </span>
+  ) : (
+    <>
+      {frame}
+      {caption}
+    </>
   )
 
   return item.href ? (
@@ -85,7 +103,7 @@ function Feature({
       {body}
     </Link>
   ) : (
-    <button type="button" onClick={() => onPlay(item)} className="group block w-full" {...handlers}>
+    <button type="button" onClick={() => onPlay(item)} className="group block w-full text-left" {...handlers}>
       {body}
     </button>
   )
