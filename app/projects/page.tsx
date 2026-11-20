@@ -73,7 +73,7 @@ export default function WorkPage() {
       <SiteHeader />
       <main className="tone-dark min-h-[70vh]">
         <section className="wrap pt-14 md:pt-20 pb-10 md:pb-14 grid gap-6 lg:grid-cols-12 lg:items-end">
-          <h1 className="open-1 t-display lg:col-span-7 text-[clamp(4rem,12vw,11rem)]">Work</h1>
+          <h1 className="open-1 t-display lg:col-span-7 text-[clamp(2.75rem,5.2vw,5.25rem)]">Work</h1>
           <p className="open-2 lg:col-span-5 t-lead text-[#d6d5cf] max-w-[44ch] lg:pb-3">
             {texts.workIntro}
             {ready && <span className="t-meta block mt-2 t-num">{items.length} projects</span>}

@@ -66,7 +66,7 @@ export function CreditsRoll({ items, onPlay }: { items: WorkItem[]; onPlay: (ite
               <span className="t-meta pt-[0.45em] order-2 sm:order-none">{it.role || it.categoryLabel}</span>
               <span className="min-w-0">
                 <span
-                  className="t-title block text-[clamp(1.5rem,2.2vw,2.75rem)] transition-colors duration-300"
+                  className="t-title block text-[clamp(1.375rem,1.7vw,2rem)] transition-colors duration-300"
                   style={{ color: isActive ? 'var(--fg)' : undefined }}
                 >
                   {it.title}

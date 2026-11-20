@@ -25,7 +25,7 @@ export function SiteFooter({ tone = 'dark', cta = true }: { tone?: 'dark' | 'lig
         {cta && (
         <a
           href={`mailto:${texts.email}`}
-          className="t-display block text-[clamp(3rem,9vw,8.5rem)] max-w-[12ch] hover:opacity-80 transition-opacity"
+          className="t-display block text-[clamp(2.25rem,4.2vw,4.25rem)] max-w-[12ch] hover:opacity-80 transition-opacity"
         >
           {texts.ctaLine}
         </a>

@@ -77,7 +77,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
       <>
         <SiteHeader />
         <main className="tone-dark wrap min-h-[70vh] py-24">
-          <h1 className="t-display text-[clamp(3rem,8vw,6rem)]">Project not found</h1>
+          <h1 className="t-display text-[clamp(2.25rem,4vw,3.5rem)]">Project not found</h1>
           <p className="t-lead mt-6 max-w-[48ch] text-[#d6d5cf]">This project may have been moved or unpublished.</p>
           <Link href="/projects" className="link-draw inline-block mt-6">
             Back to all work
@@ -113,17 +113,17 @@ export default function CaseStudyPage({ params }: { params: Promise<{ id: string
           poster={cs.hero_image || collect(cs.gallery_images, sectionImages(cs, SECTION_KEYS))[0] || videoFrameUrl(film) || videoThumb(film)}
           kicker={cs.format || categoryLabel(cs.category)}
           title={cs.title}
-          subtitle={cs.subtitle}
           onWatch={film ? () => setPlaying(true) : undefined}
           watchLabel="Watch the film"
+          aside={
+            (cs.subtitle || cs.hero_description) && (
+              <>
+                {cs.subtitle && <p className="t-title text-[1.25rem] text-[#d6d5cf]">{cs.subtitle}</p>}
+                {cs.hero_description && <p className="t-lead text-[#c9c8c2] mt-4 max-w-[40ch]">{cs.hero_description}</p>}
+              </>
+            )
+          }
         />
-
-        {cs.hero_description && (
-          <section className="wrap py-16 md:py-28 grid gap-8 lg:grid-cols-12">
-            <p className="t-meta lg:col-span-3 pt-2">The film</p>
-            <p className="lg:col-span-9 t-title text-[clamp(1.625rem,3vw,3rem)] leading-[1.12] max-w-[30ch]">{cs.hero_description}</p>
-          </section>
-        )}
 
         {meta.length > 0 && (
           <section className="wrap">
@@ -201,7 +201,7 @@ function Chapter({ label, title, text, images }: { label: string; title?: string
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-x-8">
         <div className="lg:col-span-4">
           <h2 className="t-meta">{label}</h2>
-          {title && <p className="t-title mt-3 text-[clamp(1.75rem,2.8vw,3rem)] leading-[1.05]">{title}</p>}
+          {title && <p className="t-title mt-3 text-[clamp(1.5rem,2vw,2.125rem)] leading-[1.15]">{title}</p>}
           {text && <p className="mt-5 text-[1.0625rem] leading-[1.7] text-[#cfcec8] max-w-[52ch] whitespace-pre-line">{text}</p>}
         </div>
         {n > 0 && (

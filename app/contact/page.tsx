@@ -31,7 +31,7 @@ export default function ContactPage() {
       <main className="tone-dark">
         <section className="wrap pt-14 md:pt-20 pb-16 md:pb-24 grid gap-10 lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-7">
-            <h1 className="open-1 t-display text-[clamp(4rem,12vw,11rem)]">Contact</h1>
+            <h1 className="open-1 t-display text-[clamp(2.75rem,5.2vw,5.25rem)]">Contact</h1>
             <p className="open-2 t-lead text-[#d6d5cf] mt-8 max-w-[44ch]">
               Have a film, a brand or an idea that needs a director’s eye? Write a few lines and I’ll get back to you.
             </p>

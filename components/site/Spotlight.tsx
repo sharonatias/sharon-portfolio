@@ -7,8 +7,8 @@ import { isVideoFile } from '@/lib/media'
 import { WorkImage } from './Media'
 
 /**
- * The headline work, shown the way it was made to be seen: edge to edge, in
- * widescreen, with the title set on the picture. Hovering plays the footage.
+ * The headline work as a quiet catalogue: a framed picture and a short caption
+ * beside it, alternating sides down the page. Hovering plays the footage.
  */
 export function Spotlight({ items, onPlay }: { items: WorkItem[]; onPlay: (item: WorkItem) => void }) {
   const [canPreview, setCanPreview] = useState(false)
@@ -20,74 +20,73 @@ export function Spotlight({ items, onPlay }: { items: WorkItem[]; onPlay: (item:
   }, [])
 
   return (
-    <ul className="flex flex-col gap-2 md:gap-3">
+    <ul className="wrap flex flex-col gap-20 md:gap-32">
       {items.map((it, i) => (
         <li key={it.key}>
-          <Frame item={it} index={i} total={items.length} canPreview={canPreview} onPlay={onPlay} />
+          <Feature item={it} flip={i % 2 === 1} canPreview={canPreview} onPlay={onPlay} eager={i === 0} />
         </li>
       ))}
     </ul>
   )
 }
 
-function Frame({
+function Feature({
   item,
-  index,
-  total,
+  flip,
   canPreview,
   onPlay,
+  eager,
 }: {
   item: WorkItem
-  index: number
-  total: number
+  flip: boolean
   canPreview: boolean
   onPlay: (item: WorkItem) => void
+  eager?: boolean
 }) {
   const [hover, setHover] = useState(false)
   const preview = canPreview && isVideoFile(item.video)
+  const handlers = {
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    onFocus: () => setHover(true),
+    onBlur: () => setHover(false),
+  }
 
-  const inner = (
-    <>
-      <div className="absolute inset-0 transition-transform duration-[1.2s] group-hover:scale-[1.02]" style={{ transitionTimingFunction: 'var(--ease)' }}>
-        <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={index === 0} />
-        {preview && hover && (
-          <video src={item.video} autoPlay muted loop playsInline data-managed="" className="cover absolute inset-0 fade-in" />
+  const body = (
+    <span className="grid gap-6 lg:grid-cols-12 lg:gap-x-8 lg:items-end text-left">
+      <span className={`block lg:col-span-8 ${flip ? 'lg:col-start-5 lg:row-start-1' : ''}`}>
+        <span className="block relative aspect-[16/10] overflow-hidden bg-[#0d0d0d] edge">
+          <span className="absolute inset-0 transition-transform duration-[1.2s] group-hover:scale-[1.015]" style={{ transitionTimingFunction: 'var(--ease)' }}>
+            <WorkImage src={item.image} srcs={item.images} video={item.video} alt={item.title} eager={eager} />
+            {preview && hover && (
+              <video src={item.video} autoPlay muted loop playsInline data-managed="" className="cover absolute inset-0 fade-in" />
+            )}
+          </span>
+        </span>
+      </span>
+      <span className={`block lg:col-span-4 ${flip ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+        <span className="t-meta block">{[item.categoryLabel, item.year].filter(Boolean).join(', ')}</span>
+        <span className="t-display block mt-3 text-[clamp(1.75rem,2.4vw,2.5rem)]">{item.title}</span>
+        {item.role && <span className="t-meta block mt-2">{item.role}</span>}
+        {item.description && (
+          <span className="block mt-5 text-[0.9875rem] leading-[1.65] text-[#c9c8c2] max-w-[42ch] line-clamp-4">{item.description}</span>
         )}
-      </div>
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-[65%] pointer-events-none"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,0))' }}
-      />
-      <div className="absolute inset-x-0 bottom-0 wrap pb-6 md:pb-10 grid gap-4 md:grid-cols-12 md:items-end text-left">
-        <div className="md:col-span-8">
-          <p className="t-meta text-white/70 mb-3">{item.categoryLabel}</p>
-          <h3 className="t-display text-[clamp(2.5rem,6.4vw,7.5rem)] text-[#f6f5f0] max-w-[16ch]">{item.title}</h3>
-        </div>
-        <div className="md:col-span-4 md:text-right text-[0.9375rem] text-white/85">
-          {item.role && <p>{item.role}</p>}
-          {item.year && <p className="t-num text-white/60">{item.year}</p>}
-          <p className="mt-4 inline-flex items-center gap-2 text-white">
-            <span className="link-draw" style={{ backgroundSize: hover ? '100% 1px' : undefined }}>
-              {item.href ? 'View project' : item.video ? 'Play' : 'View'}
-            </span>
-          </p>
-        </div>
-      </div>
-    </>
+        <span className="inline-block mt-6 text-[0.9375rem]">
+          <span className="link-draw" style={{ backgroundSize: hover ? '100% 1px' : undefined }}>
+            {item.href ? 'View project' : item.video ? 'Play' : 'View'}
+          </span>
+        </span>
+      </span>
+    </span>
   )
 
-  const cls =
-    'group relative block w-full overflow-hidden bg-[#0d0d0d] aspect-[4/5] sm:aspect-[16/10] lg:aspect-[2.39/1] lg:max-h-[calc(100svh-var(--header-h))]'
-  const handlers = { onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), onFocus: () => setHover(true), onBlur: () => setHover(false) }
-
   return item.href ? (
-    <Link href={item.href} className={cls} {...handlers}>
-      {inner}
+    <Link href={item.href} className="group block" {...handlers}>
+      {body}
     </Link>
   ) : (
-    <button type="button" onClick={() => onPlay(item)} className={cls} {...handlers}>
-      {inner}
+    <button type="button" onClick={() => onPlay(item)} className="group block w-full" {...handlers}>
+      {body}
     </button>
   )
 }

@@ -112,21 +112,20 @@ video {
 }
 
 /* ---------- Type ---------- */
-/* Condensed display: the "credits" voice. Used for big titles only. */
+/* Display: quiet and precise. Size comes from proportion, not weight. */
 .t-display {
-  font-weight: 800;
-  font-variation-settings: 'wdth' 62;
-  text-transform: uppercase;
-  line-height: 0.88;
-  letter-spacing: -0.005em;
+  font-weight: 380;
+  font-variation-settings: 'wdth' 100;
+  line-height: 1.04;
+  letter-spacing: -0.032em;
 }
 
-/* Condensed title: project names in lists and cards. */
+/* Title: project names in lists and cards. */
 .t-title {
-  font-weight: 650;
-  font-variation-settings: 'wdth' 78;
-  letter-spacing: -0.005em;
-  line-height: 1.05;
+  font-weight: 450;
+  font-variation-settings: 'wdth' 100;
+  letter-spacing: -0.018em;
+  line-height: 1.12;
 }
 
 .t-lead {
@@ -319,40 +318,6 @@ video {
 .overflow-y-auto {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-
-/* ---------- Home: the opening frame ---------- */
-.hero-screen {
-  height: calc(100svh - var(--header-h));
-  min-height: 560px;
-  max-height: 1200px;
-}
-
-/* Bars close in to a 2.39:1 frame as --p goes 0 → 1 (set on scroll) */
-.hero-bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  background: #000;
-  height: max(0px, calc((100% - 100vw / 2.39) / 2));
-  transform: scaleY(var(--p, 0));
-  will-change: transform;
-}
-.hero-bar--top {
-  top: 0;
-  transform-origin: top;
-}
-.hero-bar--bottom {
-  bottom: 0;
-  transform-origin: bottom;
-}
-.hero-copy {
-  z-index: 3;
-}
-.hero-ratio {
-  z-index: 3;
-  opacity: var(--p, 0);
 }
 
 /* Tactile press on primary buttons */

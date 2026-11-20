@@ -37,7 +37,7 @@ export default function AboutPage() {
       <SiteHeader />
       <main className="tone-dark">
         <section className="wrap pt-14 md:pt-20 pb-16 md:pb-24">
-          <h1 className="open-1 t-display text-[clamp(4rem,12vw,11rem)]">About</h1>
+          <h1 className="open-1 t-display text-[clamp(2.75rem,5.2vw,5.25rem)]">About</h1>
         </section>
 
         <section className="wrap pb-20 md:pb-32 grid gap-10 lg:grid-cols-12 lg:gap-x-8">

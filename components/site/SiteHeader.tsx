@@ -58,11 +58,8 @@ export function SiteHeader({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
       >
         <div className="wrap h-full flex items-center justify-between gap-6">
           <Link href="/" className="flex items-baseline gap-4 min-w-0" aria-label="Sharon Moshe Attias, home">
-            <span
-              className="whitespace-nowrap text-[1.125rem] md:text-[1.375rem]"
-              style={{ fontWeight: 800, fontVariationSettings: "'wdth' 68", letterSpacing: '0.01em' }}
-            >
-              SHARON MOSHE ATTIAS
+            <span className="whitespace-nowrap text-[1rem] md:text-[1.0625rem]" style={{ fontWeight: 520, letterSpacing: '-0.01em' }}>
+              Sharon Moshe Attias
             </span>
             <span className="t-meta hidden lg:inline truncate">{tidyRole(content.heroRole)}</span>
           </Link>
@@ -104,8 +101,8 @@ export function SiteHeader({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
           className="tone-dark fixed inset-0 z-50 flex flex-col fade-in md:hidden"
         >
           <div className="wrap flex items-center justify-between rule-bottom" style={{ height: 'var(--header-h)' }}>
-            <span style={{ fontWeight: 800, fontVariationSettings: "'wdth' 68" }} className="text-[1.125rem]">
-              SHARON MOSHE ATTIAS
+            <span style={{ fontWeight: 520 }} className="text-[1rem]">
+              Sharon Moshe Attias
             </span>
             <button type="button" className="text-[0.9375rem] py-2" onClick={() => setOpen(false)}>
               Close
@@ -117,7 +114,7 @@ export function SiteHeader({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
                 key={n.href}
                 href={n.href}
                 aria-current={(n.href === '/' ? pathname === '/' : isActive(n.href)) ? 'page' : undefined}
-                className="t-display text-[clamp(3.5rem,17vw,6rem)]"
+                className="t-display text-[clamp(2.5rem,11vw,3.5rem)]"
                 onClick={() => setOpen(false)}
               >
                 {n.label}

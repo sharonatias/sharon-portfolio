@@ -12,7 +12,6 @@ import { SectionHead } from '@/components/site/SectionHead'
 import { Spotlight } from '@/components/site/Spotlight'
 import { useAllWork, useSiteContent } from '@/lib/useSiteContent'
 import { CATEGORY_LABELS, CATEGORY_ORDER, pickByIds, WorkItem } from '@/lib/work'
-import { tidyRole } from '@/lib/site'
 
 export default function Home() {
   const { content, texts } = useSiteContent()
@@ -86,37 +85,30 @@ export default function Home() {
           video={heroVideo}
           poster={heroPoster}
           title={content.heroTitle}
-          subtitle={content.heroSubtitle}
           onWatch={showreel ? () => setPlayer({ list: [showreel], index: 0 }) : undefined}
+          aside={
+            <>
+              <p className="t-lead text-[#d6d5cf] max-w-[38ch]">{content.heroSubtitle}</p>
+              {texts.currently && <p className="t-meta mt-4 max-w-[38ch]">{texts.currently}</p>}
+              <p className="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-[0.9375rem]">
+                <Link href="/projects" className="link-draw">
+                  See all work{ready && items.length ? ` (${items.length})` : ''}
+                </Link>
+                <Link href="/contact" className="link-draw">
+                  Get in touch
+                </Link>
+              </p>
+            </>
+          }
         />
-
-        {/* Who, in one breath */}
-        <section className="wrap py-20 md:py-32 grid gap-8 lg:grid-cols-12">
-          <p className="t-meta lg:col-span-3 pt-2">{tidyRole(content.heroRole)}</p>
-          <div className="lg:col-span-9">
-            <p className="t-title text-[clamp(1.75rem,3.4vw,3.5rem)] leading-[1.08] max-w-[26ch]">
-              {texts.currently || content.heroSubtitle}
-            </p>
-            <p className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-[1rem]">
-              <Link href="/projects" className="link-draw">
-                See all work{ready && items.length ? ` (${items.length})` : ''}
-              </Link>
-              <Link href="/about" className="link-draw">
-                About me
-              </Link>
-              <Link href="/contact" className="link-draw">
-                Get in touch
-              </Link>
-            </p>
-          </div>
-        </section>
 
         {content.featured_visible !== false && spotlight.length > 0 && (
           <section aria-labelledby="selected">
             <SectionHead id="selected" title={texts.workHeading} count={featured.length} href="/projects" linkLabel="All work" />
+            <div className="h-6 md:h-10" />
             <Spotlight items={spotlight} onPlay={(it) => play(featured, it)} />
             {credits.length > 0 && (
-              <div className="wrap pt-20 md:pt-28 pb-8">
+              <div className="wrap pt-24 md:pt-36 pb-8">
                 <CreditsRoll items={credits} onPlay={(it) => play(featured, it)} />
               </div>
             )}
@@ -132,9 +124,9 @@ export default function Home() {
                 <li key={d.key} className="rule-bottom">
                   <Link
                     href={`/projects?c=${d.key}`}
-                    className="group flex items-baseline justify-between gap-6 py-4 md:py-5 text-[#cfcec8] hover:text-white transition-colors"
+                    className="group flex items-baseline justify-between gap-6 py-4 md:py-5 text-[#bdbcb6] hover:text-white transition-colors"
                   >
-                    <span className="t-display text-[clamp(2.25rem,5.6vw,5.5rem)] transition-transform duration-500 group-hover:translate-x-3" style={{ transitionTimingFunction: 'var(--ease)' }}>
+                    <span className="t-display text-[clamp(1.75rem,2.6vw,2.75rem)] transition-transform duration-500 group-hover:translate-x-2" style={{ transitionTimingFunction: 'var(--ease)' }}>
                       {d.label}
                     </span>
                     <span className="t-meta t-num text-[1rem]">

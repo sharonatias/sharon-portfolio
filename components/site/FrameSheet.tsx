@@ -34,7 +34,7 @@ export function FrameSheet({ title, frames }: { title: string; frames: string[] 
   return (
     <section className="wrap py-16 md:py-24 rule-top" aria-label="Frames">
       <div className="flex items-end justify-between gap-6 pb-8">
-        <h2 className="t-display text-[clamp(2.25rem,4.4vw,4.5rem)]">Frames</h2>
+        <h2 className="t-display text-[clamp(1.75rem,2.4vw,2.5rem)]">Frames</h2>
         <p className="t-meta t-num pb-2">{frames.length} stills</p>
       </div>
 

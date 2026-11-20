@@ -75,7 +75,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
       <>
         <SiteHeader tone="light" />
         <main className="tone-light wrap min-h-[70vh] py-24">
-          <h1 className="t-display text-[clamp(3rem,8vw,6rem)]">Project not found</h1>
+          <h1 className="t-display text-[clamp(2.25rem,4vw,3.5rem)]">Project not found</h1>
           <p className="t-lead mt-6 max-w-[48ch]">This project may have been moved or unpublished.</p>
           <Link href="/projects" className="link-draw inline-block mt-6">
             Back to all work
@@ -163,7 +163,7 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
     <>
       <SiteHeader tone="light" />
       <main className="tone-light">
-        <section className="relative w-full aspect-[4/5] sm:aspect-[16/10] lg:aspect-auto lg:h-[calc(100svh-var(--header-h))] lg:min-h-[560px] lg:max-h-[1200px] bg-[#e7e7e3] overflow-hidden">
+        <div className="wrap pt-6 md:pt-10"><section className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[2.39/1] lg:max-h-[64svh] bg-[#e7e7e3] overflow-hidden">
           {cs.hero_video ? (
             <BackgroundVideo url={cs.hero_video} poster={cs.hero_image} className="absolute inset-0" />
           ) : (
@@ -177,12 +177,12 @@ export default function BrandCaseStudyPage({ params }: { params: Promise<{ id: s
               />
             </div>
           )}
-        </section>
+        </section></div>
 
         <section className="wrap pt-10 md:pt-14 pb-14 md:pb-20 grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-8">
             <p className="t-meta mb-4">{categoryLabel(cs.category || 'brand_design')}</p>
-            <h1 className="open-1 t-display text-[clamp(2.75rem,6.6vw,7rem)]">{cs.title}</h1>
+            <h1 className="open-1 t-display text-[clamp(2.25rem,4vw,4rem)]">{cs.title}</h1>
             {cs.subtitle && <p className="open-2 t-title mt-4 text-[clamp(1.25rem,2vw,1.75rem)] opacity-80">{cs.subtitle}</p>}
           </div>
           {cs.hero_description && (
