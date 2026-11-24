@@ -78,12 +78,13 @@ export function withTextDefaults(saved?: Partial<SiteTexts> | null): SiteTexts {
   return out
 }
 
-/** Role line: the old default was shouty all-caps with bullets; show it in sentence case. */
+/** Role line: "A • B • C" from the admin becomes "A, B, C"; shouty all-caps becomes sentence case. */
 export function tidyRole(role?: string) {
   if (!role) return DEFAULT_PAGE_CONTENT.heroRole
-  const cleaned = role.replace(/\s*[•·|]\s*/g, ' & ').trim()
-  if (cleaned === cleaned.toUpperCase()) {
-    return cleaned.charAt(0) + cleaned.slice(1).toLowerCase()
+  const parts = role.split(/\s*[•·|]\s*/).map((p) => p.trim()).filter(Boolean)
+  const joined = parts.join(', ')
+  if (joined === joined.toUpperCase()) {
+    return joined.charAt(0) + joined.slice(1).toLowerCase()
   }
-  return cleaned
+  return joined
 }
