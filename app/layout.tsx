@@ -1,45 +1,44 @@
-import type { Metadata } from 'next'
-import { Space_Grotesk } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Archivo, Heebo } from 'next/font/google'
 import './globals.css'
 import { CookieBanner } from './components/CookieBanner'
 import { AccessibilityWidget } from './components/AccessibilityWidget'
 import { MediaFallback } from '../components/MediaFallback'
-import { TopShade } from '../components/TopShade'
 
-const spaceGrotesk = Space_Grotesk({
+// Archivo's width axis gives one family two voices: condensed for titles, regular for reading.
+const archivo = Archivo({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-space-grotesk',
+  axes: ['wdth'],
+  variable: '--font-archivo',
+  display: 'swap',
+})
+
+// Hebrew glyphs (project titles, legal pages) fall back to Heebo.
+const heebo = Heebo({
+  subsets: ['hebrew'],
+  variable: '--font-heebo',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'Sharon Moshe Attias - Creative & Director',
-  description: 'Portfolio of Sharon Moshe Attias',
-  other: {
-    'X-UA-Compatible': 'IE=edge',
-  },
+  title: 'Sharon Moshe Attias — Director & creative',
+  description:
+    'Director and creative. Documentaries, commercials, brand identities and AI-driven work by Sharon Moshe Attias.',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export const viewport: Viewport = {
+  themeColor: '#000000',
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" dir="ltr" className={spaceGrotesk.variable}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-      </head>
-      <body className="font-space-grotesk">
+    <html lang="en" dir="ltr" className={`${archivo.variable} ${heebo.variable}`}>
+      <body>
         {children}
         <MediaFallback />
-        <TopShade />
         <CookieBanner />
         <AccessibilityWidget />
       </body>
     </html>
   )
 }
-// Trigger rebuild
